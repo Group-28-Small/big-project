@@ -1,0 +1,8 @@
+{
+  "name": "group21-big",
+  "version": "0.1.0",
+  "scripts": {
+    "start": "npm run start --prefix backend",
+    "postinstall": "npm run build --prefix backend/big-project-web"
+  }
+}
