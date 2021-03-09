@@ -1,5 +1,10 @@
 #!/usr/bin/bash
 
+echo
+echo For Development Only!!!
+echo
+sleep 2
+
 control_c()
 {
   echo "Killing Scripts $backend_id $frontend_id"
