@@ -15,7 +15,7 @@ control_c()
 }
 echo "Setting control-c trap"
 trap control_c SIGINT
-setsid sh -c "cd backend ; export PORT=4000 ; FORCE_COLOR=true npm start |& cat | sed  's/^/[backend] /' " &
+setsid sh -c "cd backend ; export PORT=4000 ; FORCE_COLOR=true npm dev |& cat | sed  's/^/[backend] /' " &
 backend_id=$!
 echo "Backend PID: $backend_id"
 # fix clearing screen issue
