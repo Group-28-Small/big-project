@@ -4,5 +4,6 @@
   "scripts": {
     "start": "npm run start --prefix backend",
     "postinstall": "npm install --prefix frontend/big-project-web && npm install --prefix backend && npm run build --prefix frontend/big-project-web"
-  }
+  },
+  "cacheDirectories": ["frontend/big-project-web/node_modules", "backend/node_modules"]
 }
