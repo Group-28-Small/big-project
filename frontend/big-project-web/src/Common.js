@@ -1,5 +1,5 @@
-var app_name = "OUR_APP_HERE";
-function buildPath(route)
+var app_name = "group21-big";
+function frontend_address(route)
 {
     if (process.env.NODE_ENV === 'production') 
     {
@@ -7,8 +7,19 @@ function buildPath(route)
     }
     else
     {        
-        return 'http://localhost:5000/' + route;
+        return 'http://localhost:3000/' + route;
     }
 }
 
-export default buildPath;
+function backend_address(route)
+{
+    if (process.env.NODE_ENV === 'production') 
+    {
+        return 'https://' + app_name +  '.herokuapp.com/api/' + route;
+    }
+    else
+    {        
+        return 'http://localhost:4000/api/' + route;
+    }
+}
+export { backend_address, frontend_address };

@@ -1,5 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
+import { frontend_address, backend_address } from './Common';
 
 function App() {
   return (
@@ -11,11 +12,19 @@ function App() {
         </p>
         <a
           className="App-link"
-          href="https://reactjs.org"
+          href={frontend_address("")}
           target="_blank"
           rel="noopener noreferrer"
         >
-          Learn React
+          frontend link
+        </a>
+        <a
+          className="App-link"
+          href={backend_address("")}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          backend link
         </a>
       </header>
     </div>
