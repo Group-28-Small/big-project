@@ -1,6 +1,6 @@
 import logo from './logo.svg';
 import './App.css';
-import { frontend_address, backend_address } from './Common';
+import { frontend_address, backend_address } from 'big-project-common';
 
 function App() {
   return (
