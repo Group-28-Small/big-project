@@ -7,7 +7,6 @@
   },
   "cacheDirectories": [
     "frontend/big-project-web/node_modules",
-    "backend/node_modules",
-    "common"
+    "backend/node_modules"
   ]
 }
