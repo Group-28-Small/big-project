@@ -22,4 +22,9 @@ function backend_address(route)
         return 'http://localhost:4000/api/' + route;
     }
 }
-export { backend_address, frontend_address };
+
+function is_production() {
+    return process.env.NODE_ENV === 'production';
+}
+
+module.exports = {frontend_address, backend_address, is_production };

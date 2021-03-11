@@ -7,9 +7,11 @@
     "start": "node ./bin/www"
   },
   "dependencies": {
+    "big-project-common": "file:../common",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "express": "~4.16.1",
+    "firebase-admin": "^9.5.0",
     "morgan": "~1.9.1"
   },
   "devDependencies": {

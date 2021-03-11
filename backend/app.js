@@ -2,6 +2,7 @@ var path = require('path');
 var express = require('express');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var database = require('./database');
 
 var apiRouter = require('./routes/api');
 
