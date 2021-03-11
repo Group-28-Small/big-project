@@ -8,8 +8,5 @@
     "build": "./node_modules/.bin/babel src --out-file index.js"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "babel-cli": "^6.26.0"
-  }
+  "license": "ISC"
 }
