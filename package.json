@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "scripts": {
     "start": "npm run start --prefix backend",
-    "postinstall": "cp -r common frontend/big-project-web/node_modules/big-project-common && cp -r common backend/node_modules/big-project-common && npm install --prefix frontend/big-project-web && npm install --prefix backend && npm run build --prefix frontend/big-project-web"
+    "postinstall": "npm install --prefix frontend/big-project-web && npm install --prefix backend && npm run build --prefix frontend/big-project-web"
   },
   "cacheDirectories": [
     "frontend/big-project-web/node_modules",
