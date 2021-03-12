@@ -7,6 +7,28 @@ router.get('/', function(req, res, next) {
   res.send('respond with a resource');
 });
 
+router.post('/register', function (req, res) {
+  var email = req.body.email;
+  var password = req.body.password;
+  var username = req.body.username;
+  // https://firebase.google.com/docs/auth/admin/manage-users#create_a_user
+  admin.auth().createUser({
+    email: email,
+    emailVerified: false,
+    password: password,
+    displayName: username
+  })
+  .then((userRecord) => {
+    // See the UserRecord reference doc for the contents of userRecord.
+    console.log('Successfully created new user:', userRecord.uid);
+    res.json(userRecord);
+  })
+  .catch((error) => {
+    console.log('Error creating new user:', error);
+    res.json({"error": "some error"})
+  });
+});
+
 // router.get('/database_test', function (req, res, next) {
 //   admin
 //   .auth()
