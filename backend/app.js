@@ -8,6 +8,9 @@ var apiRouter = require('./routes/api');
 
 var app = express();
 
+// security hardening: don't tell the client about the backend
+app.disable("x-powered-by");
+
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
