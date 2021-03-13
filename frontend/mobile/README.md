@@ -1,0 +1,1 @@
+# firebase library: https://github.com/FirebaseExtended/reactfire
