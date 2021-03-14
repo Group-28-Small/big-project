@@ -1,7 +1,7 @@
 var app_name = "group21-big";
 function frontend_address(route)
 {
-    if (process.env.NODE_ENV === 'production') 
+    if (is_production())
     {
         return 'https://' + app_name +  '.herokuapp.com/' + route;
     }
@@ -13,7 +13,7 @@ function frontend_address(route)
 
 function backend_address(route)
 {
-    if (process.env.NODE_ENV === 'production') 
+    if (is_production())
     {
         return 'https://' + app_name +  '.herokuapp.com/api/' + route;
     }
