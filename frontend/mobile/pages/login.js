@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, Button, Platform, ToastAndroid } from 'react-native';
+import { StyleSheet, SafeAreaView, Button, Alert } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import '../styles';
 import { useAuth, useUser } from 'reactfire';
@@ -8,16 +8,11 @@ export const LoginPage = props => {
     const [email, onChangeEmail] = React.useState("");
     const [password, onChangePassword] = React.useState("");
     const auth = useAuth();
-    const login = () => auth.signInWithEmailAndPassword(email, password).then(result => {
+    const login = () => auth.signInWithEmailAndPassword(email, password).then((result) => {
         console.log(result);
     }).catch(() => {
-        if (Platform.OS === 'android') {
-            ToastAndroid.show("Incorrect details", ToastAndroid.SHORT);
-        } else if (Platform.OS === 'ios') {
-            // TODO: iOS
-            // Alert("Incorrect details");
-        }
-
+        console.log("false");
+        Alert.alert("Incorrect details");
     });
     var user = useUser();
     if (user !== undefined) {
