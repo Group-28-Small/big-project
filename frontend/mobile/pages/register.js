@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import { Text, View } from 'react-native';
 
 export class RegisterPage extends React.Component {
     render() {

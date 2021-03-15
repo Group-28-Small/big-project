@@ -1,8 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, View, Image, SafeAreaView, Button, Platform, ToastAndroid, Alert } from 'react-native';
+import { StyleSheet, SafeAreaView, Button, Platform, ToastAndroid } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import '../styles';
-import AppStyles from '../styles';
 import { useAuth, useUser } from 'reactfire';
 
 export const LoginPage = props => {

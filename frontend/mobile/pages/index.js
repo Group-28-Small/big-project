@@ -1,8 +1,7 @@
 
 import React from 'react';
-import { StyleSheet, Text, View, Image, AppState } from 'react-native';
+import { Text, View } from 'react-native';
 import { backend_address } from 'big-project-common';
-import { useUser } from 'reactfire';
 import '../styles';
 import AppStyles from '../styles';
 export const IndexPage = props => {

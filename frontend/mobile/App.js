@@ -1,12 +1,11 @@
-import { StatusBar } from 'expo-status-bar';
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
-// import { StyleSheet, Text, View, Link, AppRegistry } from 'react-native';
-import 'react-native-gesture-handler';
-import 'firebase/firestore';
-import { FirebaseAppProvider, useFirestoreDocData, useFirestore, useUser, useAuth } from 'reactfire';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import 'firebase/auth';
+import React from 'react';
+import { Button } from 'react-native';
+// import { StyleSheet, Text, View, Link, AppRegistry } from 'react-native';
+import 'react-native-gesture-handler';
+import { FirebaseAppProvider, useAuth, useUser } from 'reactfire';
 import { IndexPage } from './pages/index';
 import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
