@@ -7,10 +7,6 @@ import '../styles';
 import AppStyles from '../styles';
 export const IndexPage = props => {
     console.log("heeeeerres index!");
-    const { user } = useUser();
-    if (user === undefined) {
-        props.navigation.navigate("Login");
-    }
     return (
         <View style={AppStyles.container}>
             <Text>Open up App.js to start working on your app!</Text>

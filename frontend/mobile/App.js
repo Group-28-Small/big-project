@@ -1,10 +1,10 @@
 import { StatusBar } from 'expo-status-bar';
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, StyleSheet, Button } from 'react-native';
 // import { StyleSheet, Text, View, Link, AppRegistry } from 'react-native';
 import 'react-native-gesture-handler';
 import 'firebase/firestore';
-import { FirebaseAppProvider, useFirestoreDocData, useFirestore } from 'reactfire';
+import { FirebaseAppProvider, useFirestoreDocData, useFirestore, useUser, useAuth } from 'reactfire';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { IndexPage } from './pages/index';
@@ -21,16 +21,52 @@ var firebaseConfig = {
 };
 
 export default function App() {
-  const Stack = createStackNavigator();
   return (
     <FirebaseAppProvider firebaseConfig={firebaseConfig}>
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Home" component={IndexPage} />
-          <Stack.Screen name="Login" component={LoginPage} />
-          <Stack.Screen name="Register" component={RegisterPage} />
-      </Stack.Navigator>
-      </NavigationContainer>
+      <AppNav />
     </FirebaseAppProvider>
+  );
+}
+
+function AppNav() {
+  const Stack = createStackNavigator();
+  var isSignedIn = false;
+  const auth = useAuth();
+  const { data: user } = useUser();
+  if (user != null) {
+    isSignedIn = true;
+    console.log(user);
+  }
+  console.log("issignedin " + isSignedIn);
+  const signOutUser = () => {
+    auth.signOut().then(() => {
+      console.log("Signed out");
+    }).catch(() => {
+      console.log("error");
+    });
+  }
+  return (
+    <NavigationContainer>
+    <Stack.Navigator>
+        {isSignedIn ? (
+          <>
+            <Stack.Screen name="Home" component={IndexPage} options={{
+              headerRight: () => (
+                <Button
+                  onPress={() => signOutUser()}
+                  title="logout"
+                  color="#000"
+                />
+              ),
+            }} />
+          </>
+        ) : (
+          <>
+            <Stack.Screen name="Login" component={LoginPage} />
+            <Stack.Screen name="Register" component={RegisterPage} />
+          </>
+        )}
+    </Stack.Navigator>
+    </NavigationContainer>
   );
 }
