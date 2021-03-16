@@ -26,6 +26,7 @@ export const LoginPage = props => {
     var user = useUser();
     if (user !== undefined) {
         console.log("wait a minute...");
+        console.log(user);
     }
     return (
         <View style={AppStyles.centered}>

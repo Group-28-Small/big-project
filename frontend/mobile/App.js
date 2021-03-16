@@ -11,6 +11,7 @@ import { IndexPage } from './pages/index';
 import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
 import { VerifyPage } from './pages/verify_email';
+import { setAuthHandler } from 'big-project-common';
 var firebaseConfig = {
   apiKey: "AIzaSyDhZOTZT7X9YC8krs7imlVPvFcFMs8RKhk",
   authDomain: "cop4331-group21-bigproject.firebaseapp.com",
@@ -39,12 +40,6 @@ function AppNav() {
 
   const auth = useAuth();
   const firebase = useFirebaseApp();
-  const reloadUser = () => {
-    console.log("reloading user");
-    firebase.auth().currentUser.reload().then(() => {
-      firebase.auth().currentUser.getIdToken(true);
-    });
-  }
   useEffect(() => {
     return () => {
       // componentwillunmount in functional component.
@@ -54,36 +49,7 @@ function AppNav() {
       }
     }
   }, [])
-  firebase.auth().onIdTokenChanged((user) => {
-    // console.log("id token changed");
-    // console.log(user);
-    if (user && user.emailVerified) {
-      setEmailVerified(user.emailVerified);
-      clearInterval(emailVerifyTimer);
-    } else {
-      setEmailVerified(false);
-    }
-  })
-  firebase.auth().onAuthStateChanged((user) => {
-    if (user) {
-      // console.log("we have a user");
-      setSignedIn(true);
-      setEmailVerified(user.emailVerified);
-      if (!user.emailVerified && emailVerifyTimer == null) {
-        var timer = setInterval(reloadUser, 3000);
-        setTimer(timer);
-      } else if (user.emailVerified && emailVerifyTimer != null) {
-        clearInterval(emailVerifyTimer);
-      }
-    } else {
-      setSignedIn(false);
-      console.log("no account")
-      if (emailVerifyTimer != null) {
-        clearInterval(emailVerifyTimer);
-
-      }
-    }
-  });
+  setAuthHandler(firebase, setSignedIn, setEmailVerified, emailVerifyTimer, setTimer);
   const signOutUser = () => {
     auth.signOut().then(() => {
       console.log("Signed out");

@@ -26,5 +26,5 @@ function backend_address(route)
 function is_production() {
     return process.env.NODE_ENV === 'production';
 }
-
-module.exports = {frontend_address, backend_address, is_production };
+import { setAuthHandler } from './Auth';
+module.exports = { frontend_address, backend_address, is_production, setAuthHandler };
