@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, SafeAreaView, Button, Platform, ToastAndroid, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import '../styles';
-import { useAuth, useUser } from 'reactfire';
+import { useAuth } from 'reactfire';
 import AppStyles from '../styles';
 
 export const LoginPage = props => {
@@ -23,10 +23,8 @@ export const LoginPage = props => {
     const goToRegister = () => {
         props.navigation.navigate('Register');
     }
-    var user = useUser();
-    if (user !== undefined) {
+    if (auth.currentUser != null) {
         console.log("wait a minute...");
-        console.log(user);
     }
     return (
         <View style={AppStyles.centered}>
