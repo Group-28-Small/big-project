@@ -6,9 +6,5 @@ const AppStyles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    centered: {
-        flex: 1,
-        justifyContent: 'center'
-    }
 });
 export default AppStyles;
