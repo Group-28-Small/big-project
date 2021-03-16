@@ -1,5 +1,3 @@
-import { set } from "react-native-reanimated";
-
 function setAuthHandler(firebase, setSignedIn, setEmailVerified, emailVerifyTimer, setTimer) {
     firebase.auth().onIdTokenChanged((user) => {
         // console.log("id token changed");
