@@ -17,7 +17,7 @@ function setAuthHandler(firebase, setSignedIn, setEmailVerified, emailVerifyTime
             setSignedIn(true);
             setEmailVerified(user.emailVerified);
             if (!user.emailVerified && emailVerifyTimer == null) {
-                var timer = setInterval(reloadUser, 3000);
+                var timer = setInterval(() => reloadUser(firebase), 3000);
                 setTimer(timer);
             } else if (user.emailVerified && emailVerifyTimer != null) {
                 clearInterval(emailVerifyTimer);
@@ -33,7 +33,7 @@ function setAuthHandler(firebase, setSignedIn, setEmailVerified, emailVerifyTime
     });
 
 }
-const reloadUser = () => {
+const reloadUser = (firebase) => {
     console.log("reloading user");
     firebase.auth().currentUser.reload().then(() => {
         firebase.auth().currentUser.getIdToken(true);
