@@ -1,11 +1,8 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import 'firebase/auth';
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ActivityIndicator, Button, View } from 'react-native';
-// import { StyleSheet, Text, View, Link, AppRegistry } from 'react-native';
-import 'react-native-gesture-handler';
 import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
 import { IndexPage } from './pages/index';
 import { LoginPage } from './pages/login';
@@ -60,34 +57,36 @@ function AppNav() {
   }
   var isFirebaseLoaded = isSignedIn !== undefined;
   if (isFirebaseLoaded) {
+    const verifiedEmailOrHome =
+      isEmailVerified ? (
+        <>
+          <Stack.Screen name="Home" component={IndexPage} options={{
+            headerRight: () => (
+              <Button
+                onPress={() => signOutUser()}
+                title="logout"
+                color="#000"
+              />
+            ),
+          }} />
+        </>) : (
+        <>
+          <Stack.Screen name="VerifyEmail" component={VerifyPage} options={{
+            headerRight: () => (
+              <Button
+                onPress={() => signOutUser()}
+                title={isEmailVerified ? "yes" : "no"}
+                color="#000"
+              />
+            ),
+          }} />
+        </>
+      );
     return (
       <NavigationContainer>
         <Stack.Navigator>
           {isSignedIn ? (
-            isEmailVerified ? (
-              <>
-                <Stack.Screen name="Home" component={IndexPage} options={{
-                  headerRight: () => (
-                    <Button
-                      onPress={() => signOutUser()}
-                      title="logout"
-                      color="#000"
-                    />
-                  ),
-                }} />
-              </>) : (
-              <>
-                <Stack.Screen name="VerifyEmail" component={VerifyPage} options={{
-                  headerRight: () => (
-                    <Button
-                      onPress={() => signOutUser()}
-                      title={isEmailVerified ? "yes" : "no"}
-                      color="#000"
-                    />
-                  ),
-                }} />
-              </>
-            )
+            verifiedEmailOrHome
           ) : (
             <>
               <Stack.Screen name="Login" component={LoginPage} options={{

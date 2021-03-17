@@ -1,7 +1,6 @@
 import React from 'react';
 import { StyleSheet, SafeAreaView, Button, Platform, ToastAndroid, View } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
-import '../styles';
 import { useAuth } from 'reactfire';
 import AppStyles from '../styles';
 

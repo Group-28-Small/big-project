@@ -2,7 +2,6 @@
 import React from 'react';
 import { Text, View } from 'react-native';
 import { backend_address } from 'big-project-common';
-import '../styles';
 import AppStyles from '../styles';
 export const IndexPage = props => {
     console.log("heeeeerres index!");
