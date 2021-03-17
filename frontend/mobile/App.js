@@ -3,7 +3,7 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import 'firebase/auth';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Button, View } from 'react-native';
 // import { StyleSheet, Text, View, Link, AppRegistry } from 'react-native';
 import 'react-native-gesture-handler';
 import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
@@ -58,7 +58,7 @@ function AppNav() {
       console.log("error");
     });
   }
-  var isFirebaseLoaded = !(isSignedIn === undefined);
+  var isFirebaseLoaded = isSignedIn !== undefined;
   if (isFirebaseLoaded) {
     return (
       <NavigationContainer>
