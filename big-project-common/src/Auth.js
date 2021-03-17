@@ -37,4 +37,5 @@ const reloadUser = (firebase) => {
         firebase.auth().currentUser.getIdToken(true);
     });
 }
-export { setAuthHandler };
+
+module.exports = { setAuthHandler };
