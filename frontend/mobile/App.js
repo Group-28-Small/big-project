@@ -3,15 +3,16 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import 'firebase/auth';
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Button } from 'react-native';
+import { ActivityIndicator, Button, StyleSheet, Text, View } from 'react-native';
 // import { StyleSheet, Text, View, Link, AppRegistry } from 'react-native';
 import 'react-native-gesture-handler';
-import { FirebaseAppProvider, useAuth, useFirebaseApp, useUser } from 'reactfire';
+import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
 import { IndexPage } from './pages/index';
 import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
 import { VerifyPage } from './pages/verify_email';
 import { setAuthHandler } from 'big-project-common';
+import AppStyles from './styles';
 var firebaseConfig = {
   apiKey: "AIzaSyDhZOTZT7X9YC8krs7imlVPvFcFMs8RKhk",
   authDomain: "cop4331-group21-bigproject.firebaseapp.com",
@@ -33,7 +34,7 @@ export default function App() {
 function AppNav() {
   const Stack = createStackNavigator();
 
-  var [isSignedIn, setSignedIn] = useState(false);
+  var [isSignedIn, setSignedIn] = useState(undefined);
   var [isEmailVerified, setEmailVerified] = useState(false);
   var [emailVerifyTimer, setTimer] = useState(null);
 
@@ -57,36 +58,38 @@ function AppNav() {
       console.log("error");
     });
   }
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        {isSignedIn ? (
-          isEmailVerified ? (
-            <>
-              <Stack.Screen name="Home" component={IndexPage} options={{
-                headerRight: () => (
-                  <Button
-                    onPress={() => signOutUser()}
-                    title="logout"
-                    color="#000"
-                  />
-                ),
-              }} />
-            </>) : (
-            <>
-              <Stack.Screen name="VerifyEmail" component={VerifyPage} options={{
-                headerRight: () => (
-                  <Button
-                    onPress={() => signOutUser()}
-                    title={isEmailVerified ? "yes" : "no"}
-                    color="#000"
-                  />
-                ),
-              }} />
-            </>
+  var isFirebaseLoaded = !(isSignedIn === undefined);
+  if (isFirebaseLoaded) {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          {isSignedIn ? (
+            isEmailVerified ? (
+              <>
+                <Stack.Screen name="Home" component={IndexPage} options={{
+                  headerRight: () => (
+                    <Button
+                      onPress={() => signOutUser()}
+                      title="logout"
+                      color="#000"
+                    />
+                  ),
+                }} />
+              </>) : (
+              <>
+                <Stack.Screen name="VerifyEmail" component={VerifyPage} options={{
+                  headerRight: () => (
+                    <Button
+                      onPress={() => signOutUser()}
+                      title={isEmailVerified ? "yes" : "no"}
+                      color="#000"
+                    />
+                  ),
+                }} />
+              </>
             )
-        ) : (
-          <>
+          ) : (
+            <>
               <Stack.Screen name="Login" component={LoginPage} options={{
                 ...TransitionPresets.SlideFromRightIOS
               }}
@@ -96,9 +99,16 @@ function AppNav() {
                 ...TransitionPresets.SlideFromRightIOS
               }}
               />
-          </>
-        )}
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
+            </>
+          )}
+        </Stack.Navigator>
+      </NavigationContainer>
+    );
+  } else {
+    return (
+      <View style={AppStyles.centered}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 }
