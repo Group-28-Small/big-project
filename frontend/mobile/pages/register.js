@@ -1,13 +1,15 @@
 
+import { getOrCreateUserDocument } from 'big-project-common';
 import React from 'react';
 import { View, StyleSheet, Button } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFirebaseApp } from 'reactfire';
+import { useFirebaseApp, useFirestore } from 'reactfire';
 import AppStyles from '../styles';
 
 export function RegisterPage() {
     const firebase = useFirebaseApp();
+    const db = useFirestore();
     const register = () => {
         console.log("registering");
         firebase.auth().createUserWithEmailAndPassword(email, password)
@@ -15,6 +17,7 @@ export function RegisterPage() {
                 // Signed in 
                 var user = userCredential.user;
                 console.log(user);
+                getOrCreateUserDocument(user.uid, db);
                 return user.sendEmailVerification();
                 // ...
             }).
