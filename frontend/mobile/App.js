@@ -8,8 +8,9 @@ import { IndexPage } from './pages/index';
 import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
 import { VerifyPage } from './pages/verify_email';
-import { setAuthHandler } from 'big-project-common';
+import { is_production, setAuthHandler } from 'big-project-common';
 import AppStyles from './styles';
+import { LogBox } from 'react-native';
 var firebaseConfig = {
   apiKey: "AIzaSyDhZOTZT7X9YC8krs7imlVPvFcFMs8RKhk",
   authDomain: "cop4331-group21-bigproject.firebaseapp.com",
@@ -19,6 +20,10 @@ var firebaseConfig = {
   appId: "1:889125348839:web:a6944e63b1dbeed4650942",
   measurementId: "G-WWX445V9VE"
 };
+
+if (!is_production()) {
+  LogBox.ignoreLogs(['Setting a timer']);
+}
 
 export default function App() {
   return (
