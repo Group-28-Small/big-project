@@ -1,9 +1,11 @@
 
 import React from 'react';
-import { LogBox, Text, View } from 'react-native';
+import { LogBox, StyleSheet, Text, View } from 'react-native';
 import { backend_address, createUserDocument, getOrCreateUserDocument } from 'big-project-common';
 import AppStyles from '../styles';
 import { useFirebaseApp, useFirestore, useFirestoreCollection, useFirestoreCollectionData, useUser } from 'reactfire';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import FloatingActionButton from '../components/FloatingActionButton';
 export const IndexPage = props => {
     const db = useFirestore();
     const { data: user } = useUser();
@@ -12,7 +14,9 @@ export const IndexPage = props => {
     const { data: tasks } = useFirestoreCollectionData(db.collection("tasks").where("user", "==", userDetailsRef), {
         idField: 'id'
     });
-
+    const addTask = () => {
+        db.collection("tasks").doc().set({ 'name': 'hfeuwiq', 'user': userDetailsRef })
+    }
 
     return (
         <View style={AppStyles.container}>
@@ -23,6 +27,15 @@ export const IndexPage = props => {
                     <Text key={item.id}>{item.name}</Text>
                 );
             }) : <Text>No data</Text>}
+            <FloatingActionButton style={styles.floatinBtn} onPress={() => addTask()} />
         </View>
     );
 }
+const styles = StyleSheet.create({
+    floatinBtn: {
+        position: 'absolute',
+        bottom: 16,
+        right: 16,
+        elevation: 5
+    }
+});

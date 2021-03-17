@@ -109,6 +109,7 @@ function AppNav() {
       </NavigationContainer>
     );
   } else {
+    console.log("loading...");
     return (
       <View style={AppStyles.centered}>
         <ActivityIndicator size="large" color="#0000ff" />
