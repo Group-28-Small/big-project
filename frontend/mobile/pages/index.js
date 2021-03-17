@@ -1,32 +1,37 @@
 
 import React from 'react';
-import { Text, View } from 'react-native';
-import { backend_address, createUserDocument } from 'big-project-common';
+import { LogBox, Text, View } from 'react-native';
+import { backend_address, createUserDocument, getOrCreateUserDocument } from 'big-project-common';
 import AppStyles from '../styles';
 import { useFirebaseApp, useFirestore, useUser } from 'reactfire';
 export const IndexPage = props => {
+    const [userTasks, setUserTasks] = React.useState(Array());
+
     console.log("heeeeerres index!");
     const firebase = useFirebaseApp();
     const db = useFirestore();
     const user = firebase.auth().currentUser;
-    var docRef = db.collection("users").doc(user.uid);
-    // console.log(user);
-    docRef.get().then((doc) => {
-        if (doc.exists) {
-            console.log("Document data:", doc.data());
-        } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-            createUserDocument(user.uid, db);
-
-        }
-    }).catch((error) => {
-        console.log("Error getting document:", error);
-    });
+    getOrCreateUserDocument(user.uid, db).then((userDoc) => {
+        // console.log(userDoc);
+        return db.collection('tasks').where('user', '==', userDoc.ref).get();
+    }).then((result) => {
+        console.log("got tasks");
+        var data = Array();
+        result.forEach(doc => {
+            data.push(doc.data());
+        });
+        setUserTasks(data);
+    })
     return (
         <View style={AppStyles.container}>
             <Text>Open up App.js to start working on your app!</Text>
             <Text>{backend_address("")}</Text>
+            {userTasks.map((item) => {
+                console.log(item.name);
+                return (
+                    <Text>{item.name}</Text>
+                );
+            })}
         </View>
     );
 }
