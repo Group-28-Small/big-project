@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, Button, Platform, ToastAndroid, View } from 'react-native';
+import { StyleSheet, SafeAreaView, Button, Platform, ToastAndroid, View, Alert } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { useAuth } from 'reactfire';
 import AppStyles from '../styles';
@@ -14,8 +14,7 @@ export const LoginPage = props => {
         if (Platform.OS === 'android') {
             ToastAndroid.show("Incorrect details", ToastAndroid.SHORT);
         } else if (Platform.OS === 'ios') {
-            // TODO: iOS
-            // Alert("Incorrect details");
+            Alert.alert("Incorrect details");
         }
 
     });
