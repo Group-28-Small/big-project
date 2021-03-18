@@ -5,6 +5,7 @@ import { View, StyleSheet, Button } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFirebaseApp, useFirestore } from 'reactfire';
+import 'firebase/firestore';
 import AppStyles from '../styles';
 
 export function RegisterPage() {
