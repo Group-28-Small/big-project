@@ -1,10 +1,9 @@
 
 import React from 'react';
-import { LogBox, StyleSheet, Text, View } from 'react-native';
-import { backend_address, createUserDocument, getOrCreateUserDocument } from 'big-project-common';
+import { StyleSheet, Text, View } from 'react-native';
+import { backend_address } from 'big-project-common';
 import AppStyles from '../styles';
-import { useFirebaseApp, useFirestore, useFirestoreCollection, useFirestoreCollectionData, useUser } from 'reactfire';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
 export const IndexPage = props => {
     const db = useFirestore();

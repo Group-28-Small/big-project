@@ -1,0 +1,16 @@
+{
+    "folders": [
+        {
+            "path": "backend"
+        },
+        {
+            "path": "frontend/big-project-web"
+        },
+        {
+            "path": "frontend/mobile"
+        },
+        {
+            "path": "big-project-common"
+        }
+    ]
+}
