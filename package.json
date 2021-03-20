@@ -8,5 +8,8 @@
   "cacheDirectories": [
     "frontend/big-project-web/node_modules",
     "backend/node_modules"
-  ]
+  ],
+  "dependencies": {
+    "react-native-paper": "^4.7.2"
+  }
 }

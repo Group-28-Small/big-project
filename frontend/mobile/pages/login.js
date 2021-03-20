@@ -1,22 +1,26 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, Button, Platform, ToastAndroid, View, Alert } from 'react-native';
+import { StyleSheet, SafeAreaView, Button, Platform, ToastAndroid, View } from 'react-native';
+import { Snackbar } from 'react-native-paper';
 import { TextInput } from 'react-native-gesture-handler';
 import { useAuth } from 'reactfire';
 import AppStyles from '../styles';
 
 export const LoginPage = props => {
+    const [visible, setVisible] = React.useState(false);
+    const onToggleSnackBar = () => setVisible(true);
+    const onDismissSnackBar = () => setVisible(false);
     const [email, onChangeEmail] = React.useState("");
     const [password, onChangePassword] = React.useState("");
     const auth = useAuth();
     const login = () => auth.signInWithEmailAndPassword(email, password).then(result => {
         console.log(result);
     }).catch(() => {
+        console.log("false");
         if (Platform.OS === 'android') {
             ToastAndroid.show("Incorrect details", ToastAndroid.SHORT);
         } else if (Platform.OS === 'ios') {
-            Alert.alert("Incorrect details");
+            onToggleSnackBar()
         }
-
     });
     const goToRegister = () => {
         props.navigation.navigate('Register');
@@ -49,6 +53,15 @@ export const LoginPage = props => {
             <View style={styles.registerButton}>
                 <Button title="Register" onPress={() => goToRegister()} />
             </View>
+            <View style={styles.container}>
+            <Snackbar style={styles.iosSnackbar}
+                    visible={visible}
+                    onDismiss={onDismissSnackBar}
+                    duration={Snackbar.DURATION_SHORT}
+                    theme={{ colors: { surface: 'black' }}}>
+                    Incorrect details
+            </Snackbar>
+     </View>
         </View >
     );
 };
@@ -67,5 +80,15 @@ const styles = StyleSheet.create({
     registerButton: {
         marginHorizontal: 10,
         marginVertical: 10,
+    },
+    container: {
+        flex: 1,
+        justifyContent: 'space-between',
+      },
+    iosSnackbar: {
+        backgroundColor: 'white',
+        width: 140,
+        marginHorizontal: 120,
+        marginVertical: 270,
     }
 });
