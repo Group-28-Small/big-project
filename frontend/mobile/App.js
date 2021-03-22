@@ -8,6 +8,7 @@ import { IndexPage } from './pages/index';
 import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
 import { VerifyPage } from './pages/verify_email';
+import { NewTaskPage} from './pages/new_task'
 import { is_production, setAuthHandler } from 'big-project-common';
 import AppStyles from './styles';
 import { LogBox } from 'react-native';
@@ -73,6 +74,16 @@ function AppNav() {
                 color="#000"
               />
             ),
+          }} />
+          <Stack.Screen name="New Task" component={NewTaskPage} options={{
+            headerRight: () => (
+              <Button
+                onPress={() => signOutUser()}
+                title="logout"
+                color="#000"
+              />
+            ),
+            ...TransitionPresets.SlideFromRightIOS
           }} />
         </>) : (
         <>

@@ -14,7 +14,8 @@ export const IndexPage = props => {
         idField: 'id'
     });
     const addTask = () => {
-        db.collection("tasks").doc().set({ 'name': 'hfeuwiq', 'user': userDetailsRef })
+        // db.collection("tasks").doc().set({ 'name': 'hfeuwiq', 'user': userDetailsRef })
+        props.navigation.navigate('New Task');
     }
 
     return (
@@ -23,7 +24,7 @@ export const IndexPage = props => {
             <Text>{backend_address("")}</Text>
             {tasks ? tasks.map((item) => {
                 return (
-                    <Text key={item.id}>{item.name}</Text>
+                    <Text key={item.id}>{item.name} {item.time} {item.percentage} {item.date}</Text>
                 );
             }) : <Text>No data</Text>}
             <FloatingActionButton style={styles.floatinBtn} onPress={() => addTask()} />
