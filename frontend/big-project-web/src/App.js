@@ -1,34 +1,18 @@
-import logo from './logo.svg';
+import { AppBar, Button, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
+import { firebaseConfig, setAuthHandler } from 'big-project-common'
+import { useEffect, useState } from 'react';
+import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
+import RouteController from './RouteController';
 import './App.css';
-import { frontend_address, backend_address } from 'big-project-common';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href={frontend_address("")}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          frontend link
-        </a>
-        <a
-          className="App-link"
-          href={backend_address("")}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          backend link
-        </a>
-      </header>
-    </div>
+    <FirebaseAppProvider firebaseConfig={firebaseConfig} suspense={false}>
+      <RouteController />
+    </FirebaseAppProvider>
   );
 }
+
 
 export default App;
