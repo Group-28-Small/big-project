@@ -41,7 +41,7 @@ export default function RouteController() {
       <Header isSignedIn={isSignedIn} />
       <BrowserRouter>
          <Switch>
-          <Route path="/about">
+          <Route path="/login">
             <About />
           </Route>
           <Route path="/users">
