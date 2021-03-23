@@ -1,0 +1,61 @@
+import { AppBar, Button, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
+import { firebaseConfig, setAuthHandler } from 'big-project-common';
+import { useEffect, useState } from 'react';
+import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
+import 'firebase/auth';
+import './App.css';
+import Header from './componets/Header';
+import { Route, Switch } from 'react-router';
+
+export default function RouteController() {
+  const classes = useStyles();
+  const firebase = useFirebaseApp();
+  const auth = useAuth();
+
+  var [isSignedIn, setSignedIn] = useState(undefined);
+  var [isEmailVerified, setEmailVerified] = useState(false);
+  var [emailVerifyTimer, setTimer] = useState(null);
+
+
+  useEffect(() => {
+    return () => {
+      // componentwillunmount in functional component.
+      // Anything in here is fired on component unmount.
+      if (emailVerifyTimer != null) {
+        clearInterval(emailVerifyTimer);
+      }
+    }
+  }, [])
+  setAuthHandler(firebase, setSignedIn, setEmailVerified, emailVerifyTimer, setTimer);
+  const signOutUser = () => {
+    auth.signOut().then(() => {
+      console.log("Signed out");
+    }).catch(() => {
+      console.log("error");
+    });
+  }
+  return (
+    <>
+      <Header isSignedIn={isSignedIn} />
+      <Route>
+        <Switch>
+
+        </Switch>
+      </Route>
+    </>
+  );
+}
+const useStyles = makeStyles((theme) => ({
+  root: {
+    flexGrow: 1,
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+  },
+}));
+
+
