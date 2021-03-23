@@ -38,8 +38,8 @@ export default function RouteController() {
   }
   return (
     <>
-      <Header isSignedIn={isSignedIn} />
       <BrowserRouter>
+        <Header isSignedIn={isSignedIn} />
          <Switch>
           <Route path="/login">
             <About />

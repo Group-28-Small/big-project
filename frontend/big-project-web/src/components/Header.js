@@ -17,7 +17,7 @@ export default function Header(props) {
         <Typography variant="h6" className={classes.title}>
           News
         </Typography>
-        {props.isSignedIn ? (<Link to='/login'><Button color='inherit'>Logout</Button></Link>) : (< Button color="inherit">Login</Button>)}
+        {props.isSignedIn ? (<Button color='inherit'>Logout</Button>) : (< Button component={Link} to={'/login'} color="inherit">Login</Button>)}
       </Toolbar>
     </AppBar >
   );
