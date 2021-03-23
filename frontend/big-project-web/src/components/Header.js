@@ -4,6 +4,7 @@ import { firebaseConfig, setAuthHandler } from 'big-project-common';
 import { useEffect, useState } from 'react';
 import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
 import 'firebase/auth';
+import { Link } from 'react-router-dom';
 
 export default function Header(props) {
   const classes = useStyles();
@@ -16,7 +17,7 @@ export default function Header(props) {
         <Typography variant="h6" className={classes.title}>
           News
         </Typography>
-        {props.isSignedIn ? (<Button color='inherit'>Logout</Button>) : (< Button color="inherit">Login</Button>)}
+        {props.isSignedIn ? (<Link to='/login'><Button color='inherit'>Logout</Button></Link>) : (< Button color="inherit">Login</Button>)}
       </Toolbar>
     </AppBar >
   );

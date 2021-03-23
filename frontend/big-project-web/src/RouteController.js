@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react';
 import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
 import 'firebase/auth';
 import './App.css';
-import Header from './componets/Header';
+import Header from './components/Header';
 import { Route, Router, Switch } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 
