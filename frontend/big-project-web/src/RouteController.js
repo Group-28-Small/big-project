@@ -6,7 +6,8 @@ import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
 import 'firebase/auth';
 import './App.css';
 import Header from './componets/Header';
-import { Route, Switch } from 'react-router';
+import { Route, Router, Switch } from 'react-router';
+import { BrowserRouter } from 'react-router-dom';
 
 export default function RouteController() {
   const classes = useStyles();
@@ -38,14 +39,35 @@ export default function RouteController() {
   return (
     <>
       <Header isSignedIn={isSignedIn} />
-      <Route>
-        <Switch>
-
+      <BrowserRouter>
+         <Switch>
+          <Route path="/about">
+            <About />
+          </Route>
+          <Route path="/users">
+            <Users />
+          </Route>
+          <Route path="/">
+            <Home />
+          </Route>
         </Switch>
-      </Route>
+      </BrowserRouter>
     </>
   );
 }
+function Home() {
+  return <h2>Home</h2>;
+}
+
+function About() {
+  return <h2>About</h2>;
+}
+
+function Users() {
+  return <h2>Users</h2>;
+}
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
