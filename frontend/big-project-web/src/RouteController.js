@@ -8,6 +8,7 @@ import './App.css';
 import Header from './components/Header';
 import { Route, Router, Switch } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
+import LoginPage from './components/Login';
 
 export default function RouteController() {
   const classes = useStyles();
@@ -42,7 +43,7 @@ export default function RouteController() {
         <Header isSignedIn={isSignedIn} />
          <Switch>
           <Route path="/login">
-            <About />
+            <LoginPage />
           </Route>
           <Route path="/users">
             <Users />
@@ -59,9 +60,6 @@ function Home() {
   return <h2>Home</h2>;
 }
 
-function About() {
-  return <h2>About</h2>;
-}
 
 function Users() {
   return <h2>Users</h2>;
