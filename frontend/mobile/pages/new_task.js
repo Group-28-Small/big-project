@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, Platform } from 'react-native';
 import { SliderPicker } from 'react-native-slider-picker';
-import DatePicker from 'react-native-datepicker'
+import DatePicker from 'react-native-datepicker';
 import { useFirestore, useUser } from 'reactfire';
 
 
@@ -15,15 +15,16 @@ export const NewTaskPage = props => {
     const [time, onChangeTime] = React.useState("");
     const [pct, onChangePct] = React.useState("0");
     const [date, onChangeDate] = React.useState(new Date());
-    const pickDate = date =>{
-        console.log(date);
-        onChangeDate(date);
+    const pickDate = pickedDate =>{
+        console.log(pickedDate);
+        onChangeDate(pickedDate);
     };
     const createTask = () => {
         console.log('Creating');
-        db.collection("tasks").doc().set({ 'name': name, 'user': userDetailsRef, 'time' : time, 'percentage' : pct, 'date' : date });
+        db.collection("tasks").doc().set({ 'name': name, 'user': userDetailsRef, 'time' : time, 'percentage' : pct, 'date' : date.toLocaleString()});
          props.navigation.navigate('Home');
     }
+
     return(
         <View>
             < SafeAreaView  >
@@ -37,7 +38,8 @@ export const NewTaskPage = props => {
                     style={styles.input}
                     onChangeText={onChangeTime}
                     value={time}
-                    placeholder="Expected Time"
+                    placeholder="Expected Time (in Hours)"
+                    keyboardType='numeric'
                 />
                 <Text style={styles.text}>Or</Text>
                 <Text style={styles.text}>Percentage: {pct}%</Text>
@@ -65,16 +67,18 @@ export const NewTaskPage = props => {
                 <Text style={styles.text}>Due Date:</Text>
                 <DatePicker
                     style={styles.datePicker}
+                    selected={date}
                     date={date}
                     mode="datetime"
                     placeholder="select date"
                     format="YYYY-MM-DD HH:MM"
                     is24Hour={false}
-                    androidMode='spinner'
+                    androidMode='default'
                     minDate= {new Date()}
                     maxDate="2099-12-31"
                     confirmBtnText="Confirm"
                     cancelBtnText="Cancel"
+                    useNativeDriver={true}
                     customStyles={{
                     dateIcon: {
                         position: 'absolute',
@@ -85,15 +89,13 @@ export const NewTaskPage = props => {
                     dateInput: {
                         marginLeft: 36,
                         left: 100,
-                        
                     },
                     datePicker: {
                         left: 75
                     }
                     }}
-                    onDateChange={pickDate}
+                    onDateChange={(newDate) => pickDate(newDate)}
                 />
-                
                 <View style={styles.submitButton}>
                     <Button title="Create" onPress={() => createTask()} color={"#4caf50"} />
                 </View>
@@ -115,5 +117,11 @@ const styles = StyleSheet.create({
     },
     text: {
         textAlign: 'center'
+    }, 
+    container: {
+        flex: 1,
+        backgroundColor: '#fff',
+        alignItems: 'center',
+        justifyContent: 'center',
     },
 });

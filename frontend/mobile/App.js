@@ -8,7 +8,8 @@ import { IndexPage } from './pages/index';
 import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
 import { VerifyPage } from './pages/verify_email';
-import { NewTaskPage} from './pages/new_task'
+import { NewTaskPage} from './pages/new_task';
+// import { EditTaskPage} from './pages/edit_task';
 import { is_production, setAuthHandler } from 'big-project-common';
 import AppStyles from './styles';
 import { LogBox } from 'react-native';
@@ -85,6 +86,16 @@ function AppNav() {
             ),
             ...TransitionPresets.SlideFromRightIOS
           }} />
+        {/* <Stack.Screen name="Edit Task" component={EditTaskPage} options={{
+            headerRight: () => (
+              <Button
+                onPress={() => signOutUser()}
+                title="logout"
+                color="#000"
+              />
+            ),
+            ...TransitionPresets.SlideFromRightIOS
+          }} /> */}
         </>) : (
         <>
           <Stack.Screen name="VerifyEmail" component={VerifyPage} options={{

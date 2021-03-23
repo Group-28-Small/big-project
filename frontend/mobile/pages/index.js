@@ -5,6 +5,7 @@ import { backend_address } from 'big-project-common';
 import AppStyles from '../styles';
 import { useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
+import { ScrollView } from 'react-native-gesture-handler';
 export const IndexPage = props => {
     const db = useFirestore();
     const { data: user } = useUser();
@@ -17,16 +18,20 @@ export const IndexPage = props => {
         // db.collection("tasks").doc().set({ 'name': 'hfeuwiq', 'user': userDetailsRef })
         props.navigation.navigate('New Task');
     }
+    // const editTask = propsition => {
+    //     props.navigation.navigate('Edit Task');
+    // }
 
     return (
         <View style={AppStyles.container}>
-            <Text>Open up App.js to start working on your app!</Text>
+            <ScrollView>
             <Text>{backend_address("")}</Text>
             {tasks ? tasks.map((item) => {
                 return (
-                    <Text key={item.id}>{item.name} {item.time} {item.percentage} {item.date}</Text>
+                    <Text style={styles.tasks} key={item.id}>{item.name}{' \t'}{item.time}{' hrs\t'}{item.percentage}{'% \t'}{item.date}</Text>
                 );
             }) : <Text>No data</Text>}
+            </ScrollView>
             <FloatingActionButton style={styles.floatinBtn} onPress={() => addTask()} />
         </View>
     );
@@ -37,5 +42,15 @@ const styles = StyleSheet.create({
         bottom: 16,
         right: 16,
         elevation: 5
+    },
+    tasks:{
+        borderRadius: 5,
+        borderWidth: 2,
+        borderColor: 'black',
+        color: 'black',
+        fontSize: 15,
+        textAlign: 'center',
+        margin: 2
+        
     }
 });

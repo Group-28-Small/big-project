@@ -10,6 +10,7 @@
     "backend/node_modules"
   ],
   "dependencies": {
+    "react-duration-picker": "^1.1.1",
     "react-native-paper": "^4.7.2"
   }
 }
