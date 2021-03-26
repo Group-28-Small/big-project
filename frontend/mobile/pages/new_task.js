@@ -3,6 +3,7 @@ import { StyleSheet, Text, View, SafeAreaView, TextInput, Button, Platform } fro
 import { SliderPicker } from 'react-native-slider-picker';
 import DatePicker from 'react-native-datepicker';
 import { useFirestore, useUser } from 'reactfire';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 export const NewTaskPage = props => {
@@ -15,15 +16,16 @@ export const NewTaskPage = props => {
     const [time, onChangeTime] = React.useState("");
     const [pct, onChangePct] = React.useState("0");
     const [date, onChangeDate] = React.useState(new Date());
-    const pickDate = pickedDate =>{
-        console.log(pickedDate);
-        onChangeDate(pickedDate);
-    };
     const createTask = () => {
         console.log('Creating');
         db.collection("tasks").doc().set({ 'name': name, 'user': userDetailsRef, 'time' : time, 'percentage' : pct, 'date' : date.toLocaleString()});
          props.navigation.navigate('Home');
     }
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate || date;
+        // setShow(Platform.OS === 'ios');
+        onChangeDate(currentDate);
+      };
 
     return(
         <View>
@@ -65,7 +67,7 @@ export const NewTaskPage = props => {
                     buttonStylesOverride
                 />
                 <Text style={styles.text}>Due Date:</Text>
-                <DatePicker
+                {/* <DatePicker
                     style={styles.datePicker}
                     selected={date}
                     date={date}
@@ -95,7 +97,15 @@ export const NewTaskPage = props => {
                     }
                     }}
                     onDateChange={(newDate) => pickDate(newDate)}
-                />
+                /> */}
+                <DateTimePicker
+                    testID="dateTimePicker"
+                    value={date}
+                    mode={"date"}
+                    // is24Hour={true}
+                    display="calendar"
+                    onChange={onChange}
+                    />
                 <View style={styles.submitButton}>
                     <Button title="Create" onPress={() => createTask()} color={"#4caf50"} />
                 </View>
