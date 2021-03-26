@@ -6,11 +6,12 @@ import AppStyles from '../styles';
 import { useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
 import { ScrollView } from 'react-native-gesture-handler';
+import LoadingScreen from './loadingscreen';
 export const IndexPage = props => {
     const db = useFirestore();
     const { data: user } = useUser();
-    const userDetailsRef = db.collection('users')
-        .doc(user.uid);
+    const userDetailsRef = user != null ? db.collection('users')
+        .doc(user.uid) : null;
     const { data: tasks } = useFirestoreCollectionData(db.collection("tasks").where("user", "==", userDetailsRef), {
         idField: 'id'
     });

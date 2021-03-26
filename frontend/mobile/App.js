@@ -13,6 +13,7 @@ import { NewTaskPage} from './pages/new_task';
 import { is_production, setAuthHandler } from 'big-project-common';
 import AppStyles from './styles';
 import { LogBox } from 'react-native';
+import LoadingScreen from './pages/loadingscreen';
 var firebaseConfig = {
   apiKey: "AIzaSyDhZOTZT7X9YC8krs7imlVPvFcFMs8RKhk",
   authDomain: "cop4331-group21-bigproject.firebaseapp.com",
@@ -133,9 +134,7 @@ function AppNav() {
   } else {
     console.log("loading...");
     return (
-      <View style={AppStyles.centered}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
+      <LoadingScreen />
     );
   }
 }
