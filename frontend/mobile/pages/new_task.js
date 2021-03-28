@@ -24,7 +24,8 @@ export const NewTaskPage = props => {
     const [dueDate, setDueDate] = React.useState(new Date(Date.now() + (1000 * 60 * 60 * 24))); // one day ahead
     const createTask = () => {
         console.log('Creating');
-        db.collection("tasks").doc().set({ 'name': taskTime, 'user': userDetailsRef, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate });
+        //TODO: Find way to convert dueDate from Object to String, won't print on homescreen otherwise
+        db.collection("tasks").doc().set({ 'name': taskTime, 'user': userDetailsRef, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate});
         props.navigation.navigate('Home');
     }
     const showDatePicker = () => {
@@ -82,6 +83,7 @@ export const NewTaskPage = props => {
                             maximumValue={100}
                             // this is only the initial value - setting this to pct will cause flickering
                             value={0}
+                            step={1}
                             onValueChange={onChangePct}
                             // TODO: IDK colors
                             minimumTrackTintColor="#6c7682"
@@ -113,13 +115,13 @@ export const NewTaskPage = props => {
                             </Text>
                         </TouchableRipple>
                         {timePickerVisible && (
-                        <DateTimePicker
+                        <DateTimePicker style={{flex: 1}}
                             testID="dateTimePicker"
-                                value={dueDate}
-                                mode={timePickerMode}
-                                is24Hour={true}
-                                display="default"
-                                onChange={onDueDateTimeChange}
+                            value={dueDate}
+                            mode={timePickerMode}
+                            is24Hour={true}
+                            display="default"
+                            onChange={onDueDateTimeChange}
                         />
                         )}
                     </View>
