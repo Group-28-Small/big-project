@@ -7,6 +7,8 @@ import { useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
 import { ScrollView } from 'react-native-gesture-handler';
 import LoadingScreen from './loadingscreen';
+import Moment from 'react-moment';
+
 export const IndexPage = props => {
     const db = useFirestore();
     const { data: user } = useUser();
@@ -29,7 +31,7 @@ export const IndexPage = props => {
             <Text>{backend_address("")}</Text>
             {tasks ? tasks.map((item) => {
                 return (
-                    <Text style={styles.tasks} key={item.id}>{item.name}{' \t'}{item.estimated_time}{' hrs\t'}{item.percentage}{'%\t'}{item.date}</Text>
+                    <Text style={styles.tasks} key={item.id}>{item.name}{' \t'}{item.estimated_time}{' hrs \t'}{item.percentage}{'% \t'}{<Moment format="DD MMMM YYYY" date={item.date} element={Text} />}</Text>
                 );
             }) : <Text>No data</Text>}
             </ScrollView>

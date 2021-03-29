@@ -39,6 +39,7 @@ export const NewTaskPage = props => {
     const onDueDateTimeChange = (event, selectedDate) => {
         const currentDate = selectedDate || dueDate;
         setTimePickerVisible(Platform.OS === 'ios');
+        console.log('Setting due date');
         setDueDate(currentDate);
   };
 
@@ -106,7 +107,7 @@ export const NewTaskPage = props => {
                     <View style={styles.row}>
                         <TouchableRipple onPress={showDatePicker}>
                             <Text style={styles.boxed}>
-                                <Moment format="dddd d MMMM YYYY" date={dueDate} element={Text} />
+                                <Moment format="dddd DD MMMM YYYY" date={dueDate} element={Text} />
                             </Text>
                         </TouchableRipple>
                         <TouchableRipple onPress={showTimePicker}>
