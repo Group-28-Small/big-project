@@ -6,7 +6,7 @@ import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
 import 'firebase/auth';
 import './App.css';
 import Header from './components/Header';
-import { Route, Router, Switch } from 'react-router';
+import { Route, Router, Switch, useHistory } from 'react-router';
 import { BrowserRouter } from 'react-router-dom';
 import LoginPage from './components/Login';
 
@@ -15,9 +15,11 @@ export default function RouteController() {
   const firebase = useFirebaseApp();
   const auth = useAuth();
 
-  var [isSignedIn, setSignedIn] = useState(undefined);
+  var [isSignedIn, setStateSignedIn] = useState(undefined);
   var [isEmailVerified, setEmailVerified] = useState(false);
   var [emailVerifyTimer, setTimer] = useState(null);
+
+  const history = useHistory();
 
 
   useEffect(() => {
@@ -29,17 +31,22 @@ export default function RouteController() {
       }
     }
   }, [])
-  setAuthHandler(firebase, setSignedIn, setEmailVerified, emailVerifyTimer, setTimer);
-  const signOutUser = () => {
-    auth.signOut().then(() => {
-      console.log("Signed out");
-    }).catch(() => {
-      console.log("error");
-    });
+  // override setSignedIn so we can set the necessary routing on sign-out
+  const setSignedIn = (signedIn) => {
+    if (signedIn && !isSignedIn) {
+      // transitioned from logged out to logged in
+      history.push('/');
+    }
+    if (!signedIn && isSignedIn) {
+      // logged in to logged out
+      history.push('/login');
+    }
+    setStateSignedIn(signedIn);
+
   }
+  setAuthHandler(firebase, setSignedIn, setEmailVerified, emailVerifyTimer, setTimer);
   return (
     <>
-      <BrowserRouter>
         <Header isSignedIn={isSignedIn} />
          <Switch>
           <Route path="/login">
@@ -51,8 +58,7 @@ export default function RouteController() {
           <Route path="/">
             <Home />
           </Route>
-        </Switch>
-      </BrowserRouter>
+      </Switch>
     </>
   );
 }
