@@ -5,11 +5,14 @@ import { useEffect, useState } from 'react';
 import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
 import RouteController from './RouteController';
 import './App.css';
+import { BrowserRouter } from 'react-router-dom';
 
 function App() {
   return (
     <FirebaseAppProvider firebaseConfig={firebaseConfig} suspense={false}>
-      <RouteController />
+      <BrowserRouter>
+        <RouteController />
+      </BrowserRouter>
     </FirebaseAppProvider>
   );
 }

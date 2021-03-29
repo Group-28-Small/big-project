@@ -1,10 +1,11 @@
 import { AppBar, Button, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import { firebaseConfig, setAuthHandler } from 'big-project-common';
+import { firebaseConfig, setAuthHandler, appName } from 'big-project-common';
 import { useEffect, useState } from 'react';
 import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
 import 'firebase/auth';
 import { Link } from 'react-router-dom';
+import LogInOutButton from './LogInOutButton';
 
 export default function Header(props) {
   const classes = useStyles();
@@ -15,9 +16,9 @@ export default function Header(props) {
           <MenuIcon />
         </IconButton>
         <Typography variant="h6" className={classes.title}>
-          News
+          {appName}
         </Typography>
-        {props.isSignedIn ? (<Button color='inherit'>Logout</Button>) : (< Button component={Link} to={'/login'} color="inherit">Login</Button>)}
+        <LogInOutButton isSignedIn={props.isSignedIn} />
       </Toolbar>
     </AppBar >
   );
