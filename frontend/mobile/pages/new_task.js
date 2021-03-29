@@ -7,12 +7,13 @@ import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import AppStyles from '../styles';
 import Moment from 'react-moment';
+import LoadingScreen from './loadingscreen';
 
 export const NewTaskPage = props => {
     const db = useFirestore();
     const { data: user } = useUser();
-    const userDetailsRef = db.collection('users')
-        .doc(user.uid);
+    const userDetailsRef = user != null ? db.collection('users')
+    .doc(user.uid) : null;
     const [timePickerVisible, setTimePickerVisible] = React.useState(false);
     const [timePickerMode, setTimePickerMode] = React.useState(false);
     const [hasDueDate, setHasDueDate] = React.useState(false);
