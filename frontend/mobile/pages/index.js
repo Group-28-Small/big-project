@@ -29,7 +29,7 @@ export const IndexPage = props => {
             <Text>{backend_address("")}</Text>
             {tasks ? tasks.map((item) => {
                 return (
-                    <Text style={styles.tasks} key={item.id}>{item.name}{' \t'}{item.time}{' hrs\t'}{item.percentage}{'% \t'}{item.date}</Text>
+                    <Text style={styles.tasks} key={item.id}>{item.name}{' \t'}{item.estimated_time}{' hrs\t'}{item.percentage}{'%\t'}{item.date}</Text>
                 );
             }) : <Text>No data</Text>}
             </ScrollView>
