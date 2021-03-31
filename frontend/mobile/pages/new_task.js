@@ -19,14 +19,14 @@ export const NewTaskPage = props => {
     const [hasDueDate, setHasDueDate] = React.useState(false);
     const [trackProgress, setTrackProgress] = React.useState(false);
 
-    const [taskTime, onChangeName] = React.useState("");
+    const [taskName, onChangeName] = React.useState("");
     const [estimatedTime, onChangeTime] = React.useState("");
     const [pct, onChangePct] = React.useState(0);
     const [dueDate, setDueDate] = React.useState(new Date(Date.now() + (1000 * 60 * 60 * 24))); // one day ahead
     const createTask = () => {
         console.log('Creating');
         //TODO: Find way to convert dueDate from Object to String, won't print on homescreen otherwise
-        db.collection("tasks").doc().set({ 'name': taskTime, 'user': userDetailsRef, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate});
+        db.collection("tasks").doc().set({ 'name': taskName, 'user': userDetailsRef, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate });
         props.navigation.navigate('Home');
     }
     const showDatePicker = () => {
@@ -52,7 +52,7 @@ export const NewTaskPage = props => {
             <TextInput
                 style={styles.input}
                 onChangeText={onChangeName}
-                value={taskTime}
+                value={taskName}
                 label="Task Name"
                 mode="outlined"
             />
