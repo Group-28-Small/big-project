@@ -12,6 +12,7 @@ import LoginPage from './components/Login';
 import VerifyEmailPage from './components/VerifyEmailPage';
 import RegisterPage from './components/Register';
 import MustBeSignedIn from './components/MustBeSignedIn';
+import TaskTree from './components/TaskTree';
 
 export default function RouteController() {
   const classes = useStyles();
@@ -113,7 +114,7 @@ export default function RouteController() {
   );
 }
 function Home() {
-  return <h2>Home</h2>;
+  return <TaskTree />;
 }
 
 const useStyles = makeStyles((theme) => ({
