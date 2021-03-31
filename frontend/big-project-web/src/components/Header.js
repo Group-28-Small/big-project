@@ -1,10 +1,8 @@
-import { AppBar, Button, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import { firebaseConfig, setAuthHandler, appName } from 'big-project-common';
-import { useEffect, useState } from 'react';
-import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
+import { appName } from 'big-project-common';
 import 'firebase/auth';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import LogInOutButton from './LogInOutButton';
 
 export default function Header(props) {

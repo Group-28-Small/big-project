@@ -14,6 +14,7 @@ import { is_production, setAuthHandler } from 'big-project-common';
 import AppStyles from './styles';
 import { LogBox } from 'react-native';
 import LoadingScreen from './pages/loadingscreen';
+import { useRef } from 'react';
 var firebaseConfig = {
   apiKey: "AIzaSyDhZOTZT7X9YC8krs7imlVPvFcFMs8RKhk",
   authDomain: "cop4331-group21-bigproject.firebaseapp.com",
@@ -41,21 +42,33 @@ function AppNav() {
 
   var [isSignedIn, setSignedIn] = useState(undefined);
   var [isEmailVerified, setEmailVerified] = useState(false);
-  var [emailVerifyTimer, setTimer] = useState(null);
+  var [_emailVerifyTimer, _setTimer] = useState(null);
+  // state management is hard
+  const emailVerifyTimer = useRef(_emailVerifyTimer);
+  const setTimer = (value) => {
+    if (value != _emailVerifyTimer) {
+      _setTimer(value);
+    }
+    emailVerifyTimer.current = value;
+  }
 
-
+  // override setSignedIn so we can set the necessary routing on sign-out
+  
   const auth = useAuth();
   const firebase = useFirebaseApp();
-  useEffect(() => {
-    return () => {
-      // componentwillunmount in functional component.
-      // Anything in here is fired on component unmount.
-      if (emailVerifyTimer != null) {
-        clearInterval(emailVerifyTimer);
-      }
-    }
-  }, [])
-  setAuthHandler(firebase, setSignedIn, setEmailVerified, emailVerifyTimer, setTimer);
+  useEffect(
+    () => {
+      const [tokenCB, authCB] = setAuthHandler(firebase, setSignedIn, setEmailVerified, emailVerifyTimer, setTimer);
+
+      // this will clear Timeout
+      // when component unmount like in willComponentUnmount
+      // and show will not change to true
+      return () => {
+        tokenCB();
+        authCB();
+      };
+    },
+  );
   const signOutUser = () => {
     auth.signOut().then(() => {
       console.log("Signed out");

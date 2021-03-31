@@ -14,8 +14,12 @@ export default function LogInOutButton(props) {
             <Button color='inherit' onClick={logout}>Logout</Button>
         )
     } else {
-
-        return (< Button component={Link} to={'/login'} color="inherit">Login</Button>);
+        return (
+            <div>
+                < Button component={Link} to={'/login'} color="inherit">Login</Button>
+                < Button component={Link} to={'/register'} color="inherit">Register</Button>
+            </div>
+        );
     }
 
 }
