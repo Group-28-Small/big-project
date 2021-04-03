@@ -15,22 +15,32 @@ export const EditTaskPage = props => {
     const { data: user } = useUser();
     const userDetailsRef = user != null ? db.collection('users')
     .doc(user.uid) : null;
+    //this might be useful? maybe?
+    // const { data: task } = useFirestoreCollectionData(db.collection("tasks").where("user", "==", userDetailsRef).where("id", "==", key), {
+    //     idField: 'id'
+    // });
     const [timePickerVisible, setTimePickerVisible] = React.useState(false);
     const [timePickerMode, setTimePickerMode] = React.useState(false);
     const [hasDueDate, setHasDueDate] = React.useState(false);
     const [trackProgress, setTrackProgress] = React.useState(false);
 
-    //TODO: Make these modifiable
-    const {name, time, percent, date} = props.route.params;
-
+    //TODO: Make Date modifiable
+    const {key, name, time, percent, date} = props.route.params;
     const [taskName, onChangeName] = React.useState(name);
     const [estimatedTime, onChangeTime] = React.useState(time);
-    const [pct, onChangePct] = React.useState(pct);
+    const [pct, onChangePct] = React.useState(percent);
     const [dueDate, setDueDate] = React.useState(date);
-    const createTask = () => {
+    const updateTask = () => {
         console.log(percent);
-        //TODO: Find way to convert dueDate from Object to String, won't print on homescreen otherwise
+        console.log(pct);
+        console.log(name);
+        console.log(taskName);
+        console.log(time);
+        console.log(estimatedTime);
+        console.log(key);
+        //TODO: Find way to get correct database entry and update it
         // db.collection("tasks").doc().set({ 'name': taskName, 'user': userDetailsRef, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate});
+        // db.collection("tasks").doc().set({ 'idField': key, 'name': taskName, 'user': userDetailsRef, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate});
         // props.navigation.navigate('Home');
     }
     const showDatePicker = () => {
@@ -56,14 +66,14 @@ export const EditTaskPage = props => {
             <TextInput
                 style={styles.input}
                 onChangeText={onChangeName}
-                value={name}
+                value={taskName}
                 label="Task Name"
                 mode="outlined"
             />
             <TextInput
                 style={styles.input}
                 onChangeText={onChangeTime}
-                value={time}
+                value={estimatedTime}
                 label="Expected Time (Optional)"
                 placeholder="hours:minutes"
                 keyboardType='numeric'
@@ -80,14 +90,14 @@ export const EditTaskPage = props => {
             {trackProgress && (
                 <>
                     <View style={[styles.row, AppStyles.centered]}>
-                        <Text style={styles.text}>Percentage: {percent}%</Text>
+                        <Text style={styles.text}>Percentage: {pct}%</Text>
                     </View>
                     <View style={styles.row}>
                         <Slider
                             style={{ width: '100%', height: 40 }}
                             minimumValue={0}
                             maximumValue={100}
-                            value={percent}
+                            value={pct}
                             step={1}
                             onValueChange={onChangePct}
                             // TODO: IDK colors
@@ -111,18 +121,18 @@ export const EditTaskPage = props => {
                     <View style={styles.row}>
                         <TouchableRipple onPress={showDatePicker}>
                             <Text style={styles.boxed}>
-                                <Moment format="dddd DD MMMM YYYY" date={date} element={Text} />
+                                <Moment format="dddd DD MMMM YYYY" date={dueDate} element={Text} />
                             </Text>
                         </TouchableRipple>
                         <TouchableRipple onPress={showTimePicker}>
                             <Text style={styles.boxed}>
-                                <Moment format="hh:mm:ss" date={date} element={Text} />
+                                <Moment format="hh:mm:ss" date={dueDate} element={Text} />
                             </Text>
                         </TouchableRipple>
                         {timePickerVisible && (
                         <DateTimePicker style={{flex: 1}}
                             testID="dateTimePicker"
-                            value={date}
+                            value={dueDate}
                             mode={timePickerMode}
                             is24Hour={true}
                             display="default"
@@ -138,7 +148,7 @@ export const EditTaskPage = props => {
             }
 
             <View style={styles.submitButton}>
-                <Button title="Create" onPress={() => createTask()} color={"#4caf50"} />
+                <Button title="Update" onPress={() => updateTask()} color={"#4caf50"} />
             </View>
         </ScrollView >
     );
