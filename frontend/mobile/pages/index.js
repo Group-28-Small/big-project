@@ -21,8 +21,8 @@ export const IndexPage = props => {
         props.navigation.navigate('New Task');
     }
     const editTask = item => {
-        // console.log(item);
-        props.navigation.navigate('Edit Task', {name: item.name, time: item.estimated_time, percent: item.percentage, date: item.date});
+        console.log(item);
+        props.navigation.navigate('Edit Task', {key: item.id, name: item.name, time: item.estimated_time, percent: item.percentage, date: item.date});
     }
 
     return (
