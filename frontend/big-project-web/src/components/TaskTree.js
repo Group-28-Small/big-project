@@ -41,7 +41,7 @@ function TaskTreeItem(props) {
         <TreeItem
             label={
                 <div >
-                    {task.name}{' \t'}{task.estimated_time}{' hrs \t'}{task.percentage}{'% \t'}<Moment format="DD MMMM YYYY" date={task.date} />
+                    {task.name}{' \t'}{task.estimated_time}{' hrs \t'}{task.percentage}{'% \t'}<Moment format="DD MMMM YYYY" date={task.due_date} unix />
                 </div>
             }
             {...other}

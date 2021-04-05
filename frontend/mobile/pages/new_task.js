@@ -26,7 +26,7 @@ export const NewTaskPage = props => {
     const createTask = () => {
         console.log('Creating');
         //TODO: Find way to convert dueDate from Object to String, won't print on homescreen otherwise
-        db.collection("tasks").doc().set({ 'name': taskName, 'user': userDetailsRef, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate });
+        db.collection("tasks").doc().set({ 'name': taskName, 'user': userDetailsRef, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000 });
         props.navigation.navigate('Home');
     }
     const showDatePicker = () => {
