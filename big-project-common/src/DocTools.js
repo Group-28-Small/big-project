@@ -29,4 +29,10 @@ function getOrCreateUserDocument(uid, db) {
     //     // console.log(doc);
     // });
 }
-module.exports = { createUserDocument, getOrCreateUserDocument }
+
+function setUserActiveTask(user, userDetails, item, db) {
+    // console.log(userDetails);
+    const itemRef = db.doc('tasks/' + item);
+    userDetails.update({ 'active_task': itemRef })
+}
+module.exports = { createUserDocument, getOrCreateUserDocument, setUserActiveTask }

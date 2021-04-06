@@ -42,7 +42,7 @@ export const NewTaskPage = props => {
             data.due_date = (Date.now() / 1000) + (60 * 60 * 24);
             setTimeSet(true);
         }
-        return <TaskEditor item={data} item_id={itemRef.id} user={user} userRef={userDetailsRef} {...props} />
+        return <TaskEditor item={data} item_id={itemRef.id} user={user} userRef={userDetailsRef} {...props} isNewTask={true} />
     } else {
         return <LoadingScreen />
     }
@@ -166,14 +166,14 @@ const TaskEditor = props => {
                         )}
                     </View>
                     <View style={styles.row}>
-                        <Text>Time left: <Moment element={Text} date={dueDate} fromNow /></Text>
+                        <Text>Due: <Moment element={Text} date={dueDate} fromNow /></Text>
                     </View>
                 </>
             )
             }
 
             <View style={styles.submitButton}>
-                <Button title="Update" onPress={() => updateTask()} color={"#4caf50"} />
+                <Button title={props.isNewTask ? "Add Task" : "Update"} onPress={() => updateTask()} color={"#4caf50"} />
             </View>
         </ScrollView >
     );
