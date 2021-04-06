@@ -6,12 +6,17 @@ import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
 import RouteController from './RouteController';
 import './App.css';
 import { BrowserRouter } from 'react-router-dom';
+import moment from 'moment';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+import MomentUtils from '@date-io/moment';
 
 function App() {
   return (
     <FirebaseAppProvider firebaseConfig={firebaseConfig} suspense={false}>
       <BrowserRouter>
-        <RouteController />
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <RouteController />
+        </MuiPickersUtilsProvider>
       </BrowserRouter>
     </FirebaseAppProvider>
   );

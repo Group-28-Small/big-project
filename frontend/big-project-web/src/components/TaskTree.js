@@ -5,6 +5,7 @@ import TreeView from '@material-ui/lab/TreeView';
 import TreeItem from '@material-ui/lab/TreeItem';
 import { Fab, makeStyles } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
+import { useHistory } from 'react-router';
 
 export default function TaskTree(props) {
     const db = useFirestore();
@@ -15,8 +16,15 @@ export default function TaskTree(props) {
         idField: 'id'
     });
     const styles = useStyles();
+    const history = useHistory();
     if (!tasks) {
-        return <div>Loading...</div>
+        return <div>Getting  tasks...</div>
+    }
+    const createNewTask = () => {
+        history.push("/newtask/")
+    }
+    const editTask = (task) => {
+        history.push("/edittask/" + task.id)
     }
     return (
         <div>
@@ -24,11 +32,11 @@ export default function TaskTree(props) {
             <TreeView>
                 {tasks.map((item) => {
                     return (
-                        <TaskTreeItem nodeId={item.id} key={item.id} task={item} />
+                        <TaskTreeItem nodeId={item.id} key={item.id} task={item} onClick={() => editTask(item)} />
                     );
                 })}
             </TreeView>
-            <Fab color="primary" aria-label="add" className={styles.fab}>
+            <Fab color="primary" aria-label="add" className={styles.fab} onClick={createNewTask}>
                 <AddIcon />
             </Fab>
         </div>

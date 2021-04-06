@@ -1,7 +1,8 @@
 import { Box, Button, Container, makeStyles, TextField } from '@material-ui/core';
 import { React, useState } from 'react';
-import { useAuth } from 'reactfire';
+import { useAuth, useUser } from 'reactfire';
 import 'firebase/auth';
+import { useHistory } from 'react-router';
 export default function LoginPage(props) {
     const styles = useStyles();
 
@@ -9,11 +10,18 @@ export default function LoginPage(props) {
     const [password, setPassword] = useState("");
 
     const auth = useAuth();
+    const history = useHistory();
     const logInUser = () => {
         console.log(email);
         auth.signInWithEmailAndPassword(email, password).then(result => {
             console.log(result);
+            history.push("/");
         });
+    }
+    const { data: user } = useUser();
+    if (user != null) {
+        console.log("redirecting to home");
+        history.push("/");
     }
     return (
         <Container maxWidth="md">

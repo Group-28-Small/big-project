@@ -30,7 +30,7 @@ export const EditTaskPage = props => {
 
 export const NewTaskPage = props => {
     const db = useFirestore();
-    const [itemRef, setItemRef] = useState(db.collection('tasks').doc());
+    const [itemRef,] = useState(db.collection('tasks').doc());
     const { data: user } = useUser();
     const item = useFirestoreDocData(itemRef, { initialData: null });
     const userDetailsRef = user != null ? db.collection('users')

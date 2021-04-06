@@ -1,5 +1,4 @@
 import { AppBar, Button, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
 import { firebaseConfig, setAuthHandler } from 'big-project-common';
 import { useEffect, useRef, useState } from 'react';
 import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
@@ -11,8 +10,8 @@ import { BrowserRouter } from 'react-router-dom';
 import LoginPage from './components/Login';
 import VerifyEmailPage from './components/VerifyEmailPage';
 import RegisterPage from './components/Register';
-import MustBeSignedIn from './components/MustBeSignedIn';
 import TaskTree from './components/TaskTree';
+import { NewTaskPage, EditTaskPage } from './components/NewTask';
 
 export default function RouteController() {
   const classes = useStyles();
@@ -33,7 +32,7 @@ export default function RouteController() {
   const history = useHistory();
 
   // override setSignedIn so we can set the necessary routing on sign-out
-  
+
   useEffect(
     () => {
       const [tokenCB, authCB] = setAuthHandler(firebase, setSignedIn, setEmailVerified, emailVerifyTimer, setTimer);
@@ -72,10 +71,17 @@ export default function RouteController() {
     return (
       <>
         {isEmailVerified ? (
-        <Route path="/">
-            {/* <MustBeSignedIn isEmailVerified={isEmailVerified} isSignedIn={isSignedIn} /> */}
-          <Home />
-        </Route>
+          <>
+            <Route path="/newtask">
+              <NewTaskPage />
+            </Route>
+            <Route path="/edittask/:taskid" component={EditTaskPage} />
+            <Route exact path="/">
+              {/* <MustBeSignedIn isEmailVerified={isEmailVerified} isSignedIn={isSignedIn} /> */}
+              <Home />
+            </Route>
+            <Redirect to='/' />
+          </>
         ) : (
           <>
             <Redirect exact from="/" to="/verifyemail" />
@@ -105,7 +111,7 @@ export default function RouteController() {
         ) : (
           <>
             {/* TODO: some kind of loading indicator */}
-            <div>loading...</div>
+              <div>Loading Libraries...</div>
           </>
         )
         }
