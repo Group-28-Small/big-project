@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button, Platform } from 'react-native';
-import { useFirestore, useUser } from 'reactfire';
+import { useFirestore, useFirestoreDoc, useFirestoreDocData, useUser } from 'reactfire';
 import { Paragraph, TextInput, TouchableRipple } from 'react-native-paper';
 import { ScrollView, Switch } from 'react-native-gesture-handler';
 import Slider from '@react-native-community/slider';
@@ -8,40 +8,65 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import AppStyles from '../styles';
 import Moment from 'react-moment';
 import LoadingScreen from './loadingscreen';
-
+import { firestore } from 'firebase';
 
 export const EditTaskPage = props => {
     const db = useFirestore();
+    const item_id = props.route.params.item_id;
+    console.log(item_id)
+    const itemRef = db.collection('tasks').doc(item_id);
+    const item = useFirestoreDocData(itemRef, { initialData: null });
     const { data: user } = useUser();
     const userDetailsRef = user != null ? db.collection('users')
-    .doc(user.uid) : null;
+        .doc(user.uid) : null;
+    if (item.data && user) {
+        const data = item.data
+        return <TaskEditor item={data} item_id={itemRef.id} user={user} userRef={userDetailsRef}  {...props} />
+    } else {
+        return <LoadingScreen />
+    }
+
+}
+
+export const NewTaskPage = props => {
+    const db = useFirestore();
+    const [itemRef, setItemRef] = useState(db.collection('tasks').doc());
+    const { data: user } = useUser();
+    const item = useFirestoreDocData(itemRef, { initialData: null });
+    const userDetailsRef = user != null ? db.collection('users')
+        .doc(user.uid) : null;
+    const [timeSet, setTimeSet] = useState(false);
+    if (item.data && user) {
+        const data = item.data
+        if (!timeSet) {
+            data.due_date = (Date.now() / 1000) + (60 * 60 * 24);
+            setTimeSet(true);
+        }
+        return <TaskEditor item={data} item_id={itemRef.id} user={user} userRef={userDetailsRef} {...props} />
+    } else {
+        return <LoadingScreen />
+    }
+
+}
+const TaskEditor = props => {
+    const db = useFirestore();
+    const { item, user, item_id, userRef } = props;
     //this might be useful? maybe?
     // const { data: task } = useFirestoreCollectionData(db.collection("tasks").where("user", "==", userDetailsRef).where("id", "==", key), {
     //     idField: 'id'
     // });
     const [timePickerVisible, setTimePickerVisible] = React.useState(false);
-    const [timePickerMode, setTimePickerMode] = React.useState(false);
+    const [timePickerMode, setTimePickerMode] = React.useState("date");
     const [hasDueDate, setHasDueDate] = React.useState(false);
     const [trackProgress, setTrackProgress] = React.useState(false);
 
-    //TODO: Make Date modifiable
-    const {key, name, time, percent, date} = props.route.params;
-    const [taskName, onChangeName] = React.useState(name);
-    const [estimatedTime, onChangeTime] = React.useState(time);
-    const [pct, onChangePct] = React.useState(percent);
-    const [dueDate, setDueDate] = React.useState(date);
+    const [taskName, onChangeName] = React.useState(item.name ?? '');
+    const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
+    const [pct, onChangePct] = React.useState(item.percentage ?? 0);
+    const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
     const updateTask = () => {
-        console.log(percent);
-        console.log(pct);
-        console.log(name);
-        console.log(taskName);
-        console.log(time);
-        console.log(estimatedTime);
-        console.log(key);
-        //TODO: Find way to get correct database entry and update it
-        // db.collection("tasks").doc().set({ 'name': taskName, 'user': userDetailsRef, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate});
-        // db.collection("tasks").doc().set({ 'idField': key, 'name': taskName, 'user': userDetailsRef, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate});
-        // props.navigation.navigate('Home');
+        db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'user': userRef }, { merge: true });
+        props.navigation.navigate('Home');
     }
     const showDatePicker = () => {
         setTimePickerMode("date");
@@ -56,7 +81,7 @@ export const EditTaskPage = props => {
         setTimePickerVisible(Platform.OS === 'ios');
         console.log('Setting due date');
         setDueDate(currentDate);
-  };
+    };
 
     return (
         <ScrollView
@@ -130,14 +155,14 @@ export const EditTaskPage = props => {
                             </Text>
                         </TouchableRipple>
                         {timePickerVisible && (
-                        <DateTimePicker style={{flex: 1}}
-                            testID="dateTimePicker"
-                            value={dueDate}
-                            mode={timePickerMode}
-                            is24Hour={true}
-                            display="default"
-                            onChange={onDueDateTimeChange}
-                        />
+                            <DateTimePicker style={{ flex: 1 }}
+                                testID="dateTimePicker"
+                                value={dueDate}
+                                mode={timePickerMode}
+                                is24Hour={true}
+                                display="default"
+                                onChange={onDueDateTimeChange}
+                            />
                         )}
                     </View>
                     <View style={styles.row}>
