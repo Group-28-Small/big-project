@@ -9,6 +9,10 @@ const AppStyles = StyleSheet.create({
     centered: {
         flex: 1,
         justifyContent: 'center'
+    },
+    bottom: {
+        justifyContent: 'flex-end',
+        margin: 8
     }
 });
 export default AppStyles;

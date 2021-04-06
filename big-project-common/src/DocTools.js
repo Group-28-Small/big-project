@@ -1,5 +1,3 @@
-const { is_production } = require("./DevTools");
-
 function createUserDocument(uid, db) {
     var doc = db.collection("users").doc(uid);
     doc.set({
@@ -30,9 +28,31 @@ function getOrCreateUserDocument(uid, db) {
     // });
 }
 
-function setUserActiveTask(user, userDetails, item, db) {
+function setUserActiveTask(userDetails, item, db) {
     // console.log(userDetails);
-    const itemRef = db.doc('tasks/' + item);
+    const itemRef = db.collection('tasks').doc(item);
     userDetails.update({ 'active_task': itemRef })
 }
-module.exports = { createUserDocument, getOrCreateUserDocument, setUserActiveTask }
+
+function userStopTask(db, active_task, userDetails, userDetailsRef) {
+    console.log("stopping task");
+    var batch = db.batch();
+    var taskSession = db.collection("sessions").doc();
+    // use batching for this - we don't want part of this succeeding and part failing
+    batch.set(taskSession, { task: "tasks/" + active_task.id, start: userDetails.task_start_time, end: Date.now() / 1000 });
+    batch.update(userDetailsRef, { is_tracking_task: false });
+
+    return batch.commit();
+}
+
+function userStartTask(db, userDetailsRef) {
+    console.log("starting task");
+    // start recording a new task
+    var batch = db.batch();
+    batch.update(userDetailsRef, { is_tracking_task: true, task_start_time: Date.now() / 1000 });
+
+    batch.commit();
+}
+
+const MIN_TASK_TIME = 10; // seconds
+module.exports = { createUserDocument, getOrCreateUserDocument, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME }

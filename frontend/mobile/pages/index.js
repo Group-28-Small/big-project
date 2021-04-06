@@ -1,14 +1,14 @@
 
 import React from 'react';
 import { StyleSheet, Text, Vibration, View } from 'react-native';
-import { backend_address, setUserActiveTask } from 'big-project-common';
+import { backend_address, setUserActiveTask, userStopTask, userStartTask } from 'big-project-common';
 import AppStyles from '../styles';
 import { useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import LoadingScreen from './loadingscreen';
 import * as Haptics from 'expo-haptics';
 import Moment from 'react-moment';
+import { TrackTaskButton } from '../components/TrackTaskButton'
 
 export const IndexPage = props => {
     const db = useFirestore();
@@ -19,19 +19,25 @@ export const IndexPage = props => {
     const { data: tasks } = useFirestoreCollectionData(db.collection("tasks").where("user", "==", userDetailsRef), {
         idField: 'id'
     });
-    const activeTask = user.active_task ?? null;
     const addTask = () => {
         props.navigation.navigate('New Task');
     }
     const editTask = item => {
-        // console.log(item);
         Haptics.selectionAsync();
         props.navigation.navigate('Edit Task', { item_id: item.id });
     }
+    const active_task = userDetails.active_task;
+    const setActiveTask = item_id => {
+        setUserActiveTask(userDetailsRef, item_id, db);
+    }
+    const trackTaskPressed = () => {
+        // TODO: handle return values from these
+        if (userDetails.is_tracking_task) {
+            userStopTask(db, active_task, userDetails, userDetailsRef);
+        } else {
+            userStartTask(db, userDetailsRef);
 
-    const setActiveTask = item => {
-        console.log("setting active to " + item)
-        setUserActiveTask(user, userDetailsRef, item, db);
+        }
     }
 
     return (
@@ -39,7 +45,7 @@ export const IndexPage = props => {
             <ScrollView>
                 {tasks ? tasks.map((item) => {
                     var taskClasses = [styles.tasks,]
-                    if (item.id === userDetails.active_task.id) {
+                    if (item.id === active_task?.id) {
                         taskClasses.push(styles.activeTask)
                     }
                 return (
@@ -49,6 +55,7 @@ export const IndexPage = props => {
                 );
             }) : <Text>No data</Text>}
             </ScrollView>
+            <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!userDetails.is_tracking_task} />
             <FloatingActionButton style={styles.floatinBtn} onPress={() => addTask()} />
         </View>
     );
@@ -76,3 +83,4 @@ const styles = StyleSheet.create({
     }
 
 });
+
