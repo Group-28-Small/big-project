@@ -28,7 +28,7 @@ export const IndexPage = props => {
     }
     const active_task = userDetails?.active_task;
     const setActiveTask = item_id => {
-        setUserActiveTask(userDetailsRef, item_id, db);
+        setUserActiveTask(userDetails, userDetailsRef, item_id, db, active_task);
     }
     const trackTaskPressed = () => {
         // TODO: handle return values from these

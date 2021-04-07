@@ -28,10 +28,21 @@ function getOrCreateUserDocument(uid, db) {
     // });
 }
 
-function setUserActiveTask(userDetails, item, db) {
-    // console.log(userDetails);
+function setUserActiveTask(userDetails, userDetailsRef, item, db, active_task) {
+    const user_was_tracking = userDetails?.is_tracking_task;
+    var need_set_task = false;
+    console.log("switching active task");
+    if (user_was_tracking) {
+        if (!(userDetails.last_task_set_time) || (Date.now() / 1000) - userDetails.last_task_set_time > MIN_TASK_TIME) {
+            userStopTask(db, active_task, userDetails, userDetailsRef);
+            need_set_task = true;
+        }
+    }
     const itemRef = db.collection('tasks').doc(item);
-    userDetails.update({ 'active_task': itemRef })
+    userDetailsRef.update({ 'active_task': itemRef, 'last_task_set_time': Date.now() / 1000 })
+    if (need_set_task) {
+        userStartTask(db, userDetailsRef);
+    }
 }
 
 function userStopTask(db, active_task, userDetails, userDetailsRef) {
