@@ -54,7 +54,8 @@ export const IndexPage = props => {
                 );
             }) : <Text>No data</Text>}
             </ScrollView>
-            <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} />
+            <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} />
+
             <FloatingActionButton style={styles.floatinBtn} onPress={() => addTask()} />
         </View>
     );

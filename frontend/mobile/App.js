@@ -14,6 +14,7 @@ import AppStyles from './styles';
 import { LogBox } from 'react-native';
 import LoadingScreen from './pages/loadingscreen';
 import { useRef } from 'react';
+import { SessionHistoryPage } from './pages/session_history';
 var firebaseConfig = {
   apiKey: "AIzaSyDhZOTZT7X9YC8krs7imlVPvFcFMs8RKhk",
   authDomain: "cop4331-group21-bigproject.firebaseapp.com",
@@ -97,6 +98,9 @@ function AppNav() {
                 color="#000"
               />
             ),
+            ...TransitionPresets.SlideFromRightIOS
+          }} />
+          <Stack.Screen name="Previous Entries" component={SessionHistoryPage} options={{
             ...TransitionPresets.SlideFromRightIOS
           }} />
         <Stack.Screen name="Edit Task" component={EditTaskPage} options={{
