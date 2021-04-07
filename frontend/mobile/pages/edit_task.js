@@ -68,9 +68,6 @@ const TaskEditor = props => {
         db.collection("tasks").doc(item_id).delete();
         props.navigation.navigate('Home');
     }
-    const doNothing = () => {
-        console.log('This is a really dumb way of getting this to work but it works so');
-    }
     const showDatePicker = () => {
         setTimePickerMode("date");
         setTimePickerVisible(true);
@@ -122,6 +119,7 @@ const TaskEditor = props => {
                     </View>
                     <View style={styles.row}>
                         <Slider
+                        //TODO: This is bugging out again on slide
                             style={{ width: '100%', height: 40 }}
                             minimumValue={0}
                             maximumValue={100}
@@ -179,7 +177,7 @@ const TaskEditor = props => {
                 <Button title={props.isNewTask ? "Add Task" : "Update"} onPress={() => updateTask()} color={"#4caf50"} />
             </View>
             <View style={styles.submitButton}>
-                <Button title={props.isNewTask ? "" : "Delete"} onPress={props.isNewTask ? () => doNothing() : () => deleteTask()} color={"red"} />
+                {props.isNewTask ? <Text></Text> : <Button title={"Delete"} onPress={() => deleteTask()} color={"red"} />}
             </View>
         </ScrollView >
     );
