@@ -51,10 +51,6 @@ export const NewTaskPage = props => {
 const TaskEditor = props => {
     const db = useFirestore();
     const { item, user, item_id, userRef } = props;
-    //this might be useful? maybe?
-    // const { data: task } = useFirestoreCollectionData(db.collection("tasks").where("user", "==", userDetailsRef).where("id", "==", key), {
-    //     idField: 'id'
-    // });
     const [timePickerVisible, setTimePickerVisible] = React.useState(false);
     const [timePickerMode, setTimePickerMode] = React.useState("date");
     const [hasDueDate, setHasDueDate] = React.useState(false);
@@ -67,6 +63,13 @@ const TaskEditor = props => {
     const updateTask = () => {
         db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'user': userRef }, { merge: true });
         props.navigation.navigate('Home');
+    }
+    const deleteTask = () => {
+        db.collection("tasks").doc(item_id).delete();
+        props.navigation.navigate('Home');
+    }
+    const doNothing = () => {
+        console.log('This is a really dumb way of getting this to work but it works so');
     }
     const showDatePicker = () => {
         setTimePickerMode("date");
@@ -174,6 +177,9 @@ const TaskEditor = props => {
 
             <View style={styles.submitButton}>
                 <Button title={props.isNewTask ? "Add Task" : "Update"} onPress={() => updateTask()} color={"#4caf50"} />
+            </View>
+            <View style={styles.submitButton}>
+                <Button title={props.isNewTask ? "" : "Delete"} onPress={props.isNewTask ? () => doNothing() : () => deleteTask()} color={"red"} />
             </View>
         </ScrollView >
     );
