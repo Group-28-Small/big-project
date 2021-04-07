@@ -39,7 +39,6 @@ export const IndexPage = props => {
 
         }
     }
-
     return (
         <View style={AppStyles.container}>
             <ScrollView>
@@ -55,7 +54,7 @@ export const IndexPage = props => {
                 );
             }) : <Text>No data</Text>}
             </ScrollView>
-            <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!userDetails.is_tracking_task} />
+            <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} />
             <FloatingActionButton style={styles.floatinBtn} onPress={() => addTask()} />
         </View>
     );

@@ -40,7 +40,7 @@ function userStopTask(db, active_task, userDetails, userDetailsRef) {
     // use batching for this - we don't want part of this succeeding and part failing
     if ((Date.now() / 1000) - userDetails.task_start_time > MIN_TASK_TIME) {
         var taskSession = db.collection("sessions").doc();
-        batch.set(taskSession, { task: "tasks/" + active_task.id, start: userDetails.task_start_time, end: Date.now() / 1000 });
+        batch.set(taskSession, { task: "tasks/" + active_task.id, start: userDetails.task_start_time, end: Date.now() / 1000, user: userDetailsRef });
     } else {
         console.log("task too short...");
     }
