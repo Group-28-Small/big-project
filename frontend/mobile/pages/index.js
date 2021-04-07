@@ -26,13 +26,13 @@ export const IndexPage = props => {
         Haptics.selectionAsync();
         props.navigation.navigate('Edit Task', { item_id: item.id });
     }
-    const active_task = userDetails.active_task;
+    const active_task = userDetails?.active_task;
     const setActiveTask = item_id => {
         setUserActiveTask(userDetailsRef, item_id, db);
     }
     const trackTaskPressed = () => {
         // TODO: handle return values from these
-        if (userDetails.is_tracking_task) {
+        if (userDetails?.is_tracking_task) {
             userStopTask(db, active_task, userDetails, userDetailsRef);
         } else {
             userStartTask(db, userDetailsRef);

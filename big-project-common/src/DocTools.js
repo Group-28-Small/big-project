@@ -37,9 +37,13 @@ function setUserActiveTask(userDetails, item, db) {
 function userStopTask(db, active_task, userDetails, userDetailsRef) {
     console.log("stopping task");
     var batch = db.batch();
-    var taskSession = db.collection("sessions").doc();
     // use batching for this - we don't want part of this succeeding and part failing
-    batch.set(taskSession, { task: "tasks/" + active_task.id, start: userDetails.task_start_time, end: Date.now() / 1000 });
+    if ((Date.now() / 1000) - userDetails.task_start_time > MIN_TASK_TIME) {
+        var taskSession = db.collection("sessions").doc();
+        batch.set(taskSession, { task: "tasks/" + active_task.id, start: userDetails.task_start_time, end: Date.now() / 1000 });
+    } else {
+        console.log("task too short...");
+    }
     batch.update(userDetailsRef, { is_tracking_task: false });
 
     return batch.commit();
@@ -49,10 +53,10 @@ function userStartTask(db, userDetailsRef) {
     console.log("starting task");
     // start recording a new task
     var batch = db.batch();
-    batch.update(userDetailsRef, { is_tracking_task: true, task_start_time: Date.now() / 1000 });
+    batch.set(userDetailsRef, { is_tracking_task: true, task_start_time: Date.now() / 1000 }, { merge: true });
 
     batch.commit();
 }
 
-const MIN_TASK_TIME = 10; // seconds
+const MIN_TASK_TIME = 5; // seconds
 module.exports = { createUserDocument, getOrCreateUserDocument, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME }
