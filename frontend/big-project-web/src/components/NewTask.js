@@ -3,13 +3,13 @@ import React, { useState } from 'react';
 import { DateTimePicker } from "@material-ui/pickers";
 import Moment from 'react-moment';
 import { useFirestore, useFirestoreDocData, useUser } from 'reactfire';
+import { Link } from 'react-router-dom';
 
 
 export const EditTaskPage = props => {
     const db = useFirestore();
     const item_id = props.match.params.taskid;
     console.log(item_id);
-    console.log(item_id)
     const itemRef = db.collection('tasks').doc(item_id);
     const item = useFirestoreDocData(itemRef, { initialData: null });
     const { data: user } = useUser();
@@ -17,7 +17,7 @@ export const EditTaskPage = props => {
         .doc(user.uid) : null;
     if (item.data && user) {
         const data = item.data
-        return <TaskEditor item={data} item_id={itemRef.id} user={user} userRef={userDetailsRef}  {...props} />
+        return <TaskEditor item={data} item_id={itemRef.id} user={user} userRef={userDetailsRef} editing={true} {...props} />
     } else {
         // TODO
         return (
@@ -40,7 +40,7 @@ export const NewTaskPage = props => {
             data.due_date = (Date.now() / 1000) + (60 * 60 * 24);
             setTimeSet(true);
         }
-        return <TaskEditor item={data} item_id={itemRef.id} user={user} userRef={userDetailsRef} {...props} />
+        return <TaskEditor item={data} item_id={itemRef.id} user={user} userRef={userDetailsRef} editing={false} {...props} />
     } else {
         // TODO
         return (
@@ -61,7 +61,7 @@ function TaskEditor(props) {
         setSwitchesState({ ...switchesState, [event.target.name]: event.target.checked });
     };
 
-    const { item, item_id, userRef } = props;
+    const { item, item_id, userRef, editing } = props;
     const [taskName, onChangeName] = React.useState(item.name ?? '');
     const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
     const [pct, onChangePct] = React.useState(item.percentage ?? 0);
@@ -69,7 +69,6 @@ function TaskEditor(props) {
     const updateTask = () => {
         console.log(dueDate);
         db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'user': userRef }, { merge: true });
-        // TODO: navigate to home
     }
     return (
         <Container maxWidth="md">
@@ -105,7 +104,10 @@ function TaskEditor(props) {
                             </div>
                         </>
                     )}
-                    <Button variant='contained' color='primary' onClick={updateTask}>Add Task</Button>
+                    {editing ?
+                        <Button variant='contained' color='primary' onClick={updateTask} component={Link} to={'/'}>Update Task</Button>
+                    :
+                        <Button variant='contained' color='primary' onClick={updateTask} component={Link} to={'/'}>Add Task</Button>}
                 </Box>
             </form>
         </Container>
