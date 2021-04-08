@@ -176,9 +176,11 @@ const TaskEditor = props => {
             <View style={styles.submitButton}>
                 <Button title={props.isNewTask ? "Add Task" : "Update"} onPress={() => updateTask()} color={"#4caf50"} />
             </View>
-            <View style={styles.submitButton}>
-                {props.isNewTask ? <Text></Text> : <Button title={"Delete"} onPress={() => deleteTask()} color={"red"} />}
-            </View>
+            {!props.isNewTask &&
+                <View style={styles.submitButton}>
+                    <Button title={"Delete"} onPress={() => deleteTask()} color={"red"} />
+                </View>
+            }
         </ScrollView >
     );
 }
