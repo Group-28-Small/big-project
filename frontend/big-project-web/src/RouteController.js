@@ -1,7 +1,7 @@
 import { AppBar, Button, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import { firebaseConfig, setAuthHandler } from 'big-project-common';
 import { useEffect, useRef, useState } from 'react';
-import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
+import { FirebaseAppProvider, preloadFirestore, useAuth, useFirebaseApp } from 'reactfire';
 import 'firebase/auth';
 import './App.css';
 import Header from './components/Header';
@@ -33,6 +33,10 @@ export default function RouteController() {
 
   useEffect(
     () => {
+      preloadFirestore({
+        firebaseApp: firebase,
+        setup: firestore => firestore().enablePersistence()
+      });
       const [tokenCB, authCB] = setAuthHandler(firebase, setSignedIn, setEmailVerified, emailVerifyTimer, setTimer);
 
       // this will clear Timeout
