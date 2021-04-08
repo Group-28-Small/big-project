@@ -143,13 +143,13 @@ const useStyles = makeStyles((theme) => ({
             margin: theme.spacing(1),
             width: '25ch',
         },
-        width: '50%'
+        width: '70%'
     },
     wide: {
         justifyContent: 'space-between'
     },
     left: {
         marginRight: 'auto',
-        marginLeft: '25%'
+        marginLeft: '15%'
     }
 }));
