@@ -70,6 +70,9 @@ function TaskEditor(props) {
         console.log(dueDate);
         db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'user': userRef }, { merge: true });
     }
+    const deleteTask = () => {
+        db.collection("tasks").doc(item_id).delete();
+    }
     return (
         <Container maxWidth="md">
             <form>
@@ -105,7 +108,10 @@ function TaskEditor(props) {
                         </>
                     )}
                     {editing ?
-                        <Button variant='contained' color='primary' onClick={updateTask} component={Link} to={'/'}>Update Task</Button>
+                        <>
+                            <Button variant='contained' color='primary' onClick={updateTask} component={Link} to={'/'}>Update Task</Button>
+                            <Button variant='contained' color='secondary' onClick={deleteTask} component={Link} to={'/'}>Delete Task</Button>
+                        </>
                     :
                         <Button variant='contained' color='primary' onClick={updateTask} component={Link} to={'/'}>Add Task</Button>}
                 </Box>
