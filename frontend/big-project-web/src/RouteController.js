@@ -12,11 +12,10 @@ import VerifyEmailPage from './components/VerifyEmailPage';
 import RegisterPage from './components/Register';
 import TaskTree from './components/TaskTree';
 import { NewTaskPage, EditTaskPage } from './components/NewTask';
+import { Home } from './components/HomePage';
 
 export default function RouteController() {
-  const classes = useStyles();
   const firebase = useFirebaseApp();
-  const auth = useAuth();
 
   var [isSignedIn, setSignedIn] = useState(undefined);
   var [isEmailVerified, setEmailVerified] = useState(false);
@@ -24,12 +23,11 @@ export default function RouteController() {
   // state management is hard
   const emailVerifyTimer = useRef(_emailVerifyTimer);
   const setTimer = (value) => {
-    if (value != _emailVerifyTimer) {
+    if (value !== _emailVerifyTimer) {
       _setTimer(value);
     }
     emailVerifyTimer.current = value;
   }
-  const history = useHistory();
 
   // override setSignedIn so we can set the necessary routing on sign-out
 
@@ -72,11 +70,7 @@ export default function RouteController() {
       <>
         {isEmailVerified ? (
           <>
-            <Route path="/newtask">
-              <NewTaskPage />
-            </Route>
-            <Route path="/edittask/:taskid" component={EditTaskPage} />
-            <Route exact path="/">
+            <Route path="/">
               {/* <MustBeSignedIn isEmailVerified={isEmailVerified} isSignedIn={isSignedIn} /> */}
               <Home />
             </Route>
@@ -118,9 +112,6 @@ export default function RouteController() {
       </Switch >
     </>
   );
-}
-function Home() {
-  return <TaskTree />;
 }
 
 const useStyles = makeStyles((theme) => ({

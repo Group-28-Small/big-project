@@ -3,7 +3,7 @@ import { useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
 import Moment from 'react-moment';
 import TreeView from '@material-ui/lab/TreeView';
 import TreeItem from '@material-ui/lab/TreeItem';
-import { Fab, makeStyles } from '@material-ui/core';
+import { Container, Fab, makeStyles, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useHistory } from 'react-router';
 
@@ -27,28 +27,28 @@ export default function TaskTree(props) {
         history.push("/edittask/" + task.id)
     }
     return (
-        <div>
-            <div>tasks</div>
+        <Container>
+            <Typography variant='h4' >Tasks</Typography>
             <TreeView>
-                {tasks.map((item) => {
+                {tasks.map((item, idx) => {
                     return (
-                        <TaskTreeItem nodeId={item.id} key={item.id} task={item} onClick={() => editTask(item)} />
+                        <TaskTreeItem nodeId={item.id} key={item.id} task={item} onClick={() => editTask(item)} isLast={idx === tasks.length - 1} />
                     );
                 })}
             </TreeView>
             <Fab color="primary" aria-label="add" className={styles.fab} onClick={createNewTask}>
                 <AddIcon />
             </Fab>
-        </div>
+        </Container>
     );
 }
 function TaskTreeItem(props) {
-    const { task, ...other } = props;
-
+    const { task, isLast, ...other } = props;
+    const styles = useStyles();
     return (
-        <TreeItem
+        <TreeItem 
             label={
-                <div >
+                <div className={`${styles.treeItem} ${isLast && styles.lastItem}`} >
                     {task.name}{' \t'}{task.estimated_time}{' hrs \t'}{task.percentage}{'% \t'}<Moment format="DD MMMM YYYY" date={task.due_date} unix />
                 </div>
             }
@@ -62,4 +62,15 @@ const useStyles = makeStyles((theme) => ({
         bottom: theme.spacing(2),
         right: theme.spacing(2),
     },
+    // purely experimental - delete if you want
+    treeItem: {
+        borderWidth: 1,
+        borderBottomWidth: 0,
+        borderColor: 'black',
+        borderStyle: 'solid',
+        padding: 4
+    },
+    lastItem: {
+        borderBottomWidth: 1,
+    }
 }));

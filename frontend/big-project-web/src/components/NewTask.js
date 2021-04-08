@@ -1,5 +1,5 @@
 import { Box, Button, Container, FormControlLabel, makeStyles, Slider, Switch, TextField } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DateTimePicker } from "@material-ui/pickers";
 import Moment from 'react-moment';
 import { useFirestore, useFirestoreDocData, useUser } from 'reactfire';
@@ -73,6 +73,16 @@ function TaskEditor(props) {
     const deleteTask = () => {
         db.collection("tasks").doc(item_id).delete();
     }
+    useEffect(() => {
+        console.log("item id or state changed");
+        // TODO: find a way to do this without code duplication
+        // I think if we bundle this state into a single state, we can unpack it directly from the item... ? I'll look at it later. ~Kurt
+        onChangeName(item.name ?? '');
+        onChangeTime(item.estimated_time ?? '');
+        onChangePct(item.percentage ?? 0);
+        setDueDate(new Date(item.due_date * 1000))
+    }, [item_id, item]);
+
     return (
         <Container maxWidth="md">
             <form>
@@ -86,7 +96,7 @@ function TaskEditor(props) {
                     {switchesState.trackProgress && (
                         <div className={styles.field}>
                             Percentage: {pct}%
-                            <Slider value={pct} onChange={(_, v) => { onChangePct(v) }} value={pct} aria-labelledby="continuous-slider" />
+                            <Slider value={pct} onChange={(_, v) => { onChangePct(v) }} aria-labelledby="continuous-slider" />
                         </div>
                     )}
                     <FormControlLabel
