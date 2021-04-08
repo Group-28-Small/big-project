@@ -1,4 +1,4 @@
-import { Box, Button, Container, FormControlLabel, makeStyles, Slider, Switch, TextField } from '@material-ui/core';
+import { Box, Button, Container, FormControlLabel, makeStyles, Slider, Switch, TextField, Typography } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import { DateTimePicker } from "@material-ui/pickers";
 import Moment from 'react-moment';
@@ -87,6 +87,13 @@ function TaskEditor(props) {
         <Container maxWidth="md">
             <form>
                 <Box display='flex' justifyContent='center' alignContent='center' alignItems='center' flexDirection='column'>
+                    <div className={styles.left}>
+                        {editing ?
+                            <Typography variant='h4' >Edit Task</Typography>
+                            :
+                            <Typography variant='h4' >New Task</Typography>
+                        }
+                    </div>
                     <TextField className={styles.field} required id='taskName' label='Task Name' type='text' variant='outlined' autoFocus={true} onChange={(e) => onChangeName(e.target.value)} value={taskName}></TextField>
                     <TextField className={styles.field} id='taskEstimated' type="text" label='Estimated Time' variant='outlined' onChange={(e) => onChangeTime(e.target.value)} value={estimatedTime}></TextField>
                     <FormControlLabel
@@ -140,5 +147,9 @@ const useStyles = makeStyles((theme) => ({
     },
     wide: {
         justifyContent: 'space-between'
+    },
+    left: {
+        marginRight: 'auto',
+        marginLeft: '25%'
     }
 }));

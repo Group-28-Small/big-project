@@ -9,7 +9,7 @@ export function Home() {
             container
             direction="row"
         >
-            <Grid item>
+            <Grid item xs={3}>
                 <TaskTree />
             </Grid>
             <Grid item xs={8}>
