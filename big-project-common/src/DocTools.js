@@ -39,7 +39,7 @@ function setUserActiveTask(userDetails, userDetailsRef, item, db, active_task) {
         }
     }
     const itemRef = db.collection('tasks').doc(item);
-    userDetailsRef.update({ 'active_task': itemRef, 'last_task_set_time': Date.now() / 1000 })
+    userDetailsRef.set({ 'active_task': itemRef, 'last_task_set_time': Date.now() / 1000 }, { merge: true })
     if (need_set_task) {
         userStartTask(db, userDetailsRef);
     }
@@ -55,7 +55,7 @@ function userStopTask(db, active_task, userDetails, userDetailsRef) {
     } else {
         console.log("task too short...");
     }
-    batch.update(userDetailsRef, { is_tracking_task: false });
+    batch.set(userDetailsRef, { is_tracking_task: false }, { merge: true });
 
     return batch.commit();
 }
