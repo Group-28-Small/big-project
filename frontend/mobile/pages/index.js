@@ -3,19 +3,26 @@ import React from 'react';
 import { StyleSheet, Text, Vibration, View } from 'react-native';
 import { backend_address, setUserActiveTask, userStopTask, userStartTask } from 'big-project-common';
 import AppStyles from '../styles';
-import { useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser } from 'reactfire';
+import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
 import Moment from 'react-moment';
 import { TrackTaskButton } from '../components/TrackTaskButton'
-
-export const IndexPage = props => {
+import LoadingScreen from './loadingscreen';
+export const IndexPage = (props) => {
+    return (
+        <AuthCheck fallback={<LoadingScreen />}>
+            <MainTaskList {...props} />
+        </AuthCheck>
+    )
+}
+const MainTaskList = props => {
     const db = useFirestore();
     const { data: user } = useUser();
     const userDetailsRef = user != null ? db.collection('users')
         .doc(user.uid) : null;
-    const { data: userDetails } = useFirestoreDocData(userDetailsRef);
+    const { data: userDetails } = useFirestoreDocData(userDetailsRef ?? db.collection('users').doc());
     const { data: tasks } = useFirestoreCollectionData(db.collection("tasks").where("user", "==", userDetailsRef), {
         idField: 'id'
     });

@@ -101,6 +101,13 @@ function AppNav() {
             ...TransitionPresets.SlideFromRightIOS
           }} />
           <Stack.Screen name="Previous Entries" component={SessionHistoryPage} options={{
+            headerRight: () => (
+              <Button
+                onPress={() => signOutUser()}
+                title="logout"
+                color="#000"
+              />
+            ),
             ...TransitionPresets.SlideFromRightIOS
           }} />
         <Stack.Screen name="Edit Task" component={EditTaskPage} options={{
