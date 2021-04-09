@@ -48,7 +48,7 @@ export const IndexPage = props => {
                         taskClasses.push(styles.activeTask)
                     }
                 return (
-                    <TouchableOpacity key={item.id} onLongPress={() => editTask(item)} onPress={() => setActiveTask(item.id)}>
+                    <TouchableOpacity key={item.id} onLongPress={() => editTask(item)} onPress={userDetails?.is_tracking_task ? () => console.log('shouldn\'t be able to switch here') : () => setActiveTask(item.id)}>
                         <Text style={taskClasses} >{item.name}{' \t'}{item.estimated_time}{' hrs \t'}{item.percentage}{'% \t'}{<Moment format="DD MMMM YYYY" date={item.due_date} element={Text} unix />}</Text>
                     </TouchableOpacity>
                 );
