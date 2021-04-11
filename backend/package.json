@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nodemon ./bin/www",
-    "start": "node ./bin/www"
+    "start": "REACT_APP_GIT_SHA=`git rev-parse --short HEAD` node ./bin/www"
   },
   "dependencies": {
     "big-project-common": "file:../big-project-common",

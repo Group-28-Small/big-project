@@ -48,7 +48,7 @@ export const SessionHistoryPage = props => {
                     }
                     var duration = moment.duration((item.end - item.start) * 1000).humanize();
                     return (
-                        <TouchableOpacity key={item.id} onLongPress={() => editTask(item)} onPress={() => setActiveTask(item.id)}>
+                        <TouchableOpacity key={item.id}>
                             <Text style={taskClasses} >{task.name}{' \tAt: '}<Moment unix element={Text} date={item.start} format="MMMM DD" />{" for: " + duration}</Text>
                         </TouchableOpacity>
                     );

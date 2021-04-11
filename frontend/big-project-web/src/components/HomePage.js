@@ -9,10 +9,10 @@ export function Home() {
             container
             direction="row"
         >
-            <Grid item>
+            <Grid item xs={5}>
                 <TaskTree />
             </Grid>
-            <Grid item xs={8}>
+            <Grid item xs={7}>
                 <Route path="/newtask">
                     <NewTaskPage />
                 </Route>

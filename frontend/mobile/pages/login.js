@@ -54,14 +54,14 @@ export const LoginPage = props => {
                 <Button title="Register" onPress={() => goToRegister()} />
             </View>
             <View style={styles.container}>
-            <Snackbar style={styles.iosSnackbar}
+                <Snackbar style={styles.iosSnackbar}
                     visible={visible}
                     onDismiss={onDismissSnackBar}
                     duration={Snackbar.DURATION_SHORT}
                     theme={{ colors: { surface: 'black' }}}>
                     Incorrect details
-            </Snackbar>
-     </View>
+                </Snackbar>
+            </View>
         </View >
     );
 };
