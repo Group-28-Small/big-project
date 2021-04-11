@@ -9,12 +9,13 @@ import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
 import { VerifyPage } from './pages/verify_email';
 import { EditTaskPage, NewTaskPage } from './pages/edit_task';
-import { is_production, setAuthHandler } from 'big-project-common';
+import { is_production, setAuthHandler, AppTheme } from 'big-project-common';
 import AppStyles from './styles';
 import { LogBox } from 'react-native';
 import LoadingScreen from './pages/loadingscreen';
 import { useRef } from 'react';
 import { SessionHistoryPage } from './pages/session_history';
+
 var firebaseConfig = {
   apiKey: "AIzaSyDhZOTZT7X9YC8krs7imlVPvFcFMs8RKhk",
   authDomain: "cop4331-group21-bigproject.firebaseapp.com",

@@ -88,7 +88,7 @@ function TaskEditor(props) {
             <form>
                 <Box display='flex' justifyContent='center' alignContent='center' alignItems='center' flexDirection='column'>
                     <TextField className={styles.field} required id='taskName' label='Task Name' type='text' variant='outlined' autoFocus={true} onChange={(e) => onChangeName(e.target.value)} value={taskName}></TextField>
-                    <TextField className={styles.field} id='taskEstimated' type="text" label='Estimated Time' variant='outlined' onChange={(e) => onChangeTime(e.target.value)} value={estimatedTime}></TextField>
+                    <TextField className={styles.field} id='taskEstimated' type="text" label='Estimated Time (Hours)' variant='outlined' onChange={(e) => onChangeTime(e.target.value)} value={estimatedTime}></TextField>
                     <FormControlLabel
                         control={<Switch checked={switchesState.trackProgress} name="trackProgress" onChange={handleSwitchChange} />}
                         label="Track Progress" labelPlacement="start" className={`${styles.field} ${styles.wide}`}
