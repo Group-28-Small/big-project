@@ -41,7 +41,7 @@ const MainTaskList = props => {
     const active_task = userDetails?.active_task;
     const setActiveTask = item_id => {
         setUserActiveTask(userDetails, userDetailsRef, item_id, db, active_task);
-        if((Date.now() / 1000) - userDetails.last_task_set_time < MIN_TASK_TIME){
+        if((Date.now() / 1000) - userDetails.last_task_set_time < MIN_TASK_TIME && userDetails?.is_tracking_task){
             if (Platform.OS === 'android') {
                 ToastAndroid.show("Tracked task has been switched", ToastAndroid.SHORT);
             } else if (Platform.OS === 'ios') {
