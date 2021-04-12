@@ -162,6 +162,7 @@ const TaskEditor = props => {
                                 mode={timePickerMode}
                                 is24Hour={true}
                                 display="default"
+                                minimumDate={new Date()}
                                 onChange={onDueDateTimeChange}
                             />
                         )}
