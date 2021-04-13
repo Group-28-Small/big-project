@@ -1,4 +1,4 @@
-import moment from 'moment';
+const moment = require("moment")
 
 function createUserDocument(uid, db) {
     var doc = db.collection("users").doc(uid);
