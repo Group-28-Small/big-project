@@ -1,3 +1,5 @@
+import moment from 'moment';
+
 function createUserDocument(uid, db) {
     var doc = db.collection("users").doc(uid);
     doc.set({
@@ -52,6 +54,7 @@ function userStopTask(db, active_task, userDetails, userDetailsRef) {
     if ((Date.now() / 1000) - userDetails.task_start_time > MIN_TASK_TIME) {
         var taskSession = db.collection("sessions").doc();
         batch.set(taskSession, { task: "tasks/" + active_task.id, start: userDetails.task_start_time, end: Date.now() / 1000, user: userDetailsRef });
+        db.collection("tasks").doc(active_task.id).set({ 'duration': moment.duration((((Date.now() / 1000) - userDetails.task_start_time) * 1000)).humanize() }, { merge: true });
     } else {
         console.log("task too short... " + (Date.now() / 1000) - userDetails.task_start_time);
     }

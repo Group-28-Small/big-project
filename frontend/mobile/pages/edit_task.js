@@ -62,7 +62,7 @@ const TaskEditor = props => {
     const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
     const [notes, onChangeNotes] = React.useState(item.note ?? '');
     const updateTask = () => {
-        db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'user': userRef }, { merge: true });
+        db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'duration': item.duration ?? 0, 'user': userRef }, { merge: true });
         props.navigation.navigate('Home');
     }
     const deleteTask = () => {
