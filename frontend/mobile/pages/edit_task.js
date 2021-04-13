@@ -124,6 +124,7 @@ const TaskEditor = props => {
                 value={notes}
                 label="Notes..."
                 mode="outlined"
+                multiline
             />
             <TouchableRipple onPress={() => setTrackProgress(!trackProgress)}>
                 <View style={styles.row}>
