@@ -52,16 +52,17 @@ export const NewTaskPage = props => {
 function TaskEditor(props) {
     const db = useFirestore();
     const styles = useStyles();
-    const [switchesState, setSwitchesState] = React.useState({
-        hasDueDate: true,
-        trackProgress: false,
-    });
 
     const handleSwitchChange = (event) => {
         setSwitchesState({ ...switchesState, [event.target.name]: event.target.checked });
     };
 
     const { item, item_id, userRef, editing } = props;
+
+    const [switchesState, setSwitchesState] = React.useState({
+        hasDueDate: item.has_due_date ?? false,
+        trackProgress: item.track_progress ?? false,
+    });
     const [taskName, onChangeName] = React.useState(item.name ?? '');
     const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
     const [pct, onChangePct] = React.useState(item.percentage ?? 0);

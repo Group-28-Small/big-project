@@ -57,8 +57,8 @@ const TaskEditor = props => {
     const { item, user, item_id, userRef } = props;
     const [timePickerVisible, setTimePickerVisible] = React.useState(false);
     const [timePickerMode, setTimePickerMode] = React.useState("date");
-    const [hasDueDate, setHasDueDate] = React.useState(false);
-    const [trackProgress, setTrackProgress] = React.useState(false);
+    const [hasDueDate, setHasDueDate] = React.useState(item.has_due_date ?? false);
+    const [trackProgress, setTrackProgress] = React.useState(item.track_progress ?? false);
 
     const [taskName, onChangeName] = React.useState(item.name ?? '');
     const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
@@ -68,7 +68,10 @@ const TaskEditor = props => {
     const updateTask = () => {
         console.log("taskName: " + taskName);
         if(taskName != ''){
-        db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'duration': item.duration ?? 0, 'user': userRef }, { merge: true });
+            db.collection("tasks").doc(item_id).set({
+                'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'duration': item.duration ?? 0,
+                'track_progress': trackProgress, 'has_due_date': hasDueDate, 'user': userRef
+            }, { merge: true });
         props.navigation.navigate('Home');
         } else{
             if (Platform.OS === 'android') {
