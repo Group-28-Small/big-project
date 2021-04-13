@@ -66,9 +66,10 @@ function TaskEditor(props) {
     const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
     const [pct, onChangePct] = React.useState(item.percentage ?? 0);
     const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
+    const [notes, onChangeNotes] = React.useState(item.note ?? '');
     const updateTask = () => {
         console.log(dueDate);
-        db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'user': userRef }, { merge: true });
+        db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'user': userRef }, { merge: true });
     }
     const deleteTask = () => {
         db.collection("tasks").doc(item_id).delete();
@@ -96,6 +97,7 @@ function TaskEditor(props) {
                     </div>
                     <TextField className={styles.field} required id='taskName' label='Task Name' type='text' variant='outlined' autoFocus={true} onChange={(e) => onChangeName(e.target.value)} value={taskName}></TextField>
                     <TextField className={styles.field} id='taskEstimated' type="text" label='Estimated Time (Hours)' variant='outlined' onChange={(e) => onChangeTime(e.target.value)} value={estimatedTime}></TextField>
+                    <TextField className={styles.field} id='notes' type="text" label='Notes...' variant='outlined' onChange={(e) => onChangeNotes(e.target.value)} value={notes} multiline></TextField>
                     <FormControlLabel
                         control={<Switch checked={switchesState.trackProgress} name="trackProgress" onChange={handleSwitchChange} />}
                         label="Track Progress" labelPlacement="start" className={`${styles.field} ${styles.wide}`}
