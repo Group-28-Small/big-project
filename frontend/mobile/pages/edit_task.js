@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Button, Platform } from 'react-native';
+import { StyleSheet, Text, View, Button, Platform, ToastAndroid } from 'react-native';
 import { useFirestore, useFirestoreDoc, useFirestoreDocData, useUser } from 'reactfire';
 import { Paragraph, TextInput, TouchableRipple } from 'react-native-paper';
 import { ScrollView, Switch } from 'react-native-gesture-handler';
@@ -9,6 +9,7 @@ import AppStyles from '../styles';
 import Moment from 'react-moment';
 import LoadingScreen from './loadingscreen';
 import { firestore } from 'firebase';
+import { Snackbar } from 'react-native-paper';
 
 export const EditTaskPage = props => {
     const db = useFirestore();
@@ -49,6 +50,9 @@ export const NewTaskPage = props => {
 
 }
 const TaskEditor = props => {
+    const [visible, setVisible] = React.useState(false);
+    const onToggleSnackBar = () => setVisible(true);
+    const onDismissSnackBar = () => setVisible(false);
     const db = useFirestore();
     const { item, user, item_id, userRef } = props;
     const [timePickerVisible, setTimePickerVisible] = React.useState(false);
@@ -62,8 +66,17 @@ const TaskEditor = props => {
     const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
     const [notes, onChangeNotes] = React.useState(item.note ?? '');
     const updateTask = () => {
+        console.log("taskName: " + taskName);
+        if(taskName != ''){
         db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'duration': item.duration ?? 0, 'user': userRef }, { merge: true });
         props.navigation.navigate('Home');
+        } else{
+            if (Platform.OS === 'android') {
+                ToastAndroid.show("Tasks can't be created without a name", ToastAndroid.SHORT);
+            } else if (Platform.OS === 'ios') {
+                onToggleSnackBar()
+            }
+        }
     }
     const deleteTask = () => {
         db.collection("tasks").doc(item_id).delete();
@@ -181,7 +194,6 @@ const TaskEditor = props => {
                 </>
             )
             }
-
             <View style={styles.submitButton}>
                 <Button title={props.isNewTask ? "Add Task" : "Update"} onPress={() => updateTask()} color={"#4caf50"} />
             </View>
@@ -190,6 +202,13 @@ const TaskEditor = props => {
                     <Button title={"Delete"} onPress={() => deleteTask()} color={"red"} />
                 </View>
             }
+            <Snackbar style={styles.iosSnackbar}
+                visible={visible}
+                onDismiss={onDismissSnackBar}
+                duration={Snackbar.DURATION_SHORT}
+                theme={{ colors: { surface: 'black' }}}>
+                Tasks can't be created without a name
+            </Snackbar>
         </ScrollView >
     );
 }
@@ -218,5 +237,12 @@ const styles = StyleSheet.create({
     boxed: {
         borderWidth: 1,
         padding: 8
+    },
+    iosSnackbar: {
+        backgroundColor: 'white',
+        width: 290,
+        marginHorizontal: 120,
+        alignSelf: 'center',
+        position: 'absolute'
     }
 });

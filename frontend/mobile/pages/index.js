@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StyleSheet, Text, Vibration, View } from 'react-native';
+import { StyleSheet, Text, Vibration, View, ToastAndroid } from 'react-native';
 import { backend_address, setUserActiveTask, userStopTask, userStartTask } from 'big-project-common';
 import AppStyles from '../styles';
 import { Snackbar } from 'react-native-paper';
@@ -72,6 +72,9 @@ const MainTaskList = props => {
                 );
             }) : <Text>No data</Text>}
             </ScrollView>
+                {active_task != undefined && (
+            <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} />
+                )}
                 <Snackbar style={styles.iosSnackbar}
                     visible={visible}
                     onDismiss={onDismissSnackBar}
@@ -79,10 +82,6 @@ const MainTaskList = props => {
                     theme={{ colors: { surface: 'black' }}}>
                     Tracked task has been switched
                 </Snackbar>
-
-                {active_task != undefined && (
-            <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} />
-                )}
             <FloatingActionButton style={styles.floatinBtn} onPress={() => addTask()} />
         </View>
     );
@@ -111,9 +110,10 @@ const styles = StyleSheet.create({
     iosSnackbar: {
         backgroundColor: 'white',
         width: 250,
-        marginHorizontal: 120,
-        marginVertical: 270,
-        alignSelf: 'center'
+        position: 'absolute',
+        bottom: 0,
+        elevation: 1,
+        alignSelf: 'center',
     }
 });
 
