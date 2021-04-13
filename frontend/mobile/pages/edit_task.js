@@ -60,8 +60,9 @@ const TaskEditor = props => {
     const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
     const [pct, onChangePct] = React.useState(item.percentage ?? 0);
     const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
+    const [notes, onChangeNotes] = React.useState(item.note ?? '');
     const updateTask = () => {
-        db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'user': userRef }, { merge: true });
+        db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'user': userRef }, { merge: true });
         props.navigation.navigate('Home');
     }
     const deleteTask = () => {
@@ -102,6 +103,13 @@ const TaskEditor = props => {
                 label="Expected Time (Optional)"
                 placeholder="hours:minutes"
                 keyboardType='numeric'
+                mode="outlined"
+            />
+            <TextInput
+                style={styles.input}
+                onChangeText={onChangeNotes}
+                value={notes}
+                label="Notes..."
                 mode="outlined"
             />
             <TouchableRipple onPress={() => setTrackProgress(!trackProgress)}>
