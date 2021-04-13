@@ -3,7 +3,6 @@
 echo
 echo For Development Only!!!
 echo
-sleep 2
 
 control_c()
 {
