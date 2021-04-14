@@ -21,6 +21,7 @@ export default function Header(props) {
     </AppBar >
   );
 }
+
 const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,

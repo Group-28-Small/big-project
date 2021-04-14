@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { StyleSheet, Text, Vibration, View, ToastAndroid } from 'react-native';
-import { backend_address, setUserActiveTask, userStopTask, userStartTask } from 'big-project-common';
+import { backend_address, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME } from 'big-project-common';
 import AppStyles from '../styles';
 import { Snackbar } from 'react-native-paper';
 import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser } from 'reactfire';
@@ -19,7 +19,6 @@ export const IndexPage = (props) => {
     )
 }
 const MainTaskList = props => {
-    const MIN_TASK_TIME = 5; // seconds
     const [visible, setVisible] = React.useState(false);
     const onToggleSnackBar = () => setVisible(true);
     const onDismissSnackBar = () => setVisible(false);
