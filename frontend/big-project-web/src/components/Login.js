@@ -3,7 +3,7 @@ import { React, useState } from 'react';
 import { useAuth, useUser } from 'reactfire';
 import 'firebase/auth';
 import { useHistory } from 'react-router';
-import AccessTimeIcon from '@material-ui/icons/AccessTime';
+import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
 
 export default function LoginPage(props) {
@@ -32,22 +32,20 @@ export default function LoginPage(props) {
           <CssBaseline />
           <div className={styles.paper}>
             <Avatar className={styles.avatar}>
-              <AccessTimeIcon />
+              <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <form className={styles.form} noValidate>
-              <TextField variant="outlined" margin="normal" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus onChange={(event) => setEmail(event.target.value)} autoFocus={true}/>
-              <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" onChange={(event) => setPassword(event.target.value)}/>
-              <Button type="submit" fullWidth variant="contained" color="primary" className={styles.submit} onClick={() => logInUser()}> Sign In </Button>
-              
+            <form className={styles.form}>
+              <TextField variant="outlined" margin="normal" fullWidth required id='emailField' label='Email Address' type='email' variant='outlined' onChange={(event) => setEmail(event.target.value)} autoFocus={true}></TextField>
+              <TextField variant="outlined" margin="normal" required fullWidth id='passField' type='password' label='Password' variant='outlined' onChange={(event) => setPassword(event.target.value)}></TextField>
+              <Button fullWidth variant="contained" color="primary" className={styles.submit} onClick={() => logInUser()}> Sign In </Button>
             </form>
           </div>
         </Container>
-    );
+    )
 }
-
 
 const useStyles = makeStyles((theme) => ({
     paper: {

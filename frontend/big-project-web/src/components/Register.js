@@ -52,7 +52,7 @@ export default function RegisterPage(props) {
             <form className={styles.form} noValidate>
               <TextField variant="outlined" margin="normal" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus onChange={(event) => setEmail(event.target.value)} autoFocus={true}/>
               <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" onChange={(event) => setPassword(event.target.value)}/>
-              <Button type="submit" fullWidth variant="contained" color="primary" className={styles.submit} onClick={() => register()}> Sign In </Button>
+              <Button fullWidth variant="contained" color="primary" className={styles.submit} onClick={() => register()}> Sign In </Button>
             </form>
           </div>
         </Container>
