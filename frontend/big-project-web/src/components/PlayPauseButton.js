@@ -21,8 +21,7 @@ export default function PlayPauseButton(props) {
     const active_task = userDetails?.active_task;
     if(active_task !== undefined)
         var active_task_id = active_task.id;
-    const isCurrTracking = (active_task_id === taskId); //TODO: doesn't keep isTracking when refreshing page
-    const [isTracking, setTracking] = useState(isCurrTracking);   
+    const isCurrTracking = (active_task_id === taskId);
     const setActiveTask = item_id => {
         setUserActiveTask(userDetails, userDetailsRef, item_id, db, active_task);
         if((Date.now() / 1000) - userDetails.last_task_set_time < MIN_TASK_TIME && userDetails?.is_tracking_task){
@@ -32,19 +31,23 @@ export default function PlayPauseButton(props) {
 
     const trackTaskPressed = () => {
         // TODO: handle return values from these
-        if (userDetails.is_tracking_task) {
+        if (userDetails.is_tracking_task && isCurrTracking) { //if we clicked pause we only want to stop
             userStopTask(db, active_task, userDetails, userDetailsRef);
-            setTracking(false);
-        } else {
+        }
+        else if (userDetails.is_tracking_task) { //if we clicked play while tracking other task
+            userStopTask(db, active_task, userDetails, userDetailsRef);
             userStartTask(db, userDetailsRef);
             setActiveTask(taskId);
-            setTracking(true);
+        }
+        else { //if we just hit play
+            userStartTask(db, userDetailsRef);
+            setActiveTask(taskId);
         }
     }
 
-    console.log("Active Task:\t" + active_task_id);
-    console.log(isTracking);
-    if(active_task === undefined || !isTracking)
+    //console.log("Active Task:\t" + active_task_id);
+    //console.log(isTracking);
+    if(active_task === undefined || !userDetails.is_tracking_task)
         return(
             <div>
                 <IconButton size='small' onClick={trackTaskPressed}>
