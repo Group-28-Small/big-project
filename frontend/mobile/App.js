@@ -2,7 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import 'firebase/auth';
 import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Button, View } from 'react-native';
+import { ActivityIndicator, Button, Modal, View } from 'react-native';
 import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
 import { IndexPage } from './pages/index';
 import { LoginPage } from './pages/login';
@@ -39,6 +39,18 @@ export default function App() {
 }
 
 function AppNav() {
+  const ModalStack = createStackNavigator();
+  return (
+    <NavigationContainer>
+      <ModalStack.Navigator>
+        <ModalStack.Screen name="MainApp" component={MainAppNav} options={{ headerShown: false }} />
+        <ModalStack.Screen name="TaskDoneScreen" component={LoadingScreen} />
+      </ModalStack.Navigator>
+    </NavigationContainer>
+  )
+}
+
+function MainAppNav() {
   const Stack = createStackNavigator();
 
   var [isSignedIn, setSignedIn] = useState(undefined);
@@ -135,7 +147,6 @@ function AppNav() {
         </>
       );
     return (
-      <NavigationContainer>
         <Stack.Navigator>
           {isSignedIn ? (
             verifiedEmailOrHome
@@ -152,8 +163,7 @@ function AppNav() {
               />
             </>
           )}
-        </Stack.Navigator>
-      </NavigationContainer>
+      </Stack.Navigator>
     );
   } else {
     console.log("loading...");

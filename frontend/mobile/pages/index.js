@@ -39,8 +39,18 @@ const MainTaskList = props => {
         props.navigation.navigate('Edit Task', { item_id: item.id });
     }
     const active_task = userDetails?.active_task;
+    const askTaskProgress = (task) => {
+        db.collection('tasks').doc(task.id).get().then((task_data) => {
+            if (!task_data.exists) {
+                return;
+            }
+            const data = task_data.data();
+            console.log(data.track_progress);
+        });
+    }
     const setActiveTask = item_id => {
-        setUserActiveTask(userDetails, userDetailsRef, item_id, db, active_task);
+        const previous_active_task = active_task;
+        const taskStopped = setUserActiveTask(userDetails, userDetailsRef, item_id, db, active_task);
         if((Date.now() / 1000) - userDetails.last_task_set_time < MIN_TASK_TIME && userDetails?.is_tracking_task){
             if (Platform.OS === 'android') {
                 ToastAndroid.show("Tracked task has been switched", ToastAndroid.SHORT);
@@ -48,11 +58,19 @@ const MainTaskList = props => {
                 onToggleSnackBar()
             }
         }
+        // TODO: ask progress
+        if (taskStopped) {
+            console.log("asking progress...")
+            askTaskProgress(previous_active_task)
+        }
     }
     const trackTaskPressed = () => {
         // TODO: handle return values from these
         if (userDetails?.is_tracking_task) {
-            userStopTask(db, active_task, userDetails, userDetailsRef);
+            const { taskStopped } = userStopTask(db, active_task, userDetails, userDetailsRef);
+            console.log("asking progress...")
+            askTaskProgress(active_task)
+
         } else {
             userStartTask(db, userDetailsRef);
         }
