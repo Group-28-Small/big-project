@@ -6,6 +6,7 @@ import TreeItem from '@material-ui/lab/TreeItem';
 import { Container, Fab, makeStyles, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useHistory } from 'react-router';
+import PlayPauseButton from './PlayPauseButton';
 
 export default function TaskTree(props) {
     const db = useFirestore();
@@ -32,7 +33,13 @@ export default function TaskTree(props) {
             <TreeView>
                 {tasks.map((item, idx) => {
                     return (
-                        <TaskTreeItem nodeId={item.id} key={item.id} task={item} onClick={() => editTask(item)} isLast={idx === tasks.length - 1} />
+                        <TaskTreeItem 
+                            nodeId={item.id} 
+                            key={item.id} 
+                            task={item} 
+                            onClick={() => editTask(item)} 
+                            isLast={idx === tasks.length - 1}
+                        />
                     );
                 })}
             </TreeView>
@@ -49,13 +56,17 @@ function TaskTreeItem(props) {
         <TreeItem 
             label={
                 <div className={`${styles.treeItem} ${isLast && styles.lastItem}`} >
-                    {task.name}{' \t'}{task.estimated_time}{' hrs \t'}{task.percentage}{'% \t'}<Moment format="DD MMMM YYYY" date={task.due_date} unix />
+                    {task.name}{' \t'}{task.estimated_time}{' hrs \t'}{task.percentage}{'% \t'}
+                    <Moment format="DD MMMM YYYY" date={task.due_date} unix />
+                    <PlayPauseButton taskId={task.id}/>
                 </div>
             }
             {...other}
         />
     );
 }
+
+
 const useStyles = makeStyles((theme) => ({
     fab: {
         position: 'absolute',
@@ -68,7 +79,10 @@ const useStyles = makeStyles((theme) => ({
         borderBottomWidth: 0,
         borderColor: 'black',
         borderStyle: 'solid',
-        padding: 4
+        padding: 4,
+        flexGrow: 1,
+        alignItems: 'center',
+        display: 'flex'
     },
     lastItem: {
         borderBottomWidth: 1,
