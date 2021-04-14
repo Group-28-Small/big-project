@@ -7,6 +7,7 @@ import { Container, Fab, makeStyles, Typography } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { useHistory } from 'react-router';
 import PlayPauseButton from './PlayPauseButton';
+import EditTaskButton from './EditTaskButton';
 
 export default function TaskTree(props) {
     const db = useFirestore();
@@ -24,9 +25,7 @@ export default function TaskTree(props) {
     const createNewTask = () => {
         history.push("/newtask/")
     }
-    const editTask = (task) => {
-        history.push("/edittask/" + task.id)
-    }
+    
     return (
         <Container>
             <Typography variant='h4' >Tasks</Typography>
@@ -37,7 +36,7 @@ export default function TaskTree(props) {
                             nodeId={item.id} 
                             key={item.id} 
                             task={item} 
-                            onClick={() => editTask(item)} 
+                            //onClick={() => editTask(item)} 
                             isLast={idx === tasks.length - 1}
                         />
                     );
@@ -58,7 +57,11 @@ function TaskTreeItem(props) {
                 <div className={`${styles.treeItem} ${isLast && styles.lastItem}`} >
                     {task.name}{' \t'}{task.estimated_time}{' hrs \t'}{task.percentage}{'% \t'}
                     <Moment format="DD MMMM YYYY" date={task.due_date} unix />
-                    <PlayPauseButton taskId={task.id}/>
+                    <div style={{marginRight: '0', marginLeft: 'auto'}}>
+                        <EditTaskButton taskId={task.id}/>
+                    </div>
+                        <PlayPauseButton taskId={task.id}/>
+                    
                 </div>
             }
             {...other}
@@ -80,7 +83,6 @@ const useStyles = makeStyles((theme) => ({
         borderColor: 'black',
         borderStyle: 'solid',
         padding: 4,
-        flexGrow: 1,
         alignItems: 'center',
         display: 'flex'
     },
