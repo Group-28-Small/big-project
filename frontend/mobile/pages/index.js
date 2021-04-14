@@ -6,7 +6,7 @@ import AppStyles from '../styles';
 import { Snackbar } from 'react-native-paper';
 import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { DrawerLayoutAndroid, ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
 import Moment from 'react-moment';
 import { TrackTaskButton } from '../components/TrackTaskButton'
@@ -45,7 +45,10 @@ const MainTaskList = props => {
                 return;
             }
             const data = task_data.data();
-            console.log(data.track_progress);
+            if (data.track_progress) {
+                // let's ask the user how it went
+                props.navigation.navigate('TaskDoneScreen');
+            }
         });
     }
     const setActiveTask = item_id => {
@@ -68,8 +71,10 @@ const MainTaskList = props => {
         // TODO: handle return values from these
         if (userDetails?.is_tracking_task) {
             const { taskStopped } = userStopTask(db, active_task, userDetails, userDetailsRef);
-            console.log("asking progress...")
-            askTaskProgress(active_task)
+            if (taskStopped) {
+                console.log("asking progress...")
+                askTaskProgress(active_task)
+            }
 
         } else {
             userStartTask(db, userDetailsRef);
