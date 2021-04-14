@@ -39,18 +39,6 @@ export default function RegisterPage(props) {
 
     }
 
-    // return (
-    //     <Container maxWidth="md">
-    //         <form>
-    //             <Box display='flex' justifyContent='center' alignContent='center' alignItems='center' flexDirection='column'>
-    //                 <TextField className={styles.field} required id='emailField' label='Email Address' type='email' variant='outlined' onChange={(event) => setEmail(event.target.value)} autoFocus={true}></TextField>
-    //                 <TextField className={styles.field} required id='emailField' type='password' label='Password' variant='outlined' onChange={(event) => setPassword(event.target.value)}></TextField>
-    //                 <Button variant='contained' color='primary' onClick={() => register()}>Register</Button>
-    //             </Box>
-    //         </form>
-    //     </Container>
-    // )
-
     return (
         <Container component="main" maxWidth="xs">
           <CssBaseline />
@@ -64,9 +52,7 @@ export default function RegisterPage(props) {
             <form className={styles.form} noValidate>
               <TextField variant="outlined" margin="normal" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus onChange={(event) => setEmail(event.target.value)} autoFocus={true}/>
               <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" onChange={(event) => setPassword(event.target.value)}/>
-              <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me"/>
               <Button type="submit" fullWidth variant="contained" color="primary" className={styles.submit} onClick={() => register()}> Sign In </Button>
-              
             </form>
           </div>
         </Container>
@@ -92,14 +78,3 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(3, 0, 2),
     },
   }));
-
-
-// const useStyles = makeStyles((theme) => ({
-//     field: {
-//         margin: 8,
-//         '& .MuiTextField-root': {
-//             margin: theme.spacing(1),
-//             width: '25ch',
-//         },
-//     },
-// }));
