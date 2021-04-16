@@ -15,6 +15,7 @@ import { LogBox } from 'react-native';
 import LoadingScreen from './pages/loadingscreen';
 import { useRef } from 'react';
 import { SessionHistoryPage } from './pages/session_history';
+import { TaskDoneScreen } from './pages/TaskDoneScreen';
 
 var firebaseConfig = {
   apiKey: "AIzaSyDhZOTZT7X9YC8krs7imlVPvFcFMs8RKhk",
@@ -44,7 +45,7 @@ function AppNav() {
     <NavigationContainer>
       <ModalStack.Navigator>
         <ModalStack.Screen name="MainApp" component={MainAppNav} options={{ headerShown: false }} />
-        <ModalStack.Screen name="TaskDoneScreen" component={LoadingScreen} />
+        <ModalStack.Screen name="TaskDoneScreen" component={TaskDoneScreen} />
       </ModalStack.Navigator>
     </NavigationContainer>
   )

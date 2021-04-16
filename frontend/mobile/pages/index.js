@@ -39,7 +39,7 @@ const MainTaskList = props => {
         props.navigation.navigate('Edit Task', { item_id: item.id });
     }
     const active_task = userDetails?.active_task;
-    const askTaskProgress = (task) => {
+    const askTaskProgress = (task, session) => {
         db.collection('tasks').doc(task.id).get().then((task_data) => {
             if (!task_data.exists) {
                 return;
@@ -47,14 +47,14 @@ const MainTaskList = props => {
             const data = task_data.data();
             if (data.track_progress) {
                 // let's ask the user how it went
-                props.navigation.navigate('TaskDoneScreen');
+                props.navigation.navigate('TaskDoneScreen', { task: task, session: session });
             }
         });
     }
     const setActiveTask = item_id => {
         const previous_active_task = active_task;
-        const taskStopped = setUserActiveTask(userDetails, userDetailsRef, item_id, db, active_task);
-        if((Date.now() / 1000) - userDetails.last_task_set_time < MIN_TASK_TIME && userDetails?.is_tracking_task){
+        const { taskStopped, session } = setUserActiveTask(userDetails, userDetailsRef, item_id, db, active_task);
+        if (taskStopped && userDetails?.is_tracking_task) {
             if (Platform.OS === 'android') {
                 ToastAndroid.show("Tracked task has been switched", ToastAndroid.SHORT);
             } else if (Platform.OS === 'ios') {
@@ -64,16 +64,16 @@ const MainTaskList = props => {
         // TODO: ask progress
         if (taskStopped) {
             console.log("asking progress...")
-            askTaskProgress(previous_active_task)
+            askTaskProgress(previous_active_task, session)
         }
     }
     const trackTaskPressed = () => {
         // TODO: handle return values from these
         if (userDetails?.is_tracking_task) {
-            const { taskStopped } = userStopTask(db, active_task, userDetails, userDetailsRef);
+            const { taskStopped, session } = userStopTask(db, active_task, userDetails, userDetailsRef);
             if (taskStopped) {
                 console.log("asking progress...")
-                askTaskProgress(active_task)
+                askTaskProgress(active_task, session)
             }
 
         } else {

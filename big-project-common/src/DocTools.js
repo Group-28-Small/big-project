@@ -34,10 +34,11 @@ function setUserActiveTask(userDetails, userDetailsRef, item, db, active_task) {
     const user_was_tracking = userDetails?.is_tracking_task;
     var need_set_task = false;
     var taskStopped = false;
+    var session = undefined;
     console.log("switching active task");
     if (user_was_tracking) {
         if (!(userDetails.last_task_set_time) || (Date.now() / 1000) - userDetails.last_task_set_time > MIN_TASK_TIME) {
-            taskStopped = userStopTask(db, active_task, userDetails, userDetailsRef).taskStopped;
+            ({ taskStopped, session } = userStopTask(db, active_task, userDetails, userDetailsRef));
             need_set_task = true;
         }
     }
@@ -46,16 +47,17 @@ function setUserActiveTask(userDetails, userDetailsRef, item, db, active_task) {
     if (need_set_task) {
         userStartTask(db, userDetailsRef);
     }
-    return taskStopped;
+    return { taskStopped: taskStopped, session: session };
 }
 
 function userStopTask(db, active_task, userDetails, userDetailsRef) {
     console.log("stopping task");
     var batch = db.batch();
     var taskStopped = false;
+    var taskSession = undefined;
     // use batching for this - we don't want part of this succeeding and part failing
     if ((Date.now() / 1000) - userDetails.task_start_time > MIN_TASK_TIME) {
-        var taskSession = db.collection("sessions").doc();
+        taskSession = db.collection("sessions").doc();
         batch.set(taskSession, { task: "tasks/" + active_task.id, start: userDetails.task_start_time, end: Date.now() / 1000, user: userDetailsRef });
         db.collection("tasks").doc(active_task.id).set({ 'duration': moment.duration((((Date.now() / 1000) - userDetails.task_start_time) * 1000)).humanize() }, { merge: true });
         taskStopped = true;
@@ -65,7 +67,7 @@ function userStopTask(db, active_task, userDetails, userDetailsRef) {
     }
     batch.set(userDetailsRef, { is_tracking_task: false }, { merge: true });
 
-    return { batch: batch.commit(), taskStopped: taskStopped };
+    return { batch: batch.commit(), taskStopped: taskStopped, session: taskSession };
 }
 
 function userStartTask(db, userDetailsRef) {
