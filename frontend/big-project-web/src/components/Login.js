@@ -9,9 +9,12 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 export default function LoginPage(props) {
     const styles = useStyles();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const snackbar_success = "We sent you a password reset email"
+  const snackbar_fail = "There was a problem"
+  const [snackBarMessage, setSnackMessage] = useState(snackbar_success)
 
     const auth = useAuth();
     const history = useHistory();
@@ -30,13 +33,11 @@ export default function LoginPage(props) {
 
   const resetPassword = () => {
     auth.sendPasswordResetEmail(email).then(() => {
-      // do nothing bc why now
-      // TODO: snacbar or toast?
-      console.log("it worked?");
+      setSnackMessage(snackbar_success)
       setSnackbarOpen(true)
     }, error => {
-      console.log("error");
-      console.log(error.message);
+      setSnackMessage(snackbar_fail)
+      setSnackbarOpen(true)
     });
   }
     return (
@@ -56,7 +57,7 @@ export default function LoginPage(props) {
             <Button fullWidth color="primary" className={styles.submit} onClick={() => resetPassword()} disabled={email === ''}> Reset Password </Button>
             </form>
           </div>
-        <Snackbar open={snackbarOpen} onClose={() => setSnackbarOpen(false)} autoHideDuration={6000} message="We've emailed a password-reset link to you" />
+        <Snackbar open={snackbarOpen} onClose={() => setSnackbarOpen(false)} autoHideDuration={6000} message={snackBarMessage} />
       </Container>
 
     )
