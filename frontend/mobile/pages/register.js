@@ -34,7 +34,27 @@ export function RegisterPage() {
 
     }
     const [email, onChangeEmail] = React.useState("");
-    const [password, onChangePassword] = React.useState("");
+    const [password, _onChangePassword] = React.useState("");
+    const [passwordVerify, _onChangePasswordVerify] = React.useState("");
+    const [pwError, setPWError] = React.useState(false);
+
+    const onChangePassword = (pw) => {
+        _onChangePassword(pw);
+        if (pw !== passwordVerify) {
+            setPWError(true)
+        } else {
+            setPWError(false);
+        }
+    }
+    const onChangePasswordVerify = (pw) => {
+        _onChangePasswordVerify(pw);
+        if (pw !== password) {
+            setPWError(true)
+        } else {
+            setPWError(false);
+        }
+    }
+
     return (
         <View style={AppStyles.centered}>
             < SafeAreaView  >
@@ -53,8 +73,16 @@ export function RegisterPage() {
                     secureTextEntry={true}
                     autoCompleteType="password"
                 />
+                <TextInput
+                    style={[styles.input, pwError ? styles.error : null]}
+                    onChangeText={onChangePasswordVerify}
+                    value={passwordVerify}
+                    placeholder="Enter Password Again"
+                    secureTextEntry={true}
+                    autoCompleteType="password"
+                />
                 <View style={styles.submitButton}>
-                    <Button title="Register" onPress={() => register()} color={"#4caf50"} />
+                    <Button title="Register" onPress={() => register()} color={"#4caf50"} disabled={pwError} />
                 </View>
             </SafeAreaView >
         </View >
@@ -66,6 +94,9 @@ const styles = StyleSheet.create({
         margin: 12,
         borderWidth: 1,
         padding: 10
+    },
+    error: {
+        borderColor: 'red'
     },
     submitButton: {
         marginHorizontal: 10,
