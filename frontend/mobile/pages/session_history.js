@@ -29,7 +29,6 @@ export const SessionHistoryPage = props => {
     if (tasks) {
         tasks.forEach((t) => {
             taskDict['tasks/' + t.id] = t
-            // console.log('tasks/' + t.id);
         });
     }
     if (!tasks) {
@@ -42,7 +41,6 @@ export const SessionHistoryPage = props => {
             <ScrollView>
                 {sessions ? sessions.map((item) => {
                     var taskClasses = [styles.sessions,]
-                    // console.log(item.task);
                     var task = taskDict[item.task]
                     if (task === undefined) {
                         return null;
@@ -53,7 +51,7 @@ export const SessionHistoryPage = props => {
                             <Text style={taskClasses} >{task.name}{' \tAt: '}<Moment unix element={Text} date={item.start} format="MMMM DD" />{" for: " + duration}</Text>
                         </TouchableOpacity>
                     );
-                }) : <Text>No data</Text>}
+                }) : <Text>You haven't tracked any tasks!</Text>}
             </ScrollView>
         </View>
     );

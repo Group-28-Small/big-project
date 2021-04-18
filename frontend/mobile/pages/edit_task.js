@@ -79,7 +79,7 @@ const TaskEditor = props => {
     const handleClose = () => {
         setOpen(false);
     };
-    
+
     const updateTask = () => {
         console.log("taskName: " + taskName);
         if(taskName != ''){
@@ -232,10 +232,10 @@ const TaskEditor = props => {
                         <Dialog.Description id="alert-dialog-slide-description">
                             Are you sure you want to delete this task permenantly? Session history will not be saved.
                         </Dialog.Description>
-                        <Dialog.Button onPress={handleClose} color="primary" label="Disagree">
+                        <Dialog.Button onPress={handleClose} color="red" label="Disagree">
                         Disagree
                         </Dialog.Button>
-                        <Dialog.Button onPress={deleteTask} color="primary" label="Agree">
+                        <Dialog.Button onPress={deleteTask} color="green" label="Agree">
                         Agree
                         </Dialog.Button>
                     </Dialog.Container>
