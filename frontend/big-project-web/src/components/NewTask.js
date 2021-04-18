@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 
 export const EditTaskPage = props => {
     const db = useFirestore();
-    const item_id = props.match.params.taskid;
+    const item_id = props.taskID;
     console.log(item_id);
     const itemRef = db.collection('tasks').doc(item_id);
     const item = useFirestoreDocData(itemRef, { initialData: null });
@@ -74,6 +74,7 @@ function TaskEditor(props) {
     }
     const deleteTask = () => {
         db.collection("tasks").doc(item_id).delete();
+        props.setOpen(false)
     }
     useEffect(() => {
         console.log("item id or state changed");
@@ -98,7 +99,7 @@ function TaskEditor(props) {
                     </div>
                     <TextField className={styles.field} required id='taskName' label='Task Name' type='text' variant='outlined' autoFocus={true} onChange={(e) => onChangeName(e.target.value)} value={taskName}></TextField>
                     <TextField className={styles.field} id='taskEstimated' type="text" label='Estimated Time (Hours)' variant='outlined' onChange={(e) => onChangeTime(e.target.value)} value={estimatedTime}></TextField>
-                    <TextField className={styles.field} id='notes' type="text" label='Notes...' variant='outlined' onChange={(e) => onChangeNotes(e.target.value)} value={notes} multiline></TextField>
+                    <TextField className={styles.field} id='notes' type="text" label='Notes...' variant='outlined' onChange={(e) => onChangeNotes(e.target.value)} value={notes} multiline rowsMax = "6"></TextField>
                     <FormControlLabel
                         control={<Switch checked={switchesState.trackProgress} name="trackProgress" onChange={handleSwitchChange} />}
                         label="Track Progress" labelPlacement="start" className={`${styles.field} ${styles.wide}`}
