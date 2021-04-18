@@ -40,7 +40,7 @@ export default function LoginPage(props) {
     });
   }
     return (
-      <Paper className={styles.login} elevation ={3}>
+      <Paper elevation ={3} className={styles.login}>
         <Container component="main" maxWidth="xs">
             <CssBaseline />
             <div className={styles.paper}>
@@ -71,6 +71,8 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: 'column',
       alignItems: 'center',
       marginBottom: theme.spacing(4),
+      marginLeft: theme.spacing(4),
+      marginRight: theme.spacing(4),
     },
     avatar: {
       margin: theme.spacing(1),
@@ -84,13 +86,9 @@ const useStyles = makeStyles((theme) => ({
       margin: theme.spacing(3, 0, 2),
     },
     login: {
-      display: 'flex',
-      justifyContent: 'center',
-      alignItems: 'center',
-      
-      marginTop: '2%',
-      marginLeft: '40%',
-      marginRight: '40%',
-      minWidth: '20%'
+      display: 'block',
+      marginLeft: 'auto',
+      marginRight: 'auto',
+      width: theme.spacing(50), 
     }
   }));

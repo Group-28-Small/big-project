@@ -100,13 +100,9 @@ const useStyles = makeStyles((theme) => ({
         margin: theme.spacing(3, 0, 2),
     },
     login: {
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        
-        marginTop: '2%',
-        marginLeft: '40%',
-        marginRight: '40%',
-        minWidth: '20%'
+        display: 'block',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        width: theme.spacing(50),
     }
 }));
