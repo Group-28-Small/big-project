@@ -64,7 +64,7 @@ export default function TaskTree(props) {
 
     return (
         <Container>
-            <Typography variant='h4' >Tasks</Typography>
+            <Typography variant='h4' className ={styles.task}>Tasks</Typography>
             <TreeView>
                 {tasks.map((item, idx) => {
                     return (
@@ -192,5 +192,8 @@ const useStyles = makeStyles((theme) => ({
     },
     formating: {
         whiteSpace: 'pre-wrap',
+    },
+    task: {
+        textAlign: 'center',
     }
 }));

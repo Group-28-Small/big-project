@@ -48,9 +48,9 @@ export function TabPanel(props) {
 }
   
 TabPanel.propTypes = {
-children: PropTypes.node,
-index: PropTypes.any.isRequired,
-value: PropTypes.any.isRequired,
+    children: PropTypes.node,
+    index: PropTypes.any.isRequired,
+    value: PropTypes.any.isRequired,
 };
   
 function a11yProps(index) {

@@ -1,10 +1,9 @@
-import { Box, Button, Container, makeStyles, TextField, Avatar, CssBaseline, FormControlLabel, Checkbox, Link, Grid, Typography, Snackbar } from '@material-ui/core';
+import { Box, Button, Container, makeStyles,TextField, Avatar, CssBaseline, FormControlLabel, Checkbox, Link, Grid, Typography, Snackbar, Paper } from '@material-ui/core';
 import { React, useState } from 'react';
 import { useAuth, useUser } from 'reactfire';
 import 'firebase/auth';
 import { useHistory } from 'react-router';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-
+import LockOpenIcon from '@material-ui/icons/LockOpen';
 
 export default function LoginPage(props) {
     const styles = useStyles();
@@ -41,34 +40,37 @@ export default function LoginPage(props) {
     });
   }
     return (
+      <Paper className={styles.login} elevation ={3}>
         <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <div className={styles.paper}>
-            <Avatar className={styles.avatar}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Sign in
-            </Typography>
-            <form className={styles.form}>
-              <TextField variant="outlined" margin="normal" fullWidth required id='emailField' label='Email Address' type='email' variant='outlined' onChange={(event) => setEmail(event.target.value)} autoFocus={true}></TextField>
-              <TextField variant="outlined" margin="normal" required fullWidth id='passField' type='password' label='Password' variant='outlined' onChange={(event) => setPassword(event.target.value)}></TextField>
-              <Button fullWidth variant="contained" color="primary" className={styles.submit} onClick={() => logInUser()}> Sign In </Button>
-            <Button fullWidth color="primary" className={styles.submit} onClick={() => resetPassword()} disabled={email === ''}> Reset Password </Button>
-            </form>
-          </div>
-        <Snackbar open={snackbarOpen} onClose={() => setSnackbarOpen(false)} autoHideDuration={6000} message={snackBarMessage} />
-      </Container>
+            <CssBaseline />
+            <div className={styles.paper}>
+              <Avatar className={styles.avatar}>
+                <LockOpenIcon />
+              </Avatar>
+              <Typography component="h1" variant="h5">
+                Sign in
+              </Typography>
+              <form className={styles.form}>
+                <TextField variant="outlined" margin="normal" fullWidth required id='emailField' label='Email Address' type='email' variant='outlined' onChange={(event) => setEmail(event.target.value)} autoFocus={true}></TextField>
+                <TextField variant="outlined" margin="normal" required fullWidth id='passField' type='password' label='Password' variant='outlined' onChange={(event) => setPassword(event.target.value)}></TextField>
+                <Button fullWidth variant="contained" color="primary" className={styles.submit} onClick={() => logInUser()}> Sign In </Button>
+              <Button fullWidth color="primary" className={styles.submit} onClick={() => resetPassword()} disabled={email === ''}> Reset Password </Button>
+              </form>
+            </div>
+          <Snackbar open={snackbarOpen} onClose={() => setSnackbarOpen(false)} autoHideDuration={6000} message={snackBarMessage} />
+        </Container>
+      </Paper>
 
     )
 }
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-      marginTop: theme.spacing(8),
+      marginTop: theme.spacing(4),
       display: 'flex',
       flexDirection: 'column',
       alignItems: 'center',
+      marginBottom: theme.spacing(4),
     },
     avatar: {
       margin: theme.spacing(1),
@@ -81,4 +83,14 @@ const useStyles = makeStyles((theme) => ({
     submit: {
       margin: theme.spacing(3, 0, 2),
     },
+    login: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      
+      marginTop: '2%',
+      marginLeft: '40%',
+      marginRight: '40%',
+      minWidth: '20%'
+    }
   }));

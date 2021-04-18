@@ -1,10 +1,10 @@
-import { Box, Button, Container, makeStyles, TextField, Avatar, CssBaseline, FormControlLabel, Checkbox, Link, Grid, Typography } from '@material-ui/core';
+import { Box, Button, Container, makeStyles, TextField, Avatar, CssBaseline, FormControlLabel, Checkbox, Link, Grid, Typography, Paper } from '@material-ui/core';
 import { React, useState } from 'react';
 import { useAuth, useFirestore } from 'reactfire';
 import 'firebase/auth';
 import 'firebase/firestore';
 import { getOrCreateUserDocument } from 'big-project-common';
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
 
 export default function RegisterPage(props) {
     const styles = useStyles();
@@ -58,32 +58,35 @@ export default function RegisterPage(props) {
         }
     }
     return (
-        <Container component="main" maxWidth="xs">
-            <CssBaseline />
-            <div className={styles.paper}>
-                <Avatar className={styles.avatar}>
-                    <LockOutlinedIcon />
-                </Avatar>
-                <Typography component="h1" variant="h5">
-                    Register
-            </Typography>
-                <form className={styles.form} noValidate>
-                    <TextField variant="outlined" margin="normal" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus onChange={(event) => setEmail(event.target.value)} autoFocus={true} />
-                    <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" onChange={(event) => onChangePassword(event.target.value)} />
-                    <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password Verify" type="password" id="password" autoComplete="current-password" onChange={(event) => onChangePasswordVerify(event.target.value)} error={pwError} />
-                    <Button fullWidth variant="contained" color="primary" className={styles.submit} onClick={() => register()} disabled={pwError}> Register </Button>
-                </form>
-            </div>
-        </Container>
+        <Paper className={styles.login} elevation ={3}>
+            <Container component="main" maxWidth="xs">
+                <CssBaseline />
+                <div className={styles.paper}>
+                    <Avatar className={styles.avatar}>
+                        <VpnKeyIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Register
+                </Typography>
+                    <form className={styles.form} noValidate>
+                        <TextField variant="outlined" margin="normal" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus onChange={(event) => setEmail(event.target.value)} autoFocus={true} />
+                        <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" onChange={(event) => onChangePassword(event.target.value)} />
+                        <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password Verify" type="password" id="password" autoComplete="current-password" onChange={(event) => onChangePasswordVerify(event.target.value)} error={pwError} />
+                        <Button fullWidth variant="contained" color="primary" className={styles.submit} onClick={() => register()} disabled={pwError}> Register </Button>
+                    </form>
+                </div>
+            </Container>
+        </Paper>
     );
 }
 
 const useStyles = makeStyles((theme) => ({
     paper: {
-        marginTop: theme.spacing(8),
+        marginTop: theme.spacing(4),
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        marginBottom: theme.spacing(4),
     },
     avatar: {
         margin: theme.spacing(1),
@@ -96,4 +99,14 @@ const useStyles = makeStyles((theme) => ({
     submit: {
         margin: theme.spacing(3, 0, 2),
     },
+    login: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        
+        marginTop: '2%',
+        marginLeft: '40%',
+        marginRight: '40%',
+        minWidth: '20%'
+    }
 }));
