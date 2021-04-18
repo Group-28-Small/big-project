@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, Button, Platform, ToastAndroid, View } from 'react-native';
-import { Snackbar } from 'react-native-paper';
-import { TextInput } from 'react-native-gesture-handler';
-import { useAuth } from 'reactfire';
+import { StyleSheet, SafeAreaView, Button, Platform, ToastAndroid, View, Text } from 'react-native';
+import { Snackbar, Button as PaperButton } from 'react-native-paper';
+import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
+import { useAuth, useFirebaseApp } from 'reactfire';
 import AppStyles from '../styles';
 
 export const LoginPage = props => {
@@ -24,6 +24,16 @@ export const LoginPage = props => {
     });
     const goToRegister = () => {
         props.navigation.navigate('Register');
+    }
+    const resetPassword = () => {
+        auth.sendPasswordResetEmail(email).then(() => {
+            // do nothing bc why now
+            // TODO: snacbar or toast?
+            console.log("it worked?");
+        }, error => {
+            console.log("error");
+            console.log(error.message);
+        });
     }
     if (auth.currentUser != null) {
         console.log("wait a minute...");
@@ -52,6 +62,9 @@ export const LoginPage = props => {
             </SafeAreaView >
             <View style={styles.registerButton}>
                 <Button title="Register" onPress={() => goToRegister()} />
+            </View>
+            <View style={styles.registerButton}>
+                <PaperButton onPress={() => resetPassword()} mode="outlined" >Forgot Password</PaperButton>
             </View>
             <View style={styles.container}>
                 <Snackbar style={styles.iosSnackbar}
