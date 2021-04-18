@@ -4,7 +4,16 @@ import { DateTimePicker } from "@material-ui/pickers";
 import Moment from 'react-moment';
 import { useFirestore, useFirestoreDocData, useUser } from 'reactfire';
 import { Link } from 'react-router-dom';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Slide from '@material-ui/core/Slide';
 
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export const EditTaskPage = props => {
     const db = useFirestore();
@@ -63,11 +72,23 @@ function TaskEditor(props) {
         hasDueDate: item.has_due_date ?? false,
         trackProgress: item.track_progress ?? false,
     });
+
     const [taskName, onChangeName] = React.useState(item.name ?? '');
     const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
     const [pct, onChangePct] = React.useState(item.percentage ?? 0);
     const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
     const [notes, onChangeNotes] = React.useState(item.note ?? '');
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     const updateTask = () => {
         console.log(dueDate);
         db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'user': userRef }, { merge: true });
@@ -131,7 +152,30 @@ function TaskEditor(props) {
                     {editing ?
                         <>
                             <Button variant='contained' color='primary' onClick={updateTask} component={Link} to={'/'}>Update Task</Button>
-                            <Button variant='contained' color='secondary' onClick={deleteTask} component={Link} to={'/'}>Delete Task</Button>
+                            <Button variant='contained' color='secondary' onClick={handleClickOpen} component={Link} to={'/'}>Delete Task</Button>
+                            <Dialog
+                            open={open}
+                            TransitionComponent={Transition}
+                            keepMounted
+                            onClose={handleClose}
+                            aria-labelledby="alert-dialog-slide-title"
+                            aria-describedby="alert-dialog-slide-description"
+                            >
+                                <DialogTitle id="alert-dialog-slide-title">{"Delete Task?"}</DialogTitle>
+                                <DialogContent>
+                                <DialogContentText id="alert-dialog-slide-description">
+                                    Are you sure you want to delete this task permenantly? Session history will not be saved.
+                                </DialogContentText>
+                                </DialogContent>
+                                <DialogActions>
+                                    <Button onClick={handleClose} color="primary">
+                                    Disagree
+                                    </Button>
+                                    <Button onClick={deleteTask} color="primary">
+                                    Agree
+                                    </Button>
+                                </DialogActions>
+                            </Dialog>
                         </>
                     :
                         <Button variant='contained' color='primary' onClick={updateTask} component={Link} to={'/'}>Add Task</Button>}
