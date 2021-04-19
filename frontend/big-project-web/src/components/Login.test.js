@@ -10,6 +10,7 @@ const mockedUserResult = jest.fn()
 const mockedHistoryPush = jest.fn()
 jest.mock('reactfire', () => ({
     useUser: () => ({
+        // we have to define any fields that the component uses
         data: mockedUserResult()
     }),
     useAuth: () => 0
