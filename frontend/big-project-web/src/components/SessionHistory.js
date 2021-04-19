@@ -1,17 +1,15 @@
 import { Container, makeStyles, Typography } from '@material-ui/core';
-import { useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser } from 'reactfire';
-import React from 'react';
-import moment, { now } from 'moment';
-import Moment from 'react-moment';
 import TreeItem from '@material-ui/lab/TreeItem';
 import TreeView from '@material-ui/lab/TreeView';
+import moment from 'moment';
+import React from 'react';
+import { useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
 
 export default function SessionHistory(props) {
     const db = useFirestore();
     const { data: user } = useUser();
     const userDetailsRef = user != null ? db.collection('users')
         .doc(user.uid) : null;
-    const { data: userDetails } = useFirestoreDocData(userDetailsRef);
     const { data: sessions } = useFirestoreCollectionData(db.collection("sessions").where("user", "==", userDetailsRef).orderBy("start", "desc").orderBy("end", "desc")
     , {
         idField: 'id'
@@ -30,8 +28,7 @@ export default function SessionHistory(props) {
         <Container>
            <Typography variant='h4'>Session History</Typography>
            <TreeView disableSelection>
-            {sessions ? sessions.map((item) => {
-                    var taskClasses = [styles.sessions]
+                {sessions ? sessions.map((item) => {
                     var task = taskDict[item.task];
                     if(task === undefined)
                         return null;
