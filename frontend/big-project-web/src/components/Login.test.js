@@ -5,6 +5,7 @@ import LoginPage from './Login';
 import 'reactfire'
 import 'react-router'
 
+// we have to create dummy implementations of API calls
 const mockedUserResult = jest.fn()
 const mockedHistoryPush = jest.fn()
 jest.mock('reactfire', () => ({
