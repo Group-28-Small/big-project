@@ -16,15 +16,13 @@ jobs:
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
       - name: Use Node.js
+        working-directory: frontend/big-project-web
         uses: actions/setup-node@v1
         with:
           node-version: '15.x'
-        working-directory: frontend/big-project-web
       - run: npm ci
-        working-directory: frontend/big-project-web
       # - run: npm run build --if-present
       - run: npm test
-        working-directory: frontend/big-project-web
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:

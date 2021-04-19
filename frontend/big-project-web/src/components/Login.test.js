@@ -27,6 +27,7 @@ describe("Login Page", () => {
         ReactDOM.render(<LoginPage />, div);
     });
     it('redirects to home if the user is logged in', () => {
+        // make it look like the user is logged in
         mockedUserResult.mockImplementation(() => 1);
         const div = document.createElement('div');
         ReactDOM.render(<LoginPage />, div);
