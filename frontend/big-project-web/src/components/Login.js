@@ -1,9 +1,9 @@
-import { Box, Button, Container, makeStyles,TextField, Avatar, CssBaseline, FormControlLabel, Checkbox, Link, Grid, Typography, Snackbar, Paper } from '@material-ui/core';
-import { React, useState } from 'react';
-import { useAuth, useUser } from 'reactfire';
-import 'firebase/auth';
-import { useHistory } from 'react-router';
+import { Avatar, Button, Container, CssBaseline, makeStyles, Paper, Snackbar, TextField, Typography } from '@material-ui/core';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
+import 'firebase/auth';
+import { React, useState } from 'react';
+import { useHistory } from 'react-router';
+import { useAuth, useUser } from 'reactfire';
 
 export default function LoginPage(props) {
     const styles = useStyles();
