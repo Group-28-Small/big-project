@@ -1,4 +1,4 @@
-import { useAuth } from "reactfire"
+import { useAuth, useFirebaseApp, useFirestore } from "reactfire"
 import React from 'react';
 import { Button } from "@material-ui/core";
 import { Link } from 'react-router-dom';
@@ -6,9 +6,11 @@ import { Link } from 'react-router-dom';
 
 export default function LogInOutButton(props) {
     const auth = useAuth();
+    const db = useFirestore();
     const logout = (event) => {
         console.log("logging out");
         auth.signOut();
+        db.terminate();
     }
 
     // const login = (
