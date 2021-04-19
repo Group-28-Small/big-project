@@ -55,12 +55,10 @@ describe("New/Edit Task Page", () => {
         mockedFirestoreDocData.mockImplementation(() => mockedFirestoreDocDataEmptyResult)
         mockedUserResult.mockImplementation(() => 1)
         render(<NewTaskPage />);
-        // check that it doesn't redirect
     });
     it('renders a task', () => {
         mockedFirestoreDocData.mockImplementation(() => mockedFirestoreDocDataResult)
         mockedUserResult.mockImplementation(() => 1)
         render(<EditTaskPage />);
-        // check that it doesn't redirect
     });
 });
