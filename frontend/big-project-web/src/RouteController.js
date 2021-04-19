@@ -1,18 +1,15 @@
-import { AppBar, Button, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
-import { firebaseConfig, setAuthHandler } from 'big-project-common';
-import { useEffect, useRef, useState } from 'react';
-import { FirebaseAppProvider, preloadFirestore, useAuth, useFirebaseApp } from 'reactfire';
+import { makeStyles } from '@material-ui/core';
+import { setAuthHandler } from 'big-project-common';
 import 'firebase/auth';
+import { useEffect, useRef, useState } from 'react';
+import { Redirect, Route, Switch } from 'react-router';
+import { preloadFirestore, useFirebaseApp } from 'reactfire';
 import './App.css';
 import Header from './components/Header';
-import { Redirect, Route, Router, Switch, useHistory } from 'react-router';
-import { BrowserRouter } from 'react-router-dom';
-import LoginPage from './components/Login';
-import VerifyEmailPage from './components/VerifyEmailPage';
-import RegisterPage from './components/Register';
-import TaskTree from './components/TaskTree';
-import { NewTaskPage, EditTaskPage } from './components/NewTask';
 import { Home } from './components/HomePage';
+import LoginPage from './components/Login';
+import RegisterPage from './components/Register';
+import VerifyEmailPage from './components/VerifyEmailPage';
 
 export default function RouteController() {
   const firebase = useFirebaseApp();

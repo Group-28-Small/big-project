@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import EditIcon from '@material-ui/icons/Edit';
-import { useHistory } from 'react-router';
 import IconButton from "@material-ui/core/IconButton";
-import BlockIcon from '@material-ui/icons/Block';
+import EditIcon from '@material-ui/icons/Edit';
+import React from 'react';
 
 
 export default function EditTaskButton(props) {
-    const {taskId,  ...other} = props;
+    const { taskId } = props;
 
-    const editTask = (task) => {
+    const editTask = () => {
         props.editCallback(taskId)
     }
     return (
