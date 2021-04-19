@@ -21,7 +21,7 @@ jobs:
           node-version: '15.x'
       - run: cd frontend/big-project-web; npm ci
       # - run: npm run build --if-present
-      - run: cd frontend/big-project-web; npm test -- --coverage
+      - run: cd frontend/big-project-web; npm test -- --coverage --watchAll
       - name: SonarCloud Scan
         uses: SonarSource/sonarcloud-github-action@master
         with:
