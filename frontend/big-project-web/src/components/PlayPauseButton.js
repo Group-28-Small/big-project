@@ -12,12 +12,12 @@ export default function PlayPauseButton(props) {
     const { taskId, ...other } = props;
     const db = useFirestore();
     const { data: user } = useUser();
+    if (user === null) {
+        console.log("hey, wtf!?!?!");
+    }
     const userDetailsRef = user != null ? db.collection('users')
     .doc(user.uid) : null;
     const { data: userDetails } = useFirestoreDocData(userDetailsRef ?? db.collection('users').doc());
-    const { data: tasks } = useFirestoreCollectionData(db.collection("tasks").where("user", "==", userDetailsRef), {
-        idField: 'id'
-    });
     const active_task = userDetails?.active_task;
     if(active_task !== undefined)
         var active_task_id = active_task.id;

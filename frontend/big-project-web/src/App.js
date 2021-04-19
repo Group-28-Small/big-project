@@ -9,7 +9,7 @@ import { BrowserRouter } from 'react-router-dom';
 import moment from 'moment';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
-import {} from '@material-ui/core';
+import ErrorBoundary from './components/ErrorBoundary'
 
 const theme = createMuiTheme({
   palette: {
@@ -35,7 +35,9 @@ function App() {
       <BrowserRouter>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <ThemeProvider theme={theme}>
-            <RouteController />
+            <ErrorBoundary>
+              <RouteController />
+            </ErrorBoundary>
             </ThemeProvider>
         </MuiPickersUtilsProvider>
       </BrowserRouter>
