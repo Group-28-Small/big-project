@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 import LoginPage from './Login';
 import 'reactfire'
 import 'react-router'
+
 const mockedUserResult = jest.fn()
 const mockedHistoryPush = jest.fn()
 jest.mock('reactfire', () => ({
@@ -17,6 +18,7 @@ jest.mock('react-router', () => ({
         push: mockedHistoryPush
     }),
 }))
+
 describe("Login Page", () => {
     it('renders without crashing', () => {
         mockedUserResult.mockImplementation(() => null);
