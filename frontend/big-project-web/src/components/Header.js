@@ -1,5 +1,4 @@
-import { AppBar, IconButton, makeStyles, Toolbar, Typography } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
+import { AppBar, makeStyles, Toolbar, Typography } from '@material-ui/core';
 import { appName } from 'big-project-common';
 import 'firebase/auth';
 import React from 'react';

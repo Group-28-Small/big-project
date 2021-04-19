@@ -1,16 +1,15 @@
-import React from 'react';
-import { useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
-import Moment from 'react-moment';
-import TreeView from '@material-ui/lab/TreeView';
-import TreeItem from '@material-ui/lab/TreeItem';
-import { Container, Fab, makeStyles, Modal, Typography, Popover} from '@material-ui/core';
+import { Container, Fab, makeStyles, Modal, Popover, Typography } from '@material-ui/core';
+import IconButton from "@material-ui/core/IconButton";
 import AddIcon from '@material-ui/icons/Add';
-import { useHistory } from 'react-router';
-import PlayPauseButton from './PlayPauseButton';
+import NoteIcon from '@material-ui/icons/Note';
+import TreeItem from '@material-ui/lab/TreeItem';
+import TreeView from '@material-ui/lab/TreeView';
+import React from 'react';
+import Moment from 'react-moment';
+import { useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
 import EditTaskButton from './EditTaskButton';
 import { EditTaskPage, NewTaskPage } from "./NewTask";
-import NoteIcon from '@material-ui/icons/Note';
-import IconButton from "@material-ui/core/IconButton";
+import PlayPauseButton from './PlayPauseButton';
 
 
 
@@ -34,7 +33,6 @@ export default function TaskTree(props) {
         idField: 'id'
     });
     const styles = useStyles();
-    const history = useHistory();
     const [modalStyle] = React.useState(getModalStyle);
     const [open, setOpen] = React.useState(false);
     const [modalMode, setModalMode] = React.useState("newtask")
@@ -43,10 +41,7 @@ export default function TaskTree(props) {
     if (!tasks) {
         return <div>Getting  tasks...</div>
     }
-    const createNewTask = () => {
-        history.push("/newtask/")
-    }
-        
+
     const editTask = (task_id) => {
         setTaskID(task_id)
         setModalMode("edittask")
