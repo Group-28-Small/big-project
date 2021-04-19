@@ -22,9 +22,12 @@ jest.mock('react-router', () => ({
 
 describe("Login Page", () => {
     it('renders without crashing', () => {
+        // we set the user to null so it doesn't try to redirect to home
         mockedUserResult.mockImplementation(() => null);
         const div = document.createElement('div');
         ReactDOM.render(<LoginPage />, div);
+        // check that it doesn't redirect
+        expect(mockedHistoryPush).not.toHaveBeenCalled();
     });
     it('redirects to home if the user is logged in', () => {
         // make it look like the user is logged in
