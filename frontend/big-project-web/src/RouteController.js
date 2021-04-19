@@ -7,7 +7,7 @@ import { preloadFirestore, useFirebaseApp } from 'reactfire';
 import './App.css';
 import Header from './components/Header';
 import { Home } from './components/HomePage';
-import LoginPage from './components/Login';
+import LoginPage from './components/LoginPage';
 import RegisterPage from './components/Register';
 import VerifyEmailPage from './components/VerifyEmailPage';
 
@@ -72,7 +72,6 @@ export default function RouteController() {
         {isEmailVerified ? (
           <>
             <Route path="/">
-              {/* <MustBeSignedIn isEmailVerified={isEmailVerified} isSignedIn={isSignedIn} /> */}
               <Home />
             </Route>
             <Redirect to='/' />
@@ -80,8 +79,7 @@ export default function RouteController() {
         ) : (
           <>
             <Redirect exact from="/" to="/verifyemail" />
-            <Route path="/verifyemail">
-              {/* <MustBeSignedIn isEmailVerified={isEmailVerified} isSignedIn={isSignedIn} mustBeVerified={false} /> */}
+              <Route path="/verifyemail">
               <VerifyEmailPage />
             </Route>
           </>

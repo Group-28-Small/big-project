@@ -1,10 +1,10 @@
-import { Box, Button, Container, makeStyles, TextField, Avatar, CssBaseline, FormControlLabel, Checkbox, Link, Grid, Typography, Paper } from '@material-ui/core';
-import { React, useState } from 'react';
-import { useAuth, useFirestore } from 'reactfire';
+import { Avatar, Button, Container, CssBaseline, makeStyles, Paper, TextField, Typography } from '@material-ui/core';
+import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import { getOrCreateUserDocument } from 'big-project-common';
 import 'firebase/auth';
 import 'firebase/firestore';
-import { getOrCreateUserDocument } from 'big-project-common';
-import VpnKeyIcon from '@material-ui/icons/VpnKey';
+import { React, useState } from 'react';
+import { useAuth, useFirestore } from 'reactfire';
 
 export default function RegisterPage(props) {
     const styles = useStyles();
@@ -32,7 +32,6 @@ export default function RegisterPage(props) {
                 // Email sent.
                 console.log("email sent");
             }).catch(function (error) {
-                var errorCode = error.code;
                 var errorMessage = error.message;
                 console.log("error" + errorMessage);
                 // ..
