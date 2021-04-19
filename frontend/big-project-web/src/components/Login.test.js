@@ -1,7 +1,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import LoginPage from './Login';
+import LoginPage from './LoginPage';
 import 'reactfire'
 import 'react-router'
 
