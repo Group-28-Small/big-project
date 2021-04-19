@@ -1,32 +1,10 @@
-import React from 'react';
-import { Grid, Paper, Tabs, AppBar, Tab, Typography, Box, makeStyles} from "@material-ui/core";
-import {PieChart, List, AccessTime} from "@material-ui/icons";
-import { Route } from 'react-router-dom';
-import { EditTaskPage, NewTaskPage } from "./NewTask";
-import TaskTree from "./TaskTree";
-import SessionHistory from "./SessionHistory";
+import { AppBar, Box, makeStyles, Tab, Tabs, Typography } from "@material-ui/core";
+import { AccessTime, List, PieChart } from "@material-ui/icons";
 import PropTypes from 'prop-types';
-
-// export function Home() {
-//     return (
-//         <Grid container direction="row">
-//             <Grid item xs={5}>
-//                 <TaskTree />
-//             </Grid>
-//             <Grid item xs={7}>
-//                 <Route path="/newtask">
-//                     <NewTaskPage />
-//                 </Route>
-//                 <Route path="/edittask/:taskid" component={EditTaskPage} />
-//                 <Route exact path="/">
-//                     <SessionHistory />
-//                 </Route>
-//             </Grid>
-
-//         </Grid>
-//     );
-// }
-
+import React from 'react';
+import { Route } from 'react-router-dom';
+import SessionHistory from "./SessionHistory";
+import TaskTree from "./TaskTree";
 export function TabPanel(props) {
     const { children, value, index, ...other } = props;
 
