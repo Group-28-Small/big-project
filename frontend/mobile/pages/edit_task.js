@@ -10,6 +10,11 @@ import Moment from 'react-moment';
 import LoadingScreen from './loadingscreen';
 import { firestore } from 'firebase';
 import { Snackbar } from 'react-native-paper';
+import Dialog from "react-native-dialog";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export const EditTaskPage = props => {
     const db = useFirestore();
@@ -65,6 +70,16 @@ const TaskEditor = props => {
     const [pct, onChangePct] = React.useState(item.percentage ?? 0);
     const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
     const [notes, onChangeNotes] = React.useState(item.note ?? '');
+
+
+    const [open, setOpen] = React.useState(false);
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+
     const updateTask = () => {
         console.log("taskName: " + taskName);
         if(taskName != ''){
@@ -82,6 +97,7 @@ const TaskEditor = props => {
         }
     }
     const deleteTask = () => {
+        console.log('delete')
         db.collection("tasks").doc(item_id).delete();
         props.navigation.navigate('Home');
     }
@@ -203,7 +219,26 @@ const TaskEditor = props => {
             </View>
             {!props.isNewTask &&
                 <View style={styles.submitButton}>
-                    <Button title={"Delete"} onPress={() => deleteTask()} color={"red"} />
+                    <Button title={"Delete"} onPress={() => handleClickOpen()} color={"red"} />
+                    <Dialog.Container
+                        visible={open}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-slide-title"
+                        aria-describedby="alert-dialog-slide-description"
+                        >
+                        <Dialog.Title id="alert-dialog-slide-title">{"Delete Task?"}</Dialog.Title>
+                        <Dialog.Description id="alert-dialog-slide-description">
+                            Are you sure you want to delete this task permenantly? Session history will not be saved.
+                        </Dialog.Description>
+                        <Dialog.Button onPress={handleClose} color="red" label="Disagree">
+                        Disagree
+                        </Dialog.Button>
+                        <Dialog.Button onPress={deleteTask} color="green" label="Agree">
+                        Agree
+                        </Dialog.Button>
+                    </Dialog.Container>
                 </View>
             }
             <Snackbar style={styles.iosSnackbar}

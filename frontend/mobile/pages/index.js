@@ -59,7 +59,7 @@ const MainTaskList = props => {
     return (
         <View style={AppStyles.container}>
             <ScrollView>
-                {tasks ? tasks.map((item) => {
+                {tasks != undefined && tasks.length != 0 ? tasks.map((item) => {
                     var taskClasses = [styles.tasks,]
                     if (item.id === active_task?.id) {
                         taskClasses.push(styles.activeTask)
@@ -69,7 +69,7 @@ const MainTaskList = props => {
                         <Text style={taskClasses} >{item.name}{' \t'}{item.duration + '/' + item.estimated_time}{' hrs \t'}{item.percentage}{'% \n'}{<Moment format="DD MMMM YYYY" date={item.due_date} element={Text} unix />}</Text>
                     </TouchableOpacity>
                 );
-            }) : <Text>No data</Text>}
+            }) : <Text>You don't have any tasks!</Text>}
             </ScrollView>
                 {active_task != undefined && (
             <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} />
