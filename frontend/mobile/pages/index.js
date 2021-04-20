@@ -4,7 +4,7 @@ import { StyleSheet, Text, Vibration, View, ToastAndroid, Button } from 'react-n
 import { backend_address, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME } from 'big-project-common';
 import AppStyles from '../styles';
 import { Snackbar } from 'react-native-paper';
-import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser } from 'reactfire';
+import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser, useAuth } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
@@ -25,9 +25,12 @@ export const IndexPage = (props) => {
     )
 }
 const MainTaskList = props => {
+    const [pass, changePass] = React.useState("");
+    const [badPass, changeBadPass] = React.useState(false);
     const [visible, setVisible] = React.useState(false);
     const onToggleSnackBar = () => setVisible(true);
     const onDismissSnackBar = () => setVisible(false);
+    const firebase = require('firebase'); 
     const db = useFirestore();
     const { data: user } = useUser();
     const userDetailsRef = user != null ? db.collection('users')
@@ -43,8 +46,23 @@ const MainTaskList = props => {
     const handleClose = () => {
         setOpen(false);
     };
+    const dismissSnackbar = () => {
+        changeBadPass(false)
+        onDismissSnackBar()
+    }
     const deleteAccount = () => {
+        var credential = firebase.auth.EmailAuthProvider.credential(
+            user.email, 
+            pass
+        );
+        console.log(credential)
+        user.reauthenticateWithCredential(credential).then(() => {
         user.delete()
+        }).catch(() => {
+            console.log('bad')
+            changeBadPass(true)
+            onToggleSnackBar()
+        });
     }
     const addTask = () => {
         props.navigation.navigate('New Task');
@@ -92,10 +110,10 @@ const MainTaskList = props => {
                 )}
                 <Snackbar style={styles.iosSnackbar}
                     visible={visible}
-                    onDismiss={onDismissSnackBar}
+                    onDismiss={dismissSnackbar}
                     duration={Snackbar.DURATION_SHORT}
                     theme={{ colors: { surface: 'black' }}}>
-                    Tracked task has been switched
+                    {badPass ? "Incorrect password" : "Tracked task has been switched"}
                 </Snackbar>
             <FloatingActionButton style={styles.floatinBtn} onPress={() => addTask()} />
             <View>
@@ -110,8 +128,9 @@ const MainTaskList = props => {
                         >
                         <Dialog.Title id="alert-dialog-slide-title">{"Delete Account?"}</Dialog.Title>
                         <Dialog.Description id="alert-dialog-slide-description">
-                            Are you sure you want to delete your account? This can't be undone!
+                            Are you sure you want to delete your account? If so, enter your password and click Agree. This can't be undone!
                         </Dialog.Description>
+                        <Dialog.Input placeholder="Password" autoCompleteType="password" onChangeText={changePass} secureTextEntry={true}></Dialog.Input>
                         <Dialog.Button onPress={handleClose} color="red" label="Disagree">
                         Disagree
                         </Dialog.Button>
@@ -146,11 +165,11 @@ const styles = StyleSheet.create({
     },
     iosSnackbar: {
         backgroundColor: 'white',
-        width: 250,
+        width: 165,
         position: 'absolute',
         bottom: 0,
         elevation: 1,
-        alignSelf: 'center',
+        alignSelf: 'center'
     }
 });
 
