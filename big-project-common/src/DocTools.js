@@ -35,7 +35,9 @@ function setUserActiveTask(userDetails, userDetailsRef, item, db, active_task) {
     console.log("switching active task");
     if (user_was_tracking) {
         if (!(userDetails.last_task_set_time) || (Date.now() / 1000) - userDetails.last_task_set_time > MIN_TASK_TIME) {
-            userStopTask(db, active_task, userDetails, userDetailsRef);
+            if(active_task != undefined){
+                userStopTask(db, active_task, userDetails, userDetailsRef);
+            }
             need_set_task = true;
         }
     }

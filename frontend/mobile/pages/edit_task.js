@@ -8,9 +8,10 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import AppStyles from '../styles';
 import Moment from 'react-moment';
 import LoadingScreen from './loadingscreen';
-import { firestore } from 'firebase';
+import firebase, { firestore } from 'firebase';
 import { Snackbar } from 'react-native-paper';
 import Dialog from "react-native-dialog";
+import { userStopTask } from 'big-project-common';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -71,6 +72,10 @@ const TaskEditor = props => {
     const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
     const [notes, onChangeNotes] = React.useState(item.note ?? '');
 
+    const userDetailsRef = user != null ? db.collection('users')
+        .doc(user.uid) : null;
+    const { data: userDetails } = useFirestoreDocData(userDetailsRef ?? db.collection('users').doc());
+
 
     const [open, setOpen] = React.useState(false);
     const handleClickOpen = () => {
@@ -99,6 +104,10 @@ const TaskEditor = props => {
     const deleteTask = () => {
         console.log('delete')
         db.collection("tasks").doc(item_id).delete();
+        if(item_id === userDetails?.active_task.id){
+            userStopTask(db, userDetails?.active_task, userDetails, userDetailsRef);
+            userDetailsRef.set({ 'active_task': firebase.firestore.FieldValue.delete()}, { merge: true })
+        }
         props.navigation.navigate('Home');
     }
     const showDatePicker = () => {
