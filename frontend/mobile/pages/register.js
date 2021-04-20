@@ -1,12 +1,13 @@
 
 import { getOrCreateUserDocument } from 'big-project-common';
 import React from 'react';
-import { View, StyleSheet, Button } from 'react-native';
+import { View, StyleSheet, Button, Text, Platform, ToastAndroid } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFirebaseApp, useFirestore } from 'reactfire';
 import 'firebase/firestore';
 import AppStyles from '../styles';
+import { Snackbar } from 'react-native-paper';
 
 export function RegisterPage() {
     const firebase = useFirebaseApp();
@@ -28,7 +29,33 @@ export function RegisterPage() {
             }).catch(function (error) {
                 var errorCode = error.code;
                 var errorMessage = error.message;
-                console.log("error" + errorMessage);
+                console.log("error " + errorMessage);
+                console.log(errorCode)
+                // console.log(errorCode === 'auth/invalid-email')
+                if(errorCode === 'auth/invalid-email'){
+                    setBadEmail(true)
+                    if(Platform.OS === 'ios'){
+                        onDismissExistsSnackBar()
+                        onToggleSnackBar()
+                    } else if(Platform.OS === 'android'){
+                        ToastAndroid.show("Please enter a valid email adddress...", ToastAndroid.SHORT);
+                    }
+                } else if(errorCode === 'auth/weak-password'){
+                    if(Platform.OS === 'ios'){
+                        setBadEmail(false)
+                        onDismissExistsSnackBar()
+                        onToggleSnackBar()
+                    } else if(Platform.OS === 'android'){
+                        ToastAndroid.show("Your password must contain at least 6 characters...", ToastAndroid.SHORT);
+                    }
+                } else{
+                    if(Platform.OS === 'ios'){
+                        onDismissSnackBar()
+                        onToggleExistsSnackBar()
+                    } else if(Platform.OS === 'android'){
+                        ToastAndroid.show("This email is already associated with an account! Return to the login screen...", ToastAndroid.SHORT);
+                    }
+                }
                 // ..
             });
 
@@ -37,6 +64,15 @@ export function RegisterPage() {
     const [password, _onChangePassword] = React.useState("");
     const [passwordVerify, _onChangePasswordVerify] = React.useState("");
     const [pwError, setPWError] = React.useState(false);
+
+    const [badEmail, setBadEmail] = React.useState(false);
+    const [visible, setVisible] = React.useState(false);
+    const onToggleSnackBar = () => setVisible(true);
+    const onDismissSnackBar = () => setVisible(false);
+
+    const [existsVisible, setExistsVisible] = React.useState(false);
+    const onToggleExistsSnackBar = () => setExistsVisible(true);
+    const onDismissExistsSnackBar = () => setExistsVisible(false);
 
     const onChangePassword = (pw) => {
         _onChangePassword(pw);
@@ -57,6 +93,7 @@ export function RegisterPage() {
 
     return (
         <View style={AppStyles.centered}>
+            <Text style = {styles.header}>Passwords must contain at least 6 characters!</Text>
             < SafeAreaView  >
                 <TextInput
                     style={styles.input}
@@ -84,6 +121,24 @@ export function RegisterPage() {
                 <View style={styles.submitButton}>
                     <Button title="Register" onPress={() => register()} color={"#4caf50"} disabled={pwError} />
                 </View>
+                <View style={styles.container}>
+                    <Snackbar style={styles.iosSnackbar}
+                        visible={visible}
+                        onDismiss={onDismissSnackBar}
+                        duration={Snackbar.DURATION_SHORT}
+                        theme={{ colors: { surface: 'black' }}}
+                        >
+                        {badEmail ? "Please enter a valid email adddress..." : "Your password must contain at least 6 characters..."}
+                    </Snackbar>
+                    <Snackbar style={styles.iosExistsSnackbar}
+                        visible={existsVisible}
+                        onDismiss={onDismissExistsSnackBar}
+                        duration={Snackbar.DURATION_SHORT}
+                        theme={{ colors: { surface: 'black' }}}
+                        >
+                        This email is already associated with an account! Return to the login screen...
+                    </Snackbar>
+                </View>
             </SafeAreaView >
         </View >
     );
@@ -105,5 +160,21 @@ const styles = StyleSheet.create({
     registerButton: {
         marginHorizontal: 10,
         marginVertical: 10,
-    }
+    }, header: {
+        alignSelf: 'center'
+    },
+    iosSnackbar: {
+        backgroundColor: 'white',
+        width: 300,
+        marginHorizontal: 120,
+        marginVertical: 330,
+        alignSelf: 'center'
+    },
+    iosExistsSnackbar: {
+        backgroundColor: 'white',
+        width: 300,
+        marginHorizontal: 120,
+        marginVertical: 330,
+        alignSelf: 'center'
+    },
 });
