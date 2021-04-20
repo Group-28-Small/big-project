@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StyleSheet, Text, Vibration, View, ToastAndroid } from 'react-native';
+import { StyleSheet, Text, Vibration, View, ToastAndroid, Button } from 'react-native';
 import { backend_address, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME } from 'big-project-common';
 import AppStyles from '../styles';
 import { Snackbar } from 'react-native-paper';
@@ -11,6 +11,12 @@ import * as Haptics from 'expo-haptics';
 import Moment from 'react-moment';
 import { TrackTaskButton } from '../components/TrackTaskButton'
 import LoadingScreen from './loadingscreen';
+import Dialog from "react-native-dialog";
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
+
 export const IndexPage = (props) => {
     return (
         <AuthCheck fallback={<LoadingScreen />}>
@@ -30,6 +36,16 @@ const MainTaskList = props => {
     const { data: tasks } = useFirestoreCollectionData(db.collection("tasks").where("user", "==", userDetailsRef), {
         idField: 'id'
     });
+    const [open, setOpen] = React.useState(false);
+    const handleDeleteOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
+    const deleteAccount = () => {
+        user.delete()
+    }
     const addTask = () => {
         props.navigation.navigate('New Task');
     }
@@ -82,6 +98,28 @@ const MainTaskList = props => {
                     Tracked task has been switched
                 </Snackbar>
             <FloatingActionButton style={styles.floatinBtn} onPress={() => addTask()} />
+            <View>
+                    <Button title={"Delete Account"} onPress={() => handleDeleteOpen()} color={"red"} />
+                    <Dialog.Container
+                        visible={open}
+                        TransitionComponent={Transition}
+                        keepMounted
+                        onClose={handleClose}
+                        aria-labelledby="alert-dialog-slide-title"
+                        aria-describedby="alert-dialog-slide-description"
+                        >
+                        <Dialog.Title id="alert-dialog-slide-title">{"Delete Account?"}</Dialog.Title>
+                        <Dialog.Description id="alert-dialog-slide-description">
+                            Are you sure you want to delete your account? This can't be undone!
+                        </Dialog.Description>
+                        <Dialog.Button onPress={handleClose} color="red" label="Disagree">
+                        Disagree
+                        </Dialog.Button>
+                        <Dialog.Button onPress={deleteAccount} color="green" label="Agree">
+                        Agree
+                        </Dialog.Button>
+                    </Dialog.Container>
+                </View>
         </View>
     );
 }

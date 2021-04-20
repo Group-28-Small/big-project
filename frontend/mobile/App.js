@@ -123,7 +123,7 @@ function AppNav() {
           }} />
         </>) : (
         <>
-          <Stack.Screen name="VerifyEmail" component={VerifyPage} options={{
+          <Stack.Screen name="Verify Email" component={VerifyPage} options={{
             headerRight: () => (
               <Button
                 onPress={() => signOutUser()}

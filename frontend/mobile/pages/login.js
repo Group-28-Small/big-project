@@ -28,7 +28,7 @@ export const LoginPage = props => {
     const resetPassword = () => {
         auth.sendPasswordResetEmail(email).then(() => {
             // do nothing bc why now
-            // TODO: snacbar or toast?
+            // TODO: snaccbar or toast?
             console.log("it worked?");
         }, error => {
             console.log("error");
