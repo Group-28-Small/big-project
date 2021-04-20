@@ -6,6 +6,7 @@ export const VerifyPage = props => {
     return (
         <View style={AppStyles.container}>
             <Text>Check your email for a verification email!</Text>
+            <Text>Feel free to stay on this page. Once you verify your email, you will automatically be redirected to the home page.</Text>
         </View>
     );
 }

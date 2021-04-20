@@ -127,7 +127,9 @@ function AppNav() {
             headerRight: () => (
               <Button
                 onPress={() => signOutUser()}
-                title={isEmailVerified ? "yes" : "no"}
+                //this was probably useful for testing, but at this point looks odd
+                // title={isEmailVerified ? "yes" : "no"}
+                title="return"
                 color="#000"
               />
             ),
