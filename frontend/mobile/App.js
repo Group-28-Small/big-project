@@ -1,20 +1,19 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
+import { is_production, setAuthHandler } from 'big-project-common';
 import 'firebase/auth';
-import React, { useState, useEffect } from 'react';
-import { ActivityIndicator, Button, View } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { LogBox, StyleSheet } from 'react-native';
+import Dialog from 'react-native-dialog';
+import { Button, Menu, Provider, Snackbar } from 'react-native-paper';
 import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
+import { EditTaskPage, NewTaskPage } from './pages/edit_task';
 import { IndexPage } from './pages/index';
+import LoadingScreen from './pages/loadingscreen';
 import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
-import { VerifyPage } from './pages/verify_email';
-import { EditTaskPage, NewTaskPage } from './pages/edit_task';
-import { is_production, setAuthHandler, AppTheme } from 'big-project-common';
-import AppStyles from './styles';
-import { LogBox } from 'react-native';
-import LoadingScreen from './pages/loadingscreen';
-import { useRef } from 'react';
 import { SessionHistoryPage } from './pages/session_history';
+import { VerifyPage } from './pages/verify_email';
 
 var firebaseConfig = {
   apiKey: "AIzaSyDhZOTZT7X9YC8krs7imlVPvFcFMs8RKhk",
@@ -53,10 +52,17 @@ function AppNav() {
     emailVerifyTimer.current = value;
   }
 
-  // override setSignedIn so we can set the necessary routing on sign-out
-  
   const auth = useAuth();
   const firebase = useFirebaseApp();
+  const [menuVisible, setMenuVisible] = useState(false);
+  const [pass, changePass] = React.useState("");
+  const [isSnackbarVisible, setVisible] = React.useState(false);
+  const onToggleSnackBar = () => setVisible(true);
+  const onDismissSnackBar = () => setVisible(false);
+  const dismissSnackbar = () => {
+    changeBadPass(false)
+    onDismissSnackBar()
+  }
   useEffect(
     () => {
       const [tokenCB, authCB] = setAuthHandler(firebase, setSignedIn, setEmailVerified, emailVerifyTimer, setTimer);
@@ -68,7 +74,7 @@ function AppNav() {
         tokenCB();
         authCB();
       };
-    },
+    }, [menuVisible]
   );
   const signOutUser = () => {
     auth.signOut().then(() => {
@@ -77,13 +83,60 @@ function AppNav() {
       console.log("error");
     });
   }
-  const SignOutButton = () => 
-          (<Button
-            onPress={() => signOutUser()}
-            title="logout"
-            color="#000"
-          />)
-  
+  const SignOutButton = () => (
+    <Menu
+      visible={menuVisible}
+      onDismiss={() => setMenuVisible(false)}
+      anchor={<Button onPress={() => setMenuVisible(true)}>Show menu</Button>}
+      style={{
+        paddingTop: 50,
+        flexDirection: 'row',
+        justifyContent: 'center',
+      }}>
+      <Menu.Item onPress={() => signOutUser()} title="Logout" />
+      <Menu.Item onPress={() => setDialogOpen(true)} title="Delete Account" />
+    </Menu>
+  )
+  const deleteAccount = () => {
+    var credential = firebase.auth.EmailAuthProvider.credential(
+      user.email,
+      pass
+    );
+    console.log(credential)
+    user.reauthenticateWithCredential(credential).then(() => {
+      user.delete()
+    }).catch(() => {
+      console.log('bad')
+      changeBadPass(true)
+      onToggleSnackBar()
+    });
+  }
+  const [isDialogOpen, setDialogOpen] = React.useState(false);
+  const AccountDialogTransition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+  const AccountDeletionDialog = () => (
+    <Dialog.Container
+      visible={isDialogOpen}
+      TransitionComponent={AccountDialogTransition}
+      keepMounted
+      onClose={() => setDialogOpen(false)}
+      aria-labelledby="alert-dialog-slide-title"
+      aria-describedby="alert-dialog-slide-description"
+    >
+      <Dialog.Title id="alert-dialog-slide-title">{"Delete Account?"}</Dialog.Title>
+      <Dialog.Description id="alert-dialog-slide-description">
+        Are you sure you want to delete your account? If so, enter your password and click Agree. This can't be undone!
+                        </Dialog.Description>
+      <Dialog.Input placeholder="Password" autoCompleteType="password" onChangeText={changePass} secureTextEntry={true}></Dialog.Input>
+      <Dialog.Button onPress={() => setDialogOpen(false)} color="red" label="Disagree">
+        Disagree
+                        </Dialog.Button>
+      <Dialog.Button onPress={deleteAccount} color="green" label="Agree">
+        Agree
+                        </Dialog.Button>
+    </Dialog.Container>
+  )
   var isFirebaseLoaded = isSignedIn !== undefined;
   if (isFirebaseLoaded) {
     const verifiedEmailOrHome =
@@ -100,8 +153,8 @@ function AppNav() {
             headerRight: SignOutButton,
             ...TransitionPresets.SlideFromRightIOS
           }} />
-        <Stack.Screen name="Edit Task" component={EditTaskPage} options={{
-            headerRight: SignOutButton, 
+          <Stack.Screen name="Edit Task" component={EditTaskPage} options={{
+            headerRight: SignOutButton,
             ...TransitionPresets.SlideFromRightIOS
           }} />
         </>) : (
@@ -120,25 +173,36 @@ function AppNav() {
         </>
       );
     return (
-      <NavigationContainer>
-        <Stack.Navigator>
-          {isSignedIn ? (
-            verifiedEmailOrHome
-          ) : (
-            <>
-              <Stack.Screen name="Login" component={LoginPage} options={{
-                ...TransitionPresets.SlideFromRightIOS
-              }}
+      <Provider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            {isSignedIn ? (
+              verifiedEmailOrHome
+            ) : (
+              <>
+                <Stack.Screen name="Login" component={LoginPage} options={{
+                  ...TransitionPresets.SlideFromRightIOS
+                }}
 
-              />
-              <Stack.Screen name="Register" component={RegisterPage} options={{
-                ...TransitionPresets.SlideFromRightIOS
-              }}
-              />
-            </>
-          )}
-        </Stack.Navigator>
-      </NavigationContainer>
+                />
+                <Stack.Screen name="Register" component={RegisterPage} options={{
+                  ...TransitionPresets.SlideFromRightIOS
+                }}
+                />
+              </>
+            )}
+          </Stack.Navigator>
+        </NavigationContainer>
+        <AccountDeletionDialog />
+        <Snackbar
+          style={styles.iosSnackbar}
+          visible={isSnackbarVisible}
+          onDismiss={dismissSnackbar}
+          duration={Snackbar.DURATION_SHORT}
+          theme={{ colors: { surface: 'black' } }}>
+          "Incorrect Password"
+                </Snackbar>
+      </Provider>
     );
   } else {
     console.log("loading...");
@@ -147,3 +211,13 @@ function AppNav() {
     );
   }
 }
+const styles = StyleSheet.create({
+  iosSnackbar: {
+    backgroundColor: 'white',
+    width: 165,
+    position: 'absolute',
+    bottom: 0,
+    elevation: 1,
+    alignSelf: 'center'
+  }
+});
