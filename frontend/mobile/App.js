@@ -117,7 +117,6 @@ function AppNav() {
       onDismiss={() => setMenuVisible(false)}
       anchor={<IconButton
         icon="dots-vertical"
-        color={'purple'}
         size={30}
         onPress={() => setMenuVisible(true)}
       />}
