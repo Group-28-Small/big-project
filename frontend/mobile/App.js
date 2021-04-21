@@ -3,7 +3,7 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import { is_production, setAuthHandler } from 'big-project-common';
 import 'firebase/auth';
 import React, { useEffect, useRef, useState } from 'react';
-import { LogBox, StyleSheet, View } from 'react-native';
+import { LogBox, Platform, StyleSheet, View } from 'react-native';
 import Dialog from 'react-native-dialog';
 import { Button, Menu, Provider, Snackbar, IconButton } from 'react-native-paper';
 import { FirebaseAppProvider, useAuth, useFirebaseApp, useUser } from 'reactfire';
@@ -31,6 +31,10 @@ if (!is_production()) {
 }
 
 function AccountDeletionDialog(props) {
+  const closing = () => {
+    props.changePass("")
+    props.setDialogOpen(false)
+  }
   return (<View>
     <Dialog.Container
       visible={props.isDialogOpen}
@@ -41,7 +45,7 @@ function AccountDeletionDialog(props) {
         Are you sure you want to delete your account? If so, enter your password and click Agree. This can't be undone!
                         </Dialog.Description>
       <Dialog.Input placeholder="Password" autoCompleteType="password" onChangeText={props.changePass} value={props.pass} secureTextEntry={true}></Dialog.Input>
-      <Dialog.Button onPress={() => props.setDialogOpen(false)} color="red" label="Disagree">
+      <Dialog.Button onPress={() => closing()} color="red" label="Disagree">
         Disagree
                         </Dialog.Button>
       <Dialog.Button onPress={props.deleteAccount} color="green" label="Agree">
@@ -139,12 +143,20 @@ function AppNav() {
     );
     console.log(credential)
     user.reauthenticateWithCredential(credential).then(() => {
+      changePass("")
+      if(Platform.OS === 'ios'){
+        onDismissSnackBar()
+      }
       user.delete()
       setDialogOpen(false)
     }).catch(() => {
       console.log('bad')
       setVisible(true)
-      onToggleSnackBar()
+      if(Platform.OS === 'android'){
+          ToastAndroid.show("Incorrect details", ToastAndroid.SHORT);
+      } else if(Platform.OS === 'ios'){
+        onToggleSnackBar()
+      }
     });
   }
   var isFirebaseLoaded = isSignedIn !== undefined;
@@ -210,7 +222,7 @@ function AppNav() {
           onDismiss={dismissSnackbar}
           duration={Snackbar.DURATION_SHORT}
           theme={{ colors: { surface: 'black' } }}>
-          "Incorrect Password"
+          Incorrect Password
                 </Snackbar>
       </Provider>
     );
