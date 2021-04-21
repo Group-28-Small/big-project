@@ -77,48 +77,31 @@ function AppNav() {
       console.log("error");
     });
   }
+  const SignOutButton = () => 
+          (<Button
+            onPress={() => signOutUser()}
+            title="logout"
+            color="#000"
+          />)
+  
   var isFirebaseLoaded = isSignedIn !== undefined;
   if (isFirebaseLoaded) {
     const verifiedEmailOrHome =
       isEmailVerified ? (
         <>
           <Stack.Screen name="Home" component={IndexPage} options={{
-            headerRight: () => (
-              <Button
-                onPress={() => signOutUser()}
-                title="logout"
-                color="#000"
-              />
-            ),
+            headerRight: SignOutButton,
           }} />
           <Stack.Screen name="New Task" component={NewTaskPage} options={{
-            headerRight: () => (
-              <Button
-                onPress={() => signOutUser()}
-                title="logout"
-                color="#000"
-              />
-            ),
+            headerRight: SignOutButton,
             ...TransitionPresets.SlideFromRightIOS
           }} />
           <Stack.Screen name="Previous Entries" component={SessionHistoryPage} options={{
-            headerRight: () => (
-              <Button
-                onPress={() => signOutUser()}
-                title="logout"
-                color="#000"
-              />
-            ),
+            headerRight: SignOutButton,
             ...TransitionPresets.SlideFromRightIOS
           }} />
         <Stack.Screen name="Edit Task" component={EditTaskPage} options={{
-            headerRight: () => (
-              <Button
-                onPress={() => signOutUser()}
-                title="logout"
-                color="#000"
-              />
-            ),
+            headerRight: SignOutButton, 
             ...TransitionPresets.SlideFromRightIOS
           }} />
         </>) : (
