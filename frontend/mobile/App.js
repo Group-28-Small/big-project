@@ -3,10 +3,10 @@ import { createStackNavigator, TransitionPresets } from '@react-navigation/stack
 import { is_production, setAuthHandler } from 'big-project-common';
 import 'firebase/auth';
 import React, { useEffect, useRef, useState } from 'react';
-import { LogBox, StyleSheet } from 'react-native';
+import { LogBox, StyleSheet, View } from 'react-native';
 import Dialog from 'react-native-dialog';
 import { Button, Menu, Provider, Snackbar, IconButton } from 'react-native-paper';
-import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
+import { FirebaseAppProvider, useAuth, useFirebaseApp, useUser } from 'reactfire';
 import { EditTaskPage, NewTaskPage } from './pages/edit_task';
 import { IndexPage } from './pages/index';
 import LoadingScreen from './pages/loadingscreen';
@@ -14,6 +14,7 @@ import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
 import { SessionHistoryPage } from './pages/session_history';
 import { VerifyPage } from './pages/verify_email';
+import * as firebaselib from 'firebase'
 
 var firebaseConfig = {
   apiKey: "AIzaSyDhZOTZT7X9YC8krs7imlVPvFcFMs8RKhk",
@@ -29,6 +30,26 @@ if (!is_production()) {
   LogBox.ignoreLogs(['Setting a timer']);
 }
 
+function AccountDeletionDialog(props) {
+  return (<View>
+    <Dialog.Container
+      visible={props.isDialogOpen}
+      onClose={() => setDialogOpen(false)}
+    >
+      <Dialog.Title id="alert-dialog-slide-title">{"Delete Account?"}</Dialog.Title>
+      <Dialog.Description id="alert-dialog-slide-description">
+        Are you sure you want to delete your account? If so, enter your password and click Agree. This can't be undone!
+                        </Dialog.Description>
+      <Dialog.Input placeholder="Password" autoCompleteType="password" onChangeText={props.changePass} value={props.pass} secureTextEntry={true}></Dialog.Input>
+      <Dialog.Button onPress={() => props.setDialogOpen(false)} color="red" label="Disagree">
+        Disagree
+                        </Dialog.Button>
+      <Dialog.Button onPress={props.deleteAccount} color="green" label="Agree">
+        Agree
+                        </Dialog.Button>
+    </Dialog.Container>
+  </View>)
+}
 export default function App() {
   return (
     <FirebaseAppProvider firebaseConfig={firebaseConfig} suspense={false}>
@@ -55,12 +76,18 @@ function AppNav() {
   const auth = useAuth();
   const firebase = useFirebaseApp();
   const [menuVisible, setMenuVisible] = useState(false);
-  const [pass, changePass] = React.useState("");
-  const [isSnackbarVisible, setVisible] = React.useState(false);
+  const [pass, changePass] = useState("");
+  const [isSnackbarVisible, setVisible] = useState(false);
+  const [isDialogOpen, _setDialogOpen] = useState(false);
+  const setDialogOpen = (val) => {
+    console.log("setting dialog");
+    console.log(val);
+    _setDialogOpen(val)
+  }
   const onToggleSnackBar = () => setVisible(true);
   const onDismissSnackBar = () => setVisible(false);
   const dismissSnackbar = () => {
-    changeBadPass(false)
+    setVisible(false)
     onDismissSnackBar()
   }
   useEffect(
@@ -74,7 +101,7 @@ function AppNav() {
         tokenCB();
         authCB();
       };
-    }, [menuVisible]
+    }
   );
   const signOutUser = () => {
     auth.signOut().then(() => {
@@ -102,46 +129,23 @@ function AppNav() {
       <Menu.Item onPress={() => setDialogOpen(true)} title="Delete Account" />
     </Menu>
   )
+  const { data: user } = useUser()
   const deleteAccount = () => {
-    var credential = firebase.auth.EmailAuthProvider.credential(
-      user.email,
+    console.log(firebase.auth.EmailAuthProvider);
+    var credential = firebaselib.auth.EmailAuthProvider.credential(
+      user?.email,
       pass
     );
     console.log(credential)
     user.reauthenticateWithCredential(credential).then(() => {
       user.delete()
+      setDialogOpen(false)
     }).catch(() => {
       console.log('bad')
-      changeBadPass(true)
+      setVisible(true)
       onToggleSnackBar()
     });
   }
-  const [isDialogOpen, setDialogOpen] = React.useState(false);
-  const AccountDialogTransition = React.forwardRef(function Transition(props, ref) {
-    return <Slide direction="up" ref={ref} {...props} />;
-  });
-  const AccountDeletionDialog = () => (
-    <Dialog.Container
-      visible={isDialogOpen}
-      TransitionComponent={AccountDialogTransition}
-      keepMounted
-      onClose={() => setDialogOpen(false)}
-      aria-labelledby="alert-dialog-slide-title"
-      aria-describedby="alert-dialog-slide-description"
-    >
-      <Dialog.Title id="alert-dialog-slide-title">{"Delete Account?"}</Dialog.Title>
-      <Dialog.Description id="alert-dialog-slide-description">
-        Are you sure you want to delete your account? If so, enter your password and click Agree. This can't be undone!
-                        </Dialog.Description>
-      <Dialog.Input placeholder="Password" autoCompleteType="password" onChangeText={changePass} secureTextEntry={true}></Dialog.Input>
-      <Dialog.Button onPress={() => setDialogOpen(false)} color="red" label="Disagree">
-        Disagree
-                        </Dialog.Button>
-      <Dialog.Button onPress={deleteAccount} color="green" label="Agree">
-        Agree
-                        </Dialog.Button>
-    </Dialog.Container>
-  )
   var isFirebaseLoaded = isSignedIn !== undefined;
   if (isFirebaseLoaded) {
     const verifiedEmailOrHome =
@@ -197,8 +201,8 @@ function AppNav() {
               </>
             )}
           </Stack.Navigator>
+          <AccountDeletionDialog isDialogOpen={isDialogOpen} setDialogOpen={setDialogOpen} pass={pass} changePass={changePass} deleteAccount={deleteAccount} />
         </NavigationContainer>
-        <AccountDeletionDialog />
         <Snackbar
           style={styles.iosSnackbar}
           visible={isSnackbarVisible}
