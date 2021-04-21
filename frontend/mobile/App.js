@@ -87,7 +87,7 @@ function AppNav() {
     <Menu
       visible={menuVisible}
       onDismiss={() => setMenuVisible(false)}
-      anchor={<Button onPress={() => setMenuVisible(true)}>Show menu</Button>}
+      anchor={<Button onPress={() => setMenuVisible(true)} icon='dots-vertical' />}
       style={{
         paddingTop: 50,
         flexDirection: 'row',
