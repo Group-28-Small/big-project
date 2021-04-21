@@ -85,7 +85,7 @@ const MainTaskList = props => {
                     onDismiss={dismissSnackbar}
                     duration={Snackbar.DURATION_SHORT}
                     theme={{ colors: { surface: 'black' }}}>
-                "Tracked task has been switched"
+                    Tracked task has been switched
                 </Snackbar>
             <FloatingActionButton style={styles.floatinBtn} onPress={() => addTask()} />
         </View>
@@ -114,7 +114,7 @@ const styles = StyleSheet.create({
     },
     iosSnackbar: {
         backgroundColor: 'white',
-        width: 165,
+        width: 250,
         position: 'absolute',
         bottom: 0,
         elevation: 1,

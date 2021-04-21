@@ -5,7 +5,7 @@ import 'firebase/auth';
 import React, { useEffect, useRef, useState } from 'react';
 import { LogBox, StyleSheet } from 'react-native';
 import Dialog from 'react-native-dialog';
-import { Button, Menu, Provider, Snackbar } from 'react-native-paper';
+import { Button, Menu, Provider, Snackbar, IconButton } from 'react-native-paper';
 import { FirebaseAppProvider, useAuth, useFirebaseApp } from 'reactfire';
 import { EditTaskPage, NewTaskPage } from './pages/edit_task';
 import { IndexPage } from './pages/index';
@@ -87,7 +87,12 @@ function AppNav() {
     <Menu
       visible={menuVisible}
       onDismiss={() => setMenuVisible(false)}
-      anchor={<Button onPress={() => setMenuVisible(true)} icon='dots-vertical' />}
+      anchor={<IconButton
+        icon="dots-vertical"
+        color={'purple'}
+        size={30}
+        onPress={() => setMenuVisible(true)}
+      />}
       style={{
         paddingTop: 50,
         flexDirection: 'row',

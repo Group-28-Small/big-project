@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
     },
     iosResetSnackbar: {
         backgroundColor: 'white',
-        width: 330,
+        width: 290,
         marginHorizontal: 120,
         marginVertical: 250,
         alignSelf: 'center'
