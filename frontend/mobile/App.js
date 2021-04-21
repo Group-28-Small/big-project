@@ -106,6 +106,7 @@ function AppNav() {
   const signOutUser = () => {
     auth.signOut().then(() => {
       console.log("Signed out");
+      firebase.firestore().terminate();
     }).catch(() => {
       console.log("error");
     });
