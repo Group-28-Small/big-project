@@ -17,7 +17,8 @@ export const LoginPage = props => {
     const [password, onChangePassword] = React.useState("");
     const auth = useAuth();
     const login = () => auth.signInWithEmailAndPassword(email, password).then(result => {
-        console.log(result);
+        // do nothing - the router will detect the authentication transition
+        // console.log(result);
     }).catch(() => {
         console.log("false");
         if (Platform.OS === 'android') {
