@@ -10,7 +10,7 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
 import Moment from 'react-moment';
 import { TrackTaskButton } from '../components/TrackTaskButton'
-import { TaskElement } from '../components/TaskElement'
+import TaskElement from '../components/TaskElement';
 import LoadingScreen from './loadingscreen';
 import { back } from 'react-native/Libraries/Animated/src/Easing';
 
@@ -101,15 +101,14 @@ const MainTaskList = props => {
     return (
         <View style={AppStyles.container}>
             <Searchbar placeholder="Search" value={searchText} onChangeText={setSearchText} />
-            <ScrollView>
+            <ScrollView style={{width: '100%'}}>
                 {
                     tasks ? tasks.map((item) => {
                         return (
-                            <TaskElement key={item.id} name={item.name} duration={item.duration} estimated_time={item.estimated_time} has_due_date={item.has_due_date} due_date={item.due_date} track_progress={item.track_progress} percentage={item.percentage}/>
+                            <TaskElement key={item.id} name={item.name} duration={item.duration} estimated_time={item.estimated_time} has_due_date={item.has_due_date} due_date={item.due_date} track_progress={item.track_progress} percentage={item.percentage} />
                         )
                     }) : <Caption>There's nothing here...</Caption>
-                }
-                
+                }                
                 {/* {tasks != undefined && tasks.length != 0 ?
                     <>
                         {
