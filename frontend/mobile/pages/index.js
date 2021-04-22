@@ -112,7 +112,7 @@ const MainTaskList = props => {
                             }
                             
                             return (
-                                <TaskElement key={item.id} name={item.name} duration={item.duration} estimated_time={item.estimated_time} has_due_date={item.has_due_date} due_date={item.due_date} track_progress={item.track_progress} percentage={item.percentage} setActive={() => setActiveTask(item.id)} style={taskClasses} />
+                                <TaskElement key={item.id} name={item.name} duration={item.duration} estimated_time={item.estimated_time} has_due_date={item.has_due_date} due_date={item.due_date} track_progress={item.track_progress} percentage={item.percentage} setActive={() => { Haptics.selectionAsync(); setActiveTask(item.id) }} style={taskClasses} />
                             )
                         })
                     }
