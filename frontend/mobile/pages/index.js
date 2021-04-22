@@ -34,11 +34,10 @@ const MainTaskList = props => {
         .doc(user.uid) : null;
     const { data: userDetails } = useFirestoreDocData(userDetailsRef ?? db.collection('users').doc());
     var query = db.collection("tasks").where("user", "==", userDetailsRef);
-    const { data: firebase_tasks, hasEmitted } = useFirestoreCollectionData(query, {
+    const { data: firebase_tasks } = useFirestoreCollectionData(query, {
         idField: 'id'
     });
     const [tasksCache, setTasksCache] = React.useState([])
-    console.log(hasEmitted);
     const dismissSnackbar = () => {
         onDismissSnackBar()
     }

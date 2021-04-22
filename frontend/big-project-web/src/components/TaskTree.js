@@ -1,15 +1,17 @@
-import { Container, Fab, makeStyles, Modal, Popover, Typography } from '@material-ui/core';
+import { Container, Fab, makeStyles, Modal, Popover, TextField, Typography } from '@material-ui/core';
 import IconButton from "@material-ui/core/IconButton";
+import { TextFields } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
 import NoteIcon from '@material-ui/icons/Note';
 import TreeItem from '@material-ui/lab/TreeItem';
 import TreeView from '@material-ui/lab/TreeView';
-import React from 'react';
+import React, { useState } from 'react';
 import Moment from 'react-moment';
-import { useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
+import { useFirebaseApp, useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
 import EditTaskButton from './EditTaskButton';
 import { EditTaskPage, NewTaskPage } from "./NewTask";
 import PlayPauseButton from './PlayPauseButton';
+import { backend_address } from 'big-project-common'
 
 
 
@@ -26,10 +28,11 @@ function getModalStyle() {
 
 export default function TaskTree(props) {
     const db = useFirestore();
+    const firebase = useFirebaseApp();
     const { data: user } = useUser();
     const userDetailsRef = user != null ? db.collection('users')
         .doc(user.uid) : null;
-    const { data: tasks } = useFirestoreCollectionData(db.collection("tasks").where("user", "==", userDetailsRef), {
+    const { data: firebase_tasks } = useFirestoreCollectionData(db.collection("tasks").where("user", "==", userDetailsRef), {
         idField: 'id'
     });
     const styles = useStyles();
@@ -37,9 +40,38 @@ export default function TaskTree(props) {
     const [open, setOpen] = React.useState(false);
     const [modalMode, setModalMode] = React.useState("newtask")
     const [taskID, setTaskID] = React.useState(undefined);
+    const [searchText, _setSearchText] = useState("")
+    const [searchedTasks, setSearchedTasks] = React.useState([])
+    const [tasksCache, setTasksCache] = React.useState([])
+    const setSearchText = (text) => {
+        _setSearchText(text);
+        if (text === '') {
+            setSearchedTasks(firebase_tasks)
+        }
+        firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
+            const url = backend_address(idToken + "/" + text)
+            console.log(url);
+            fetch(url)
+                .then(response => response.json())
+                .then(data => setSearchedTasks(data)).catch((error) => {
+                    // do nothing
+                });
+        }).catch((error) => {
+            // this should never happen
+        })
+    }
+    if (firebase_tasks !== tasksCache) {
+        console.log("update detected")
+        setTasksCache(firebase_tasks)
+        setSearchText(searchText)
+    }
 
-    if (!tasks) {
-        return <div>Getting  tasks...</div>
+
+    var tasks = [];
+    if (searchText === "") {
+        tasks = firebase_tasks ?? [];
+    } else if (searchedTasks !== null) {
+        tasks = searchedTasks
     }
 
     const editTask = (task_id) => {
@@ -57,9 +89,12 @@ export default function TaskTree(props) {
         setOpen(false);
     };
 
+
     return (
         <Container>
-            <Typography variant='h4' className ={styles.task}>Tasks</Typography>
+            <Typography variant='h4' className={styles.task}>Tasks</Typography>
+            <TextField className={styles.field} id='search' type="text" label='Search' variant='outlined' onChange={(e) => setSearchText(e.target.value)} value={searchText}></TextField>
+
             <TreeView>
                 {tasks.map((item, idx) => {
                     return (
