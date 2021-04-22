@@ -33,8 +33,8 @@ router.get("/" + common.total_url + "/:userToken/:taskID", function (req, res, n
   const { userToken, taskID } = req.params;
   admin.auth().verifyIdToken(userToken).then((decodedToken) => {
     // const uid = decodedToken.uid;
-    const taskRef = firestore.collection('tasks').doc(taskID);
-    let query = firestore.collection('sessions').where("task", "==", taskRef);
+    // const taskRef = firestore.collection('tasks').doc(taskID);
+    let query = firestore.collection('sessions').where("task", "==", "tasks/" + taskID);
     return query.get()
 
   }).then((result) => {
@@ -43,12 +43,15 @@ router.get("/" + common.total_url + "/:userToken/:taskID", function (req, res, n
     result.forEach((d) => {
       // clear the user field, since that has keys in it
       const data = d.data()
+      data.user = undefined
+      // console.log("got data");
+      // console.log(data);
       if (!data.end || !data.start) {
-        res.status(500)
+        res.sendStatus(500)
       }
       total_time += data.end - data.start
     })
-    res.send(total_time)
+    res.send({ total_time: total_time })
   }).catch((error) => {
     console.log(error);
   })
