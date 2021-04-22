@@ -4,13 +4,14 @@ import { StyleSheet, Text, Vibration, View, ToastAndroid, Button } from 'react-n
 import { backend_address, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME } from 'big-project-common';
 import AppStyles from '../styles';
 import { Searchbar, Snackbar } from 'react-native-paper';
-import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser, useAuth } from 'reactfire';
+import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser, useAuth, useFirebaseApp } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
 import Moment from 'react-moment';
 import { TrackTaskButton } from '../components/TrackTaskButton'
 import LoadingScreen from './loadingscreen';
+import { back } from 'react-native/Libraries/Animated/src/Easing';
 
 
 export const IndexPage = (props) => {
@@ -24,17 +25,20 @@ const MainTaskList = props => {
     const [visible, setVisible] = React.useState(false);
     const onToggleSnackBar = () => setVisible(true);
     const onDismissSnackBar = () => setVisible(false);
-    const [searchText, setSearchText] = React.useState("");
-    const firebase = require('firebase');
+    const [searchText, _setSearchText] = React.useState("");
+    const [searchedTasks, setSearchedTasks] = React.useState([])
+    const firebase = useFirebaseApp()
     const db = useFirestore();
     const { data: user } = useUser();
     const userDetailsRef = user != null ? db.collection('users')
         .doc(user.uid) : null;
     const { data: userDetails } = useFirestoreDocData(userDetailsRef ?? db.collection('users').doc());
     var query = db.collection("tasks").where("user", "==", userDetailsRef);
-    const { data: tasks } = useFirestoreCollectionData(query, {
+    const { data: firebase_tasks, hasEmitted } = useFirestoreCollectionData(query, {
         idField: 'id'
     });
+    const [tasksCache, setTasksCache] = React.useState([])
+    console.log(hasEmitted);
     const dismissSnackbar = () => {
         onDismissSnackBar()
     }
@@ -44,6 +48,34 @@ const MainTaskList = props => {
     const editTask = item => {
         Haptics.selectionAsync();
         props.navigation.navigate('Edit Task', { item_id: item.id });
+    }
+    const setSearchText = (text) => {
+        _setSearchText(text)
+        firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
+            const url = backend_address(idToken + "/" + text)
+            console.log(url);
+            fetch(url)
+                .then(response => response.json())
+                .then(data => setSearchedTasks(data)).catch((error) => {
+                    // do nothing
+                });
+        }).catch((error) => {
+            // this should never happen
+        })
+    }
+    if (firebase_tasks !== tasksCache) {
+        console.log("update detected")
+        setTasksCache(firebase_tasks)
+        if (searchText !== '') {
+            setSearchText(searchText)
+        }
+    }
+    var tasks = [];
+    var no_tasks_msg = "You don't have any tasks!"
+    if (searchText === "") {
+        tasks = firebase_tasks;
+    } else {
+        tasks = searchedTasks
     }
     const active_task = userDetails?.active_task;
     const setActiveTask = item_id => {
@@ -66,10 +98,10 @@ const MainTaskList = props => {
     }
     return (
         <View style={AppStyles.container}>
+            <Searchbar placeholder="Search" value={searchText} onChangeText={setSearchText} />
             <ScrollView>
                 {tasks != undefined && tasks.length != 0 ?
                     <>
-                        <Searchbar placeholder="Search" value={searchText} onChangeText={setSearchText} />
                         {
                             tasks.map((item) => {
                                 var taskClasses = [styles.tasks,]
@@ -83,7 +115,7 @@ const MainTaskList = props => {
                                 );
                             })
                         }
-                    </> : <Text>You don't have any tasks!</Text>}
+                    </> : <Text>{no_tasks_msg}</Text>}
             </ScrollView>
             {active_task != undefined && (
                 <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} />
