@@ -12,7 +12,7 @@ import Moment from 'react-moment';
 import { TrackTaskButton } from '../components/TrackTaskButton'
 import TaskElement from '../components/TaskElement';
 import LoadingScreen from './loadingscreen';
-import { back } from 'react-native/Libraries/Animated/src/Easing';
+import { TaskEditor } from './edit_task'
 
 
 export const IndexPage = (props) => {
@@ -43,6 +43,7 @@ const MainTaskList = props => {
         onDismissSnackBar()
     }
     const addTask = () => {
+        console.log('Adding a new task...')
         props.navigation.navigate('New Task');
     }
     const editTask = item => {
@@ -112,7 +113,7 @@ const MainTaskList = props => {
                             }
                             
                             return (
-                                <TaskElement key={item.id} name={item.name} duration={item.duration} estimated_time={item.estimated_time} has_due_date={item.has_due_date} due_date={item.due_date} track_progress={item.track_progress} percentage={item.percentage} setActive={() => setActiveTask(item.id)} style={taskClasses} />
+                                <TaskElement key={item.id} name={item.name} duration={item.duration} has_estimated_time={item.has_estimated_time} estimated_time={item.estimated_time} has_due_date={item.has_due_date} due_date={item.due_date} track_progress={item.track_progress} percentage={item.percentage} setActive={() => setActiveTask(item.id)} style={taskClasses} edit={() => editTask(item)} />
                             )
                         })
                     }

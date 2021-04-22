@@ -12,6 +12,7 @@ import firebase, { firestore } from 'firebase';
 import { Snackbar } from 'react-native-paper';
 import Dialog from "react-native-dialog";
 import { userStopTask } from 'big-project-common';
+import { onChange } from 'react-native-reanimated';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -63,17 +64,19 @@ const TaskEditor = props => {
     const { item, user, item_id, userRef } = props;
     const [timePickerVisible, setTimePickerVisible] = React.useState(false);
     const [timePickerMode, setTimePickerMode] = React.useState("date");
-    const [hasDueDate, setHasDueDate] = React.useState(item.has_due_date ?? false);
-    const [trackProgress, setTrackProgress] = React.useState(item.track_progress ?? false);
 
     const [taskName, onChangeName] = React.useState(item.name ?? '');
-    const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
-    const [pct, onChangePct] = React.useState(item.percentage ?? 0);
-    const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
     const [notes, onChangeNotes] = React.useState(item.note ?? '');
-
-    const userDetailsRef = user != null ? db.collection('users')
-        .doc(user.uid) : null;
+    const [hasEstimatedTime, setHasEstimatedTime] = React.useState(item.has_estimated_time ?? false);
+    const [estimatedTime, onChangeEstimatedTime] = React.useState(item.estimated_time ?? '');
+    const [hasDueDate, setHasDueDate] = React.useState(item.has_due_date ?? false);
+    const [dueDate, onChangeDueDate] = React.useState(item.due_date ?? '');
+    const [duration, updateDuration] = React.useState(item.duration ?? '');
+    const [isDone, setIsDone] = React.useState(item.is_done ?? false); 
+    // uhh we'll see
+    // const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
+    
+    const userDetailsRef = user != null ? db.collection('users').doc(user.uid) : null;
     const { data: userDetails } = useFirestoreDocData(userDetailsRef ?? db.collection('users').doc());
 
 
@@ -86,11 +89,10 @@ const TaskEditor = props => {
     };
 
     const updateTask = () => {
-        console.log("taskName: " + taskName);
+        console.log("updating task: " + taskName);
         if(taskName != ''){
             db.collection("tasks").doc(item_id).set({
-                'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'duration': item.duration ?? 0,
-                'track_progress': trackProgress, 'has_due_date': hasDueDate, 'user': userRef
+                'name': taskName, 'note': notes, 'duration': duration, 'has_estimated_time': hasEstimatedTime, 'estimated_time': estimatedTime, 'has_due_date': hasDueDate, 'due_date': dueDate, 'is_done': isDone, 'user': userRef
             }, { merge: true });
         props.navigation.navigate('Home');
         } else{
@@ -122,7 +124,7 @@ const TaskEditor = props => {
         const currentDate = selectedDate || dueDate;
         setTimePickerVisible(Platform.OS === 'ios');
         console.log('Setting due date');
-        setDueDate(currentDate);
+        onChangeDueDate(currentDate);
     };
 
     return (
@@ -139,49 +141,30 @@ const TaskEditor = props => {
             />
             <TextInput
                 style={styles.input}
-                onChangeText={onChangeTime}
-                value={estimatedTime}
-                label="Expected Time (Optional)"
-                placeholder="hours:minutes"
-                keyboardType='numeric'
-                mode="outlined"
-            />
-            <TextInput
-                style={styles.input}
                 onChangeText={onChangeNotes}
                 value={notes}
                 label="Notes..."
                 mode="outlined"
                 multiline
             />
-            <TouchableRipple onPress={() => setTrackProgress(!trackProgress)}>
+            <TouchableRipple onPress={() => setHasEstimatedTime(!hasEstimatedTime)}>
                 <View style={styles.row}>
-                    <Paragraph>Track Progress</Paragraph>
+                    <Paragraph>Has estimated time</Paragraph>
                     <View pointerEvents="none">
-                        <Switch value={trackProgress} />
+                        <Switch value={hasEstimatedTime} />
                     </View>
                 </View>
             </TouchableRipple>
-            {trackProgress && (
-                <>
-                    <View style={[styles.row, AppStyles.centered]}>
-                        <Text style={styles.text}>Percentage: {pct}%</Text>
-                    </View>
-                    <View style={styles.row}>
-                        <Slider
-                        //TODO: This is bugging out again on slide
-                            style={{ width: '100%', height: 40 }}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={pct}
-                            step={1}
-                            onValueChange={onChangePct}
-                            // TODO: IDK colors
-                            minimumTrackTintColor="#6c7682"
-                            maximumTrackTintColor="#000000"
-                        />
-                    </View>
-                </>
+            {hasEstimatedTime && (
+                <TextInput
+                style={styles.input}
+                onChangeText={onChangeEstimatedTime}
+                value={estimatedTime}
+                label="Expected Time (Optional)"
+                placeholder="hours:minutes"
+                keyboardType='numeric'
+                mode="outlined"
+                />
             )
             }
             <TouchableRipple onPress={() => setHasDueDate(!hasDueDate)}>

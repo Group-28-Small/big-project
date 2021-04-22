@@ -3,7 +3,7 @@ import React from 'react';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Card, Divider, Text, ProgressBar, Colors } from 'react-native-paper';
+import { Card, Divider, Text, ProgressBar, Colors, Button } from 'react-native-paper';
 import Moment from 'react-moment';
 
 export default TaskElement = props => {
@@ -12,19 +12,35 @@ export default TaskElement = props => {
         <Card onPress={() => toggleCollapse(!isCollapsed)} onLongPress={props.setActive} style={styles.task}>
             <Card.Content>
                 <Text>{props.name}</Text>
-                <ProgressBar progress={props.percentage / 100} color={Colors.red300} style={{height: 15, marginTop: 5, marginBottom: 5, width: '100%'}}/>
+                {
+                    props.has_estimated_time && 
+                    <ProgressBar progress={props.percentage / 100} color={Colors.red300} style={{height: 15, marginTop: 5, marginBottom: 5, width: '100%'}}/>
+                }
                 {
                     isCollapsed &&
-                    <View>
-                        <Divider style={{marginBottom: 15, marginTop: 10}}/>
-                        <Text>{props.duration + ' / ' + (props.estimated_time || 'no estimated time')}</Text>
-                        {
-                            props.has_due_date && 
-                            <Text>Due date: {<Moment format="DD MMMM YYYY" date={props.due_date} element={Text} unix />}</Text>
-                        }
+                    <View style={{flexDirection:"row"}}>
+                        <View style={{flex: 1}, styles.boundary}>
+                            {
+                                <Text style={{justifyContent: 'flex-start',}, styles.boundary}>{props.duration + ' / ' + (props.has_estimated_time ? props.estimated_time : '--:--')}</Text>
+                            }
+                        </View>
+                        <View>
+                            {
+                                props.has_due_date && 
+                                <Text style={{justifyContent: 'flex-end',}, styles.boundary}>Due date: {<Moment format="DD MMMM YYYY" date={props.due_date} element={Text} unix />}</Text>
+                            }
+                        </View>                        
                     </View> 
                 }
             </Card.Content>
+            {
+                isCollapsed &&
+                <Card.Actions>
+                    <Button onPress={props.edit}>Edit</Button>
+                    <Button>Delete</Button>
+                    <Button>Mark as done</Button>
+                </Card.Actions>
+            }
         </Card>
     )
 }
@@ -42,5 +58,6 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 1,
         borderColor: Colors.blue900,
+        margin: 1,
     }
 })
