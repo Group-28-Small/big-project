@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { StyleSheet, Text, Vibration, View, ToastAndroid, Button } from 'react-native';
-import { backend_address, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME, AppTheme } from 'big-project-common';
+import { backend_address, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME, AppTheme, search_url } from 'big-project-common';
 import AppStyles from '../styles';
 import { Searchbar, Snackbar } from 'react-native-paper';
 import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser, useAuth, useFirebaseApp } from 'reactfire';
@@ -55,7 +55,7 @@ const MainTaskList = props => {
             return
         }
         firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
-            const url = backend_address(idToken + "/" + text)
+            const url = backend_address(search_url + "/" + idToken + "/" + text)
             console.log(url);
             fetch(url)
                 .then(response => response.json())

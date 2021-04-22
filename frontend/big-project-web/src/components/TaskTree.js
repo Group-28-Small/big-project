@@ -11,7 +11,7 @@ import { useFirebaseApp, useFirestore, useFirestoreCollectionData, useUser } fro
 import EditTaskButton from './EditTaskButton';
 import { EditTaskPage, NewTaskPage } from "./NewTask";
 import PlayPauseButton from './PlayPauseButton';
-import { backend_address } from 'big-project-common'
+import { backend_address, search_url } from 'big-project-common'
 
 
 
@@ -50,7 +50,7 @@ export default function TaskTree(props) {
             return
         }
         firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
-            const url = backend_address(idToken + "/" + text)
+            const url = backend_address(search_url + "/" + idToken + "/" + text)
             console.log(url);
             fetch(url)
                 .then(response => response.json())
