@@ -1,11 +1,12 @@
 import React from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { AppTheme } from 'big-project-common';
 
 export default FloatingActionButton = props => (
   <TouchableOpacity onPress={props.onPress} style={props.style} >
     <View
       style={{
-        backgroundColor: 'blue',
+        backgroundColor: AppTheme.primaryColor,
         width: 56,
         height: 56,
         borderRadius: 56,

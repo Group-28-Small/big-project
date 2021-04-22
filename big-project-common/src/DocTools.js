@@ -33,6 +33,7 @@ function setUserActiveTask(userDetails, userDetailsRef, item, db, active_task) {
     const user_was_tracking = userDetails?.is_tracking_task;
     var need_set_task = false;
     console.log("switching active task");
+    console.log(user_was_tracking)
     if (user_was_tracking) {
         if (!(userDetails.last_task_set_time) || (Date.now() / 1000) - userDetails.last_task_set_time > MIN_TASK_TIME) {
             if(active_task != undefined){
@@ -42,6 +43,7 @@ function setUserActiveTask(userDetails, userDetailsRef, item, db, active_task) {
         }
     }
     const itemRef = db.collection('tasks').doc(item);
+    console.log(item)
     userDetailsRef.set({ 'active_task': itemRef, 'last_task_set_time': Date.now() / 1000 }, { merge: true })
     if (need_set_task) {
         userStartTask(db, userDetailsRef);

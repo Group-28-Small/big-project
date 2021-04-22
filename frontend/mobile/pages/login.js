@@ -4,6 +4,7 @@ import { Snackbar, Button as PaperButton } from 'react-native-paper';
 import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
 import { useAuth, useFirebaseApp } from 'reactfire';
 import AppStyles from '../styles';
+import { AppTheme } from 'big-project-common';
 
 export const LoginPage = props => {
     const [visible, setVisible] = React.useState(false);
@@ -79,14 +80,14 @@ export const LoginPage = props => {
                     autoCompleteType="password"
                 />
                 <View style={styles.submitButton}>
-                    <Button title="Login" onPress={() => login()} color={"#4caf50"} />
+                    <Button title="Sign in" onPress={() => login()} color={AppTheme.secondaryDarkColor} />
                 </View>
             </SafeAreaView >
             <View style={styles.registerButton}>
-                <Button title="Register" onPress={() => goToRegister()} />
+                <Button title="Register" color={AppTheme.secondaryDarkColor} onPress={() => goToRegister()} />
             </View>
             <View style={styles.registerButton}>
-                <PaperButton onPress={() => resetPassword()} mode="outlined" >Forgot Password</PaperButton>
+                <PaperButton onPress={() => resetPassword()} mode="outlined" color={AppTheme.primaryColor}>Reset Password</PaperButton>
             </View>
             <View style={styles.container}>
                 <Snackbar style={styles.iosSnackbar}

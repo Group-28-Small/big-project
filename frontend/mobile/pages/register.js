@@ -1,5 +1,5 @@
 
-import { getOrCreateUserDocument } from 'big-project-common';
+import { getOrCreateUserDocument, AppTheme } from 'big-project-common';
 import React from 'react';
 import { View, StyleSheet, Button, Text, Platform, ToastAndroid } from 'react-native';
 import { TextInput } from 'react-native-gesture-handler';
@@ -119,7 +119,7 @@ export function RegisterPage() {
                     autoCompleteType="password"
                 />
                 <View style={styles.submitButton}>
-                    <Button title="Register" onPress={() => register()} color={"#4caf50"} disabled={pwError} />
+                    <Button title="Register" onPress={() => register()} color={AppTheme.secondaryDarkColor} disabled={pwError} />
                 </View>
                 <View style={styles.container}>
                     <Snackbar style={styles.iosSnackbar}

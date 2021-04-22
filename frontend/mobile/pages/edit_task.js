@@ -11,7 +11,7 @@ import LoadingScreen from './loadingscreen';
 import firebase, { firestore } from 'firebase';
 import { Snackbar } from 'react-native-paper';
 import Dialog from "react-native-dialog";
-import { userStopTask } from 'big-project-common';
+import { userStopTask, AppTheme } from 'big-project-common';
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -177,8 +177,9 @@ const TaskEditor = props => {
                             step={1}
                             onValueChange={onChangePct}
                             // TODO: IDK colors
-                            minimumTrackTintColor="#6c7682"
-                            maximumTrackTintColor="#000000"
+                            minimumTrackTintColor={AppTheme.primaryDarkColor}
+                            maximumTrackTintColor={AppTheme.primaryColor}
+                            thumbTintColor={AppTheme.primaryDarkColor}
                         />
                     </View>
                 </>
@@ -218,17 +219,17 @@ const TaskEditor = props => {
                         )}
                     </View>
                     <View style={styles.row}>
-                        <Text>Due: <Moment element={Text} date={dueDate} fromNow /></Text>
+                        <Text style={styles.text}>Due: <Moment element={Text} date={dueDate} fromNow /></Text>
                     </View>
                 </>
             )
             }
             <View style={styles.submitButton}>
-                <Button title={props.isNewTask ? "Add Task" : "Update"} onPress={() => updateTask()} color={"#4caf50"} />
+                <Button title={props.isNewTask ? "Add Task" : "Update Task"} onPress={() => updateTask()} color={AppTheme.primaryColor} />
             </View>
             {!props.isNewTask &&
                 <View style={styles.submitButton}>
-                    <Button title={"Delete"} onPress={() => handleClickOpen()} color={"red"} />
+                    <Button title={"Delete Task"} onPress={() => handleClickOpen()} color={AppTheme.secondaryDarkColor} />
                     <Dialog.Container
                         visible={open}
                         TransitionComponent={Transition}
@@ -241,10 +242,10 @@ const TaskEditor = props => {
                         <Dialog.Description id="alert-dialog-slide-description">
                             Are you sure you want to delete this task permenantly? Session history will not be saved.
                         </Dialog.Description>
-                        <Dialog.Button onPress={handleClose} color="red" label="Disagree">
+                        <Dialog.Button onPress={handleClose} color={AppTheme.primaryColor} label="Disagree">
                         Disagree
                         </Dialog.Button>
-                        <Dialog.Button onPress={deleteTask} color="green" label="Agree">
+                        <Dialog.Button onPress={deleteTask} color={AppTheme.primaryColor} label="Agree">
                         Agree
                         </Dialog.Button>
                     </Dialog.Container>
@@ -270,7 +271,7 @@ const styles = StyleSheet.create({
         marginVertical: 5,
     },
     text: {
-        textAlign: 'center'
+        textAlign: 'center',
     },
     container: {
         flex: 1,

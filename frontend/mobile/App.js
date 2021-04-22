@@ -1,6 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
-import { is_production, setAuthHandler } from 'big-project-common';
+import { is_production, setAuthHandler, AppTheme } from 'big-project-common';
 import 'firebase/auth';
 import React, { useEffect, useRef, useState } from 'react';
 import { LogBox, Platform, StyleSheet, View } from 'react-native';
@@ -45,10 +45,10 @@ function AccountDeletionDialog(props) {
         Are you sure you want to delete your account? If so, enter your password and click Agree. This can't be undone!
                         </Dialog.Description>
       <Dialog.Input placeholder="Password" autoCompleteType="password" onChangeText={props.changePass} value={props.pass} secureTextEntry={true}></Dialog.Input>
-      <Dialog.Button onPress={() => closing()} color="red" label="Disagree">
+      <Dialog.Button onPress={() => closing()} color={AppTheme.primaryColor} label="Disagree">
         Disagree
                         </Dialog.Button>
-      <Dialog.Button onPress={props.deleteAccount} color="green" label="Agree">
+      <Dialog.Button onPress={props.deleteAccount} color={AppTheme.primaryColor} label="Agree">
         Agree
                         </Dialog.Button>
     </Dialog.Container>
@@ -165,18 +165,30 @@ function AppNav() {
         <>
           <Stack.Screen name="Home" component={IndexPage} options={{
             headerRight: SignOutButton,
+            headerStyle: {
+              backgroundColor: AppTheme.primaryColor
+            }
           }} />
           <Stack.Screen name="New Task" component={NewTaskPage} options={{
             headerRight: SignOutButton,
-            ...TransitionPresets.SlideFromRightIOS
+            ...TransitionPresets.SlideFromRightIOS,
+            headerStyle: {
+              backgroundColor: AppTheme.primaryColor
+            }
           }} />
-          <Stack.Screen name="Previous Entries" component={SessionHistoryPage} options={{
+          <Stack.Screen name="Session History" component={SessionHistoryPage} options={{
             headerRight: SignOutButton,
-            ...TransitionPresets.SlideFromRightIOS
+            ...TransitionPresets.SlideFromRightIOS,
+            headerStyle: {
+              backgroundColor: AppTheme.primaryColor
+            }
           }} />
           <Stack.Screen name="Edit Task" component={EditTaskPage} options={{
             headerRight: SignOutButton,
-            ...TransitionPresets.SlideFromRightIOS
+            ...TransitionPresets.SlideFromRightIOS,
+            headerStyle: {
+              backgroundColor: AppTheme.primaryColor
+            }
           }} />
         </>) : (
         <>
@@ -202,12 +214,18 @@ function AppNav() {
             ) : (
               <>
                 <Stack.Screen name="Login" component={LoginPage} options={{
-                  ...TransitionPresets.SlideFromRightIOS
+                  ...TransitionPresets.SlideFromRightIOS,
+                  headerStyle: {
+                    backgroundColor: AppTheme.primaryColor
+                  }
                 }}
 
                 />
                 <Stack.Screen name="Register" component={RegisterPage} options={{
-                  ...TransitionPresets.SlideFromRightIOS
+                  ...TransitionPresets.SlideFromRightIOS,
+                  headerStyle: {
+                    backgroundColor: AppTheme.primaryColor
+                  }
                 }}
                 />
               </>

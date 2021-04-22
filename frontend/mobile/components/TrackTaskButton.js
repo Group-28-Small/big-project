@@ -6,7 +6,7 @@ export function TrackTaskButton(props) {
     return (
         <View style={AppStyles.bottom}>
             <Button title={buttonText} disabled={!props.task} onPress={props.onPress} />
-            <Button title={"Task History"} onPress={() => props.navigation.navigate("Previous Entries")} />
+            <Button title={"History"} onPress={() => props.navigation.navigate("Session History")} />
         </View>
     );
 }

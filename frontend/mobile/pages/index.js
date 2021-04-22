@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { StyleSheet, Text, Vibration, View, ToastAndroid, Button } from 'react-native';
-import { backend_address, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME } from 'big-project-common';
+import { backend_address, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME, AppTheme } from 'big-project-common';
 import AppStyles from '../styles';
 import { Searchbar, Snackbar } from 'react-native-paper';
 import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser, useAuth, useFirebaseApp } from 'reactfire';
@@ -149,9 +149,8 @@ const styles = StyleSheet.create({
         margin: 4,
     },
     activeTask: {
-        borderColor: '#05FF1E',
-        borderWidth: 4,
         margin: 2,
+        backgroundColor: AppTheme.primaryLightColor
     },
     iosSnackbar: {
         backgroundColor: 'white',
