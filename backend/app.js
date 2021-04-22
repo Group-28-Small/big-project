@@ -23,7 +23,6 @@ if (!is_production()) {
 }
 
 app.use('/api', apiRouter);
-// app.set('view engine', 'html');
 
 ///////////////////////////////////////////////////
 // For Heroku deployment
