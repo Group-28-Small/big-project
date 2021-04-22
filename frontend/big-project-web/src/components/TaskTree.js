@@ -94,7 +94,7 @@ export default function TaskTree(props) {
     return (
         <Container>
             <Typography variant='h4' className={styles.task}>Tasks</Typography>
-            <TextField className={styles.field} id='search' type="text" label='Search' variant='outlined' onChange={(e) => setSearchText(e.target.value)} value={searchText}></TextField>
+            <TextField className={styles.search} id='search' type="text" label='Search' variant='outlined' onChange={(e) => setSearchText(e.target.value)} value={searchText}></TextField>
 
             <TreeView>
                 {tasks.map((item, idx) => {
@@ -226,5 +226,10 @@ const useStyles = makeStyles((theme) => ({
     },
     task: {
         textAlign: 'center',
+    },
+    search: {
+        margin: '16px',
+        marginRight: '64px'
+
     }
 }));
