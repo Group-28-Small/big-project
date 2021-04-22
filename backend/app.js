@@ -5,6 +5,7 @@ var logger = require('morgan');
 var database = require('./database');
 var cors = require('cors')
 var apiRouter = require('./routes/api');
+const { is_production } = require('big-project-common');
 
 var app = express();
 
@@ -16,8 +17,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.json())
-app.use(cors());
-app.options('*', cors());
+if (!is_production()) {
+    app.use(cors());
+    app.options('*', cors());
+}
 
 app.use('/api', apiRouter);
 // app.set('view engine', 'html');
