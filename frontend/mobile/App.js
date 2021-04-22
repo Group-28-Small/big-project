@@ -6,7 +6,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { LogBox, Platform, StyleSheet, View } from 'react-native';
 import Dialog from 'react-native-dialog';
 import { Button, Menu, Provider, Snackbar, IconButton } from 'react-native-paper';
-import { FirebaseAppProvider, useAuth, useFirebaseApp, useUser } from 'reactfire';
+import { FirebaseAppProvider, useAuth, useFirebaseApp, useFirestore, useUser } from 'reactfire';
 import { EditTaskPage, NewTaskPage } from './pages/edit_task';
 import { IndexPage } from './pages/index';
 import LoadingScreen from './pages/loadingscreen';
@@ -79,6 +79,7 @@ function AppNav() {
 
   const auth = useAuth();
   const firebase = useFirebaseApp();
+  const firestore = useFirestore();
   const [menuVisible, setMenuVisible] = useState(false);
   const [pass, changePass] = useState("");
   const [isSnackbarVisible, setVisible] = useState(false);
@@ -110,7 +111,7 @@ function AppNav() {
   const signOutUser = () => {
     auth.signOut().then(() => {
       console.log("Signed out");
-      firebase.firestore().terminate();
+      firestore.terminate();
     }).catch(() => {
       console.log("error");
     });
