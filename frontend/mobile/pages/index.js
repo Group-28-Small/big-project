@@ -102,13 +102,22 @@ const MainTaskList = props => {
         <View style={AppStyles.container}>
             <Searchbar placeholder="Search" value={searchText} onChangeText={setSearchText} />
             <ScrollView style={{width: '100%'}}>
-                {
-                    tasks ? tasks.map((item) => {
-                        return (
-                            <TaskElement key={item.id} name={item.name} duration={item.duration} estimated_time={item.estimated_time} has_due_date={item.has_due_date} due_date={item.due_date} track_progress={item.track_progress} percentage={item.percentage} />
-                        )
-                    }) : <Caption>There's nothing here...</Caption>
-                }                
+                {tasks != undefined && tasks.length != 0 ?
+                <>
+                    {
+                        tasks.map((item) => {
+                            var taskClasses = [styles.tasks,]
+                            if (item.id === active_task?.id) {
+                                taskClasses.push(styles.activeTask)
+                            }
+                            
+                            return (
+                                <TaskElement key={item.id} name={item.name} duration={item.duration} estimated_time={item.estimated_time} has_due_date={item.has_due_date} due_date={item.due_date} track_progress={item.track_progress} percentage={item.percentage} setActive={() => setActiveTask(item.id)} style={taskClasses} />
+                            )
+                        })
+                    }
+                    </> : <Caption>There's nothing here...</Caption>
+                }              
                 {/* {tasks != undefined && tasks.length != 0 ?
                     <>
                         {

@@ -8,9 +8,8 @@ import Moment from 'react-moment';
 
 export default TaskElement = props => {
     const [isCollapsed, toggleCollapse] = useState(false);
-
     return (
-        <Card onPress={() => toggleCollapse(!isCollapsed)} style={styles.task}>
+        <Card onPress={() => toggleCollapse(!isCollapsed)} onLongPress={props.setActive} style={styles.task}>
             <Card.Content>
                 <Text>{props.name}</Text>
                 <ProgressBar progress={props.percentage / 100} color={Colors.red300} style={{height: 15, marginTop: 5, marginBottom: 5, width: '100%'}}/>
