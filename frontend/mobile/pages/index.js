@@ -50,6 +50,10 @@ const MainTaskList = props => {
     }
     const setSearchText = (text) => {
         _setSearchText(text)
+        if (text === '') {
+            setSearchedTasks(firebase_tasks);
+            return
+        }
         firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
             const url = backend_address(idToken + "/" + text)
             console.log(url);
@@ -65,9 +69,7 @@ const MainTaskList = props => {
     if (firebase_tasks !== tasksCache) {
         console.log("update detected")
         setTasksCache(firebase_tasks)
-        if (searchText !== '') {
-            setSearchText(searchText)
-        }
+        setSearchText(searchText)
     }
     var tasks = [];
     var no_tasks_msg = "You don't have any tasks!"

@@ -47,6 +47,7 @@ export default function TaskTree(props) {
         _setSearchText(text);
         if (text === '') {
             setSearchedTasks(firebase_tasks)
+            return
         }
         firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
             const url = backend_address(idToken + "/" + text)
