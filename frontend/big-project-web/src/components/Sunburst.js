@@ -1,4 +1,4 @@
-import { Container, createStyles, Grid } from '@material-ui/core';
+import { Checkbox, Container, createStyles, FormControlLabel, Grid } from '@material-ui/core';
 import { backend_address, total_url } from 'big-project-common';
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
@@ -41,6 +41,9 @@ export default function Sunburst(props) {
     var values = []
     var labels = []
     tasks.forEach((task) => {
+        if (onlyDone && task.done) {
+            return;
+        }
         labels.push(task.name);
         values.push(durations[task.id])
     })
@@ -73,6 +76,12 @@ export default function Sunburst(props) {
                     <Plot
                         data={data}
                         layout={layout} config={{ displaylogo: false }} />
+            </Grid>
+            <Grid item>
+                <FormControlLabel
+                    control={<Checkbox checked={onlyDone} onChange={(e) => setOnlyDone(e.target.checked)} name="checkedA" />}
+                    label="Secondary"
+                />
             </Grid>
         </Grid>
     )
