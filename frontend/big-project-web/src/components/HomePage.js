@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import { Route } from 'react-router-dom';
 import SessionHistory from "./SessionHistory";
+import Sunburst from "./Sunburst";
 import TaskTree from "./TaskTree";
 export function TabPanel(props) {
     const { children, value, index, ...other } = props;
@@ -75,8 +76,8 @@ const handleChange = (event, newValue) => {
         <TabPanel value={value} index={0} >
             <TaskTree /> 
         </TabPanel>
-        <TabPanel value={value} index={1} >
-            Stuff
+            <TabPanel value={value} index={1} >
+                <Sunburst />
         </TabPanel>
         <TabPanel value={value} index={2} >
             <Route exact path="/">

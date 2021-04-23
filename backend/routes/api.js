@@ -38,7 +38,7 @@ router.get("/" + common.total_url + "/:userToken/:taskID", function (req, res, n
     return query.get()
 
   }).then((result) => {
-    console.log(result);
+    // console.log(result);
     var total_time = 0
     result.forEach((d) => {
       // clear the user field, since that has keys in it

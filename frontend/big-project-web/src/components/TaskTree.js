@@ -61,6 +61,7 @@ export default function TaskTree(props) {
             // this should never happen
         })
     }
+    // turns out this should be done with useEffect (well akchually useReducer if we want to be 100% best practices)
     if (firebase_tasks !== tasksCache) {
         console.log("update detected")
         setTasksCache(firebase_tasks)
