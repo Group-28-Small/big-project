@@ -17,9 +17,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.json())
+app.use(cors());
 if (!is_production()) {
-    app.use(cors());
     app.options('*', cors());
+} else {
+    app.options(['group21-big.herokuapp.com', 'timetamer.kurtw.dev'], cors());
 }
 
 app.use('/api', apiRouter);
