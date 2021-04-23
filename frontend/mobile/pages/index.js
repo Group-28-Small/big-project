@@ -112,7 +112,7 @@ const MainTaskList = props => {
                                 }
                                 return (
                                     <TouchableOpacity key={item.id} onLongPress={() => editTask(item)} onPress={() => setActiveTask(item.id)}>
-                                        <Text style={taskClasses} >{item.name}{' \t'}{moment.duration(item.duration * 1000).humanize() + '/' + item.estimated_hour}{' hrs ' + item.estimated_minute + ' min\t'}{item.percentage}{'% \n'}{<Moment format="DD MMMM YYYY" date={item.due_date} element={Text} unix />}</Text>
+                                        <Text style={taskClasses} >{item.name}{' \t'}{item.duration === 0 ? 0 : moment.duration(item.duration * 1000).humanize()}{'/' + item.estimated_hour + ' hrs ' + item.estimated_minute + ' min'}{item.track_progress ? (' ' + item.percentage ?? item.duration / (item.estimated_hour * 60) + item.estimated_minute)  + '% \n' : ''}{item.has_due_date ? <Moment format="DD MMMM YYYY" date={item.due_date} element={Text} unix /> : '' }</Text>
                                     </TouchableOpacity>
                                 );
                             })

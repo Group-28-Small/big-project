@@ -66,7 +66,7 @@ const TaskEditor = props => {
     const [timePickerMode, setTimePickerMode] = React.useState("date");
     const [hasDueDate, setHasDueDate] = React.useState(item.has_due_date ?? false);
     const [trackProgress, setTrackProgress] = React.useState(item.track_progress ?? false);
-    const [trackTime, setTrackTime] = React.useState(item.track_time ?? false);
+    const [trackTime, setTrackTime] = React.useState(item.has_estimated_time ?? false);
 
     //leaving this for now in case we revert
     // const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
@@ -97,7 +97,7 @@ const TaskEditor = props => {
         if(taskName != ''){
             db.collection("tasks").doc(item_id).set({
                 'name': taskName, 'estimated_hour': selectedHour, 'estimated_minute': selectedMinute, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'duration': item.duration ?? 0,
-                'track_progress': trackProgress, 'has_due_date': hasDueDate, 'user': userRef
+                'track_progress': trackProgress, 'has_due_date': hasDueDate, 'user': userRef, 'has_estimated_time': trackTime
             }, { merge: true });
         props.navigation.navigate('Home');
         } else{
