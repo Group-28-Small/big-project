@@ -22,6 +22,7 @@ export const IndexPage = (props) => {
     )
 }
 const MainTaskList = props => {
+    const moment = require("moment")
     const [visible, setVisible] = React.useState(false);
     const onToggleSnackBar = () => setVisible(true);
     const onDismissSnackBar = () => setVisible(false);
@@ -111,7 +112,7 @@ const MainTaskList = props => {
                                 }
                                 return (
                                     <TouchableOpacity key={item.id} onLongPress={() => editTask(item)} onPress={() => setActiveTask(item.id)}>
-                                        <Text style={taskClasses} >{item.name}{' \t'}{item.duration + '/' + item.estimated_time}{' hrs \t'}{item.percentage}{'% \n'}{<Moment format="DD MMMM YYYY" date={item.due_date} element={Text} unix />}</Text>
+                                        <Text style={taskClasses} >{item.name}{' \t'}{moment.duration(item.duration * 1000).humanize() + '/' + item.estimated_hour}{' hrs ' + item.estimated_minute + ' min\t'}{item.percentage}{'% \n'}{<Moment format="DD MMMM YYYY" date={item.due_date} element={Text} unix />}</Text>
                                     </TouchableOpacity>
                                 );
                             })
