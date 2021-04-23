@@ -80,7 +80,7 @@ export default function Sunburst(props) {
             <Grid item>
                 <FormControlLabel
                     control={<Checkbox checked={onlyDone} onChange={(e) => setOnlyDone(e.target.checked)} name="checkedA" />}
-                    label="Secondary"
+                    label="Hide Done Tasks"
                 />
             </Grid>
         </Grid>
