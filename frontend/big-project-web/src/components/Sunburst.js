@@ -1,4 +1,5 @@
-import { Checkbox, Container, createStyles, FormControlLabel, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
+import { ToggleButton, ToggleButtonGroup } from '@material-ui/lab';
 import { backend_address, total_url } from 'big-project-common';
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
@@ -15,7 +16,7 @@ export default function Sunburst(props) {
         idField: 'id'
     });
     const [durations, setDurations] = useState({})
-    const [onlyDone, setOnlyDone] = useState(false)
+    const [onlyDone, setOnlyDone] = useState('all')
     useEffect(() => {
         // firebase tasks changed - fetch done tasks again
         console.log("data changed");
@@ -41,7 +42,9 @@ export default function Sunburst(props) {
     var values = []
     var labels = []
     tasks.forEach((task) => {
-        if (onlyDone && task.done) {
+        if (onlyDone == 'only-not-done' && task.done) {
+            return;
+        } else if (onlyDone == 'only-done' && !task.done) {
             return;
         }
         labels.push(task.name);
@@ -78,10 +81,17 @@ export default function Sunburst(props) {
                         layout={layout} config={{ displaylogo: false }} />
             </Grid>
             <Grid item>
-                <FormControlLabel
-                    control={<Checkbox checked={onlyDone} onChange={(e) => setOnlyDone(e.target.checked)} name="checkedA" />}
-                    label="Hide Done Tasks"
-                />
+                <ToggleButtonGroup value={onlyDone} onChange={(_, v) => setOnlyDone(v)} exclusive aria-label="text formatting">
+                    <ToggleButton value="all" aria-label="bold">
+                        All
+                    </ToggleButton>
+                    <ToggleButton value="only-done" aria-label="italic">
+                        Only Done
+                    </ToggleButton>
+                    <ToggleButton value="only-not-done" aria-label="underlined">
+                        Only Not Done
+                    </ToggleButton>
+                </ToggleButtonGroup>
             </Grid>
         </Grid>
     )
