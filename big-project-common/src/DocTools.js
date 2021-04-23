@@ -59,7 +59,7 @@ function userStopTask(db, active_task, userDetails, userDetailsRef) {
         var taskSession = db.collection("sessions").doc();
         batch.set(taskSession, { task: "tasks/" + active_task.id, start: userDetails.task_start_time, end: Date.now() / 1000, user: userDetailsRef });
         // TOOD: this is only _this sessions_ duration - eventually this should be cumulative
-        db.collection("tasks").doc(active_task.id).set({ 'duration': moment.duration((((Date.now() / 1000) - userDetails.task_start_time) * 1000)).humanize() }, { merge: true });
+        db.collection("tasks").doc(active_task.id).set({ 'duration': moment((((Date.now() / 1000) - userDetails.task_start_time) * 1000)).unix() }, { merge: true });
     } else {
         console.log("task too short... " + ((Date.now() / 1000) - userDetails.task_start_time));
     }
