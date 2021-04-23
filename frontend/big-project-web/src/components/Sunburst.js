@@ -1,3 +1,4 @@
+import { Container, createStyles, Grid } from '@material-ui/core';
 import { backend_address, total_url } from 'big-project-common';
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
@@ -43,9 +44,9 @@ export default function Sunburst(props) {
         labels.push(task.name);
         values.push(durations[task.id])
     })
-    console.log(values);
-    console.log(labels);
-    console.log(durations);
+    // console.log(values);
+    // console.log(labels);
+    // console.log(durations);
     var data = [{
         // once we have subtasks, this will be 'sunburst'
         type: "pie",
@@ -60,9 +61,19 @@ export default function Sunburst(props) {
         margin: { l: 0, r: 0, b: 0, t: 0 },
         sunburstcolorway: ["#636efa", "#ef553b", "#00cc96"],
     };
-    return <div>
-        <Plot
-            data={data}
-            layout={layout} config={{ displaylogo: false }} />
-    </div>
+    return (
+        <Grid
+            container
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justify="center"
+        >
+            <Grid item xs={8}>
+                    <Plot
+                        data={data}
+                        layout={layout} config={{ displaylogo: false }} />
+            </Grid>
+        </Grid>
+    )
 }
