@@ -12,6 +12,7 @@ import firebase, { firestore } from 'firebase';
 import { Snackbar } from 'react-native-paper';
 import Dialog from "react-native-dialog";
 import { userStopTask, AppTheme } from 'big-project-common';
+import InputSpinner from "react-native-input-spinner";
 
 const Transition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
@@ -65,12 +66,18 @@ const TaskEditor = props => {
     const [timePickerMode, setTimePickerMode] = React.useState("date");
     const [hasDueDate, setHasDueDate] = React.useState(item.has_due_date ?? false);
     const [trackProgress, setTrackProgress] = React.useState(item.track_progress ?? false);
+    const [trackTime, setTrackTime] = React.useState(item.track_time ?? false);
+
+    //leaving this for now in case we revert
+    // const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
 
     const [taskName, onChangeName] = React.useState(item.name ?? '');
-    const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
     const [pct, onChangePct] = React.useState(item.percentage ?? 0);
     const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
     const [notes, onChangeNotes] = React.useState(item.note ?? '');
+
+    const [selectedHour, setSelectedHour ] = useState(item.estimated_hour ?? 0);
+    const [selectedMinute, setSelectedMinute ] = useState(item.estimated_minute ?? 0);
 
     const userDetailsRef = user != null ? db.collection('users')
         .doc(user.uid) : null;
@@ -89,7 +96,7 @@ const TaskEditor = props => {
         console.log("taskName: " + taskName);
         if(taskName != ''){
             db.collection("tasks").doc(item_id).set({
-                'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'duration': item.duration ?? 0,
+                'name': taskName, 'estimated_hour': selectedHour, 'estimated_minute': selectedMinute, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'duration': item.duration ?? 0,
                 'track_progress': trackProgress, 'has_due_date': hasDueDate, 'user': userRef
             }, { merge: true });
         props.navigation.navigate('Home');
@@ -137,7 +144,8 @@ const TaskEditor = props => {
                 label="Task Name"
                 mode="outlined"
             />
-            <TextInput
+            
+            {/* <TextInput leaving this for now in case we revert
                 style={styles.input}
                 onChangeText={onChangeTime}
                 value={estimatedTime}
@@ -145,7 +153,8 @@ const TaskEditor = props => {
                 placeholder="hours:minutes"
                 keyboardType='numeric'
                 mode="outlined"
-            />
+                disabled='true'
+            /> */}
             <TextInput
                 style={styles.input}
                 onChangeText={onChangeNotes}
@@ -154,11 +163,71 @@ const TaskEditor = props => {
                 mode="outlined"
                 multiline
             />
+            <TouchableRipple onPress={() => setTrackTime(!trackTime)}>
+            <View style={styles.row}>
+                    <Paragraph>Track Time</Paragraph>
+                    <View pointerEvents="none">
+                        <Switch value={trackTime} ios_backgroundColor={AppTheme.secondaryLightColor} />
+                    </View>
+                </View>
+            </TouchableRipple>
+            {trackTime && (
+                //can extend this further to days?
+                <>
+                <View style={styles.spinnerView}>
+                    <Text style={{marginRight: 20, marginLeft: 50}}>Hours</Text>
+                    <InputSpinner
+                        style={{
+                            marginRight: 500,
+                            minWidth: 150,
+                        }}
+                            max={99}
+                            min={0}
+                            step={1}
+                            colorMax={"#f04048"}
+                            colorMin={"#40c5f4"}
+                            value={selectedHour}
+                            width={185}
+                            onLongPress={setSelectedHour}
+                            onChange={setSelectedHour}
+                            colorLeft={AppTheme.primaryColor}
+                            colorRight={AppTheme.primaryColor}
+                            // showBorder={true}
+                            skin={'square'}
+                        ></InputSpinner>
+                    </View>
+                    <View style={styles.spinnerView}>
+                    <Text style={{marginRight: 20, marginLeft: 38}}>Minutes</Text>
+                    <InputSpinner
+                        style={{
+                            marginRight: 500,
+                            minWidth: 150,
+                        }}
+                            max={99}
+                            min={0}
+                            step={1}
+                            //I'm bad with colors
+                            colorMax={"#f04048"}
+                            colorMin={"#40c5f4"}
+                            colorLeft={AppTheme.primaryColor}
+                            colorRight={AppTheme.primaryColor}
+                            // background={AppTheme.secondaryLightColor}
+                            // textColor={AppTheme.secondaryDarkColor}
+                            value={selectedMinute}
+                            width={185}
+                            onLongPress={setSelectedMinute}
+                            onChange={setSelectedMinute}
+                            // showBorder={true}
+                            skin={'square'}
+                        ></InputSpinner>
+                    </View>
+                </>
+            )}
             <TouchableRipple onPress={() => setTrackProgress(!trackProgress)}>
                 <View style={styles.row}>
                     <Paragraph>Track Progress</Paragraph>
                     <View pointerEvents="none">
-                        <Switch value={trackProgress} />
+                        <Switch value={trackProgress} ios_backgroundColor={AppTheme.secondaryLightColor}  />
                     </View>
                 </View>
             </TouchableRipple>
@@ -176,7 +245,6 @@ const TaskEditor = props => {
                             value={pct}
                             step={1}
                             onValueChange={onChangePct}
-                            // TODO: IDK colors
                             minimumTrackTintColor={AppTheme.primaryDarkColor}
                             maximumTrackTintColor={AppTheme.primaryColor}
                             thumbTintColor={AppTheme.primaryDarkColor}
@@ -189,7 +257,7 @@ const TaskEditor = props => {
                 <View style={styles.row}>
                     <Paragraph>Has Due Date</Paragraph>
                     <View pointerEvents="none">
-                        <Switch value={hasDueDate} />
+                        <Switch value={hasDueDate} ios_backgroundColor={AppTheme.secondaryLightColor} />
                     </View>
                 </View>
             </TouchableRipple>
@@ -293,5 +361,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 120,
         alignSelf: 'center',
         position: 'absolute'
+    },
+    spinnerView: {
+        marginBottom: 20,
+		flexDirection: "row",
+		alignItems: "center",
+		textAlign: "left",
+		textAlignVertical: "center"
     }
 });
