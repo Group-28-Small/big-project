@@ -1,5 +1,5 @@
 import React from 'react';
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import TaskTree from './TaskTree'
 import 'reactfire'
 import 'react-router'

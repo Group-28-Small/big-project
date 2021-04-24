@@ -1,7 +1,5 @@
-
-
 import React from 'react';
-import { render } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import { NewTaskPage, EditTaskPage } from './NewTask'
 import 'reactfire'
 import 'react-router'
@@ -60,5 +58,16 @@ describe("New/Edit Task Page", () => {
         mockedFirestoreDocData.mockImplementation(() => mockedFirestoreDocDataResult)
         mockedUserResult.mockImplementation(() => 1)
         render(<EditTaskPage />);
+    });
+    it('renders all the fields', () => {
+        mockedFirestoreDocData.mockImplementation(() => mockedFirestoreDocDataResult)
+        mockedUserResult.mockImplementation(() => 1)
+        const { container } = render(<EditTaskPage />);
+        const taskNameField = container.querySelector("#taskName")
+        expect(taskNameField).not.toBeNull()
+        const durationField = container.querySelector('#taskEstimated')
+        expect(durationField).not.toBeNull()
+        const notesField = container.querySelector('#notes')
+        expect(notesField).not.toBeNull()
     });
 });
