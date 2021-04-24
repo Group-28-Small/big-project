@@ -70,7 +70,7 @@ export default function RegisterPage(props) {
                     <form className={styles.form} noValidate>
                         <TextField variant="outlined" margin="normal" required fullWidth id="email" label="Email Address" name="email" autoComplete="email" autoFocus onChange={(event) => setEmail(event.target.value)} autoFocus={true} />
                         <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password" type="password" id="password" autoComplete="current-password" onChange={(event) => onChangePassword(event.target.value)} />
-                        <TextField variant="outlined" margin="normal" required fullWidth name="password" label="Password Verify" type="password" id="password" autoComplete="current-password" onChange={(event) => onChangePasswordVerify(event.target.value)} error={pwError} />
+                        <TextField variant="outlined" margin="normal" required fullWidth name="password-verify" label="Password Verify" type="password" id="password-verify" autoComplete="current-password" onChange={(event) => onChangePasswordVerify(event.target.value)} error={pwError} />
                         <Button fullWidth variant="contained" color="primary" className={styles.submit} onClick={() => register()} disabled={pwError}> Register </Button>
                     </form>
                 </div>
