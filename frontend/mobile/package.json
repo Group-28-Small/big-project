@@ -27,6 +27,7 @@
     "react-native-datepicker": "^1.7.2",
     "react-native-dialog": "^8.0.1",
     "react-native-gesture-handler": "~1.8.0",
+    "react-native-icons": "^0.7.1",
     "react-native-input-spinner": "^1.7.10",
     "react-native-number-selector": "^1.0.1",
     "react-native-numberpicker-dialog": "^0.0.1",
