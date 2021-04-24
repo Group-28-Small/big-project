@@ -21,7 +21,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 export const EditTaskPage = props => {
     const db = useFirestore();
     const item_id = props.route.params.item_id;
-    console.log(item_id)
+    console.log("editing task with id: " + item_id);
     const itemRef = db.collection('tasks').doc(item_id);
     const item = useFirestoreDocData(itemRef, { initialData: null });
     const { data: user } = useUser();
@@ -64,20 +64,31 @@ const TaskEditor = props => {
     const { item, user, item_id, userRef } = props;
     const [timePickerVisible, setTimePickerVisible] = React.useState(false);
     const [timePickerMode, setTimePickerMode] = React.useState("date");
-    const [hasDueDate, setHasDueDate] = React.useState(item.has_due_date ?? false);
-    const [trackProgress, setTrackProgress] = React.useState(item.track_progress ?? false);
-    const [trackTime, setTrackTime] = React.useState(item.has_estimated_time ?? false);
+    // const [hasDueDate, setHasDueDate] = React.useState(item.has_due_date ?? false);
+    // const [trackProgress, setTrackProgress] = React.useState(item.track_progress ?? false);
+    // const [trackTime, setTrackTime] = React.useState(item.has_estimated_time ?? false);
 
-    //leaving this for now in case we revert
-    // const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
+    // //leaving this for now in case we revert
+    const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
+
+    // const [taskName, onChangeName] = React.useState(item.name ?? '');
+    // const [pct, onChangePct] = React.useState(item.percentage ?? 0);
+    // const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
+    // const [notes, onChangeNotes] = React.useState(item.note ?? '');
 
     const [taskName, onChangeName] = React.useState(item.name ?? '');
-    const [pct, onChangePct] = React.useState(item.percentage ?? 0);
-    const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
     const [notes, onChangeNotes] = React.useState(item.note ?? '');
+    const [duration, updateDuration] = React.useState(item.duration ?? 0);
+    const [hasEstimatedTime, setHasEstimatedTime] = React.useState(item.has_estimated_time ?? false);
+    // i don't think we need this one since it's already handled with hour and minute
+    // const [estimatedTime, ] = React.useState(item.estimated_time ?? 0);
+    const [hasDueDate, setHasDueDate] = React.useState(item.has_due_date ?? false);
+    const [dueDate, onChangeDueDate] = React.useState(item.due_date ?? Math.ceil(Date.now() / (1000*60*60*24)) * (1000*60*60*24)); // TODO: round it up to next whole hour
+    
+    const [isDone, setIsDone] = React.useState(item.is_done ?? false);
 
-    const [selectedHour, setSelectedHour ] = useState(item.estimated_hour ?? 0);
-    const [selectedMinute, setSelectedMinute ] = useState(item.estimated_minute ?? 0);
+    const [selectedHour, setSelectedHour ] = useState(item.estimated_time ? Math.floor((item.estimated_time / (1000*60*60)) % 24) : 0);
+    const [selectedMinute, setSelectedMinute ] = useState(item.estimated_time ? Math.floor((item.estimated_time / (1000*60)) % 60) : 0);
 
     const userDetailsRef = user != null ? db.collection('users')
         .doc(user.uid) : null;
@@ -93,13 +104,22 @@ const TaskEditor = props => {
     };
 
     const updateTask = () => {
-        console.log("taskName: " + taskName);
+        var estimatedTime = (selectedHour * 60 * 60 * 1000) + (selectedMinute * 60 * 1000);
+        console.log("updating task: " + taskName);
+        console.log("time was: " + item.estimated_time + "time is: " + estimatedTime);
         if(taskName != ''){
             db.collection("tasks").doc(item_id).set({
-                'name': taskName, 'estimated_hour': selectedHour, 'estimated_minute': selectedMinute, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'duration': item.duration ?? 0,
-                'track_progress': trackProgress, 'has_due_date': hasDueDate, 'user': userRef, 'has_estimated_time': trackTime
+                'name': taskName,
+                'note': notes,
+                'duration': duration,
+                'has_estimated_time': hasEstimatedTime,
+                'estimated_time': estimatedTime,
+                'has_due_date' : hasDueDate,
+                'due_date': dueDate,
+                'done': isDone,
+                'user': userRef
             }, { merge: true });
-        props.navigation.navigate('Home');
+            props.navigation.navigate('Home');
         } else{
             if (Platform.OS === 'android') {
                 ToastAndroid.show("Tasks can't be created without a name", ToastAndroid.SHORT);
@@ -109,7 +129,7 @@ const TaskEditor = props => {
         }
     }
     const deleteTask = () => {
-        console.log('delete')
+        console.log('deletint task: ' + item_id)
         db.collection("tasks").doc(item_id).delete();
         if(userDetails?.active_task !== undefined && item_id === userDetails?.active_task.id){
             userStopTask(db, userDetails?.active_task, userDetails, userDetailsRef);
@@ -129,7 +149,7 @@ const TaskEditor = props => {
         const currentDate = selectedDate || dueDate;
         setTimePickerVisible(Platform.OS === 'ios');
         console.log('Setting due date');
-        setDueDate(currentDate);
+        onChangeDueDate(currentDate);
     };
 
     return (
@@ -163,15 +183,15 @@ const TaskEditor = props => {
                 mode="outlined"
                 multiline
             />
-            <TouchableRipple onPress={() => setTrackTime(!trackTime)}>
+            <TouchableRipple onPress={() => setHasEstimatedTime(!hasEstimatedTime)}>
             <View style={styles.row}>
-                    <Paragraph>Track Time</Paragraph>
-                    <View pointerEvents="none">
-                        <Switch value={trackTime} ios_backgroundColor={AppTheme.secondaryLightColor} />
-                    </View>
+                <Paragraph>Estimated Time</Paragraph>
+                <View pointerEvents="none">
+                    <Switch value={hasEstimatedTime} ios_backgroundColor={AppTheme.secondaryLightColor} />
                 </View>
+            </View>
             </TouchableRipple>
-            {trackTime && (
+            {hasEstimatedTime && (
                 //can extend this further to days?
                 <>
                 <View style={styles.spinnerView}>
@@ -203,7 +223,7 @@ const TaskEditor = props => {
                             marginRight: 500,
                             minWidth: 150,
                         }}
-                            max={99}
+                            max={59}
                             min={0}
                             step={1}
                             //I'm bad with colors
@@ -223,7 +243,7 @@ const TaskEditor = props => {
                     </View>
                 </>
             )}
-            <TouchableRipple onPress={() => setTrackProgress(!trackProgress)}>
+            {/* <TouchableRipple onPress={() => setTrackProgress(!trackProgress)}>
                 <View style={styles.row}>
                     <Paragraph>Track Progress</Paragraph>
                     <View pointerEvents="none">
@@ -252,7 +272,7 @@ const TaskEditor = props => {
                     </View>
                 </>
             )
-            }
+            } */}
             <TouchableRipple onPress={() => setHasDueDate(!hasDueDate)}>
                 <View style={styles.row}>
                     <Paragraph>Has Due Date</Paragraph>
@@ -271,7 +291,7 @@ const TaskEditor = props => {
                         </TouchableRipple>
                         <TouchableRipple onPress={showTimePicker}>
                             <Text style={styles.boxed}>
-                                <Moment format="hh:mm:ss" date={dueDate} element={Text} />
+                                <Moment format="hh:mm" date={dueDate} element={Text} />
                             </Text>
                         </TouchableRipple>
                         {timePickerVisible && (
@@ -279,7 +299,6 @@ const TaskEditor = props => {
                                 testID="dateTimePicker"
                                 value={dueDate}
                                 mode={timePickerMode}
-                                is24Hour={true}
                                 display="default"
                                 minimumDate={new Date()}
                                 onChange={onDueDateTimeChange}
