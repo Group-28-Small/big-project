@@ -17,6 +17,8 @@ export default function SessionHistory(props) {
     const { data: tasks } = useFirestoreCollectionData(db.collection("tasks").where("user", "==", userDetailsRef), {
         idField: 'id'
     });
+    console.log(sessions);
+    console.log(tasks);
     var taskDict = {}
     if (tasks) {
         tasks.forEach((t) => {
