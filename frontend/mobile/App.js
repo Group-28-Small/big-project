@@ -194,15 +194,11 @@ function AppNav() {
         </>) : (
         <>
           <Stack.Screen name="Verify Email" component={VerifyPage} options={{
-            headerRight: () => (
-              <Button
-                onPress={() => signOutUser()}
-                //this was probably useful for testing, but at this point looks odd
-                // title={isEmailVerified ? "yes" : "no"}
-                title="return"
-                color="#000"
-              />
-            ),
+            headerRight: SignOutButton,
+            ...TransitionPresets.SlideFromRightIOS,
+            headerStyle: {
+              backgroundColor: AppTheme.primaryColor
+            }
           }} />
         </>
       );
