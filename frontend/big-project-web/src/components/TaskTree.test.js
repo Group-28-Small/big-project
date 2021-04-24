@@ -4,6 +4,7 @@ import TaskTree from './TaskTree'
 import 'reactfire'
 import 'react-router'
 import 'react-router-dom'
+import { useFirebaseApp } from 'reactfire';
 
 // we have to create dummy implementations of API calls
 const mockedUserResult = jest.fn()
@@ -39,7 +40,8 @@ jest.mock('reactfire', () => ({
     useFirestore: () => mockedFirestoreResult,
     useFirestoreCollectionData: () => mockedFirestoreCollectionData(),
     useFirestoreDocData: () => mockedFirestoreDocData(),
-    useAuth: () => 0
+    useAuth: () => 0,
+    useFirebaseApp: jest.fn()
 }))
 jest.mock('react-router', () => ({
     useHistory: () => ({
