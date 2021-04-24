@@ -1,0 +1,115 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/Kurtoid/Group21TimeTamer/1.0.0
+  - description: SwaggerHub API Auto Mocking
+    url: timetamer.kurtw.dev/api
+info:
+  description: This is a simple API
+  version: "1.0.0"
+  title: Simple Inventory API
+  contact:
+    email: you@your-company.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+tags:
+  - name: admins
+    description: Secured Admin-only calls
+  - name: developers
+    description: Operations available to regular developers
+paths:
+  /time/{userToken}/{taskID}:
+    get:
+      summary: get the total time for a task
+      operationId: getTime
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      parameters:
+        - in: path
+          name: userToken
+          description: a users authentication token
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: taskID
+          description: the task ID in quesiton
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskTime'
+        '500':
+          description: bad user authentication token
+  /search/{userToken}/{query}:
+    get:
+      summary: search tasks by name
+      operationId: searchTasks
+      description: |
+        By passing in the appropriate options, you can search for
+        available inventory in the system
+      parameters:
+        - in: path
+          name: userToken
+          description: a users authentication token
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: query
+          description: the search string
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: search results matching criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:       
+                  $ref: '#/components/schemas/Task'
+        '500':
+          description: bad user authentication token
+
+
+components:
+  schemas:
+    Task:
+      type: object
+      required:
+        - id
+        - name
+        - estimated_time
+        - percentage
+        - due_date
+        - note
+        - user
+      properties:
+        id:
+          type: string
+          format: uid
+          example: xyzzy1234
+        name:
+          type: string
+          example: COP4331 Project
+        estimated_time:
+          type: string
+          example: '2016-08-29T09:12:33.001Z'
+    TaskTime:
+      type: object
+      required:
+        - task_time
+      properties:
+        task_time:
+          type: number
