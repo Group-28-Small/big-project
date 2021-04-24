@@ -3,13 +3,14 @@ import React from 'react';
 import { StyleSheet, Text, Vibration, View, ToastAndroid, Button } from 'react-native';
 import { backend_address, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME, AppTheme, search_url } from 'big-project-common';
 import AppStyles from '../styles';
-import { Searchbar, Snackbar } from 'react-native-paper';
+import { Searchbar, Snackbar, Caption } from 'react-native-paper';
 import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser, useAuth, useFirebaseApp } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
 import Moment from 'react-moment';
 import { TrackTaskButton } from '../components/TrackTaskButton'
+import TaskElement from '../components/TaskElement';
 import LoadingScreen from './loadingscreen';
 import { back } from 'react-native/Libraries/Animated/src/Easing';
 
@@ -101,8 +102,24 @@ const MainTaskList = props => {
     return (
         <View style={AppStyles.container}>
             <Searchbar placeholder="Search" value={searchText} onChangeText={setSearchText} />
-            <ScrollView>
+            <ScrollView style={{width: '100%'}}>
                 {tasks != undefined && tasks.length != 0 ?
+                <>
+                    {
+                        tasks.map((item) => {
+                            var taskClasses = [styles.tasks,]
+                            if (item.id === active_task?.id) {
+                                taskClasses.push(styles.activeTask)
+                            }
+                            
+                            return (
+                                <TaskElement key={item.id} name={item.name} duration={item.duration} estimated_time={item.estimated_time} has_due_date={item.has_due_date} due_date={item.due_date} track_progress={item.track_progress} percentage={item.percentage} setActive={() => { Haptics.selectionAsync(); setActiveTask(item.id) }} style={taskClasses} />
+                            )
+                        })
+                    }
+                    </> : <Caption>There's nothing here...</Caption>
+                }              
+                {/* {tasks != undefined && tasks.length != 0 ?
                     <>
                         {
                             tasks.map((item) => {
@@ -162,7 +179,7 @@ const MainTaskList = props => {
                                 }
                             })
                         }
-                    </> : <Text style={{textAlign: 'center'}}>{no_tasks_msg}</Text>}
+                    </> : <Text>{no_tasks_msg}</Text>} */}
             </ScrollView>
             {active_task != undefined && (
                 <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} />
