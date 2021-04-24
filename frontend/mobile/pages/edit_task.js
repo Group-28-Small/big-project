@@ -111,7 +111,7 @@ const TaskEditor = props => {
     const deleteTask = () => {
         console.log('delete')
         db.collection("tasks").doc(item_id).delete();
-        if(item_id === userDetails?.active_task.id){
+        if(userDetails?.active_task !== undefined && item_id === userDetails?.active_task.id){
             userStopTask(db, userDetails?.active_task, userDetails, userDetailsRef);
             userDetailsRef.set({ 'active_task': firebase.firestore.FieldValue.delete()}, { merge: true })
         }
