@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button, Platform, ToastAndroid } from 'react-native';
 import { useFirestore, useFirestoreDoc, useFirestoreDocData, useUser } from 'reactfire';
-import { Paragraph, TextInput, TouchableRipple, Colors } from 'react-native-paper';
+import { Paragraph, TextInput, TouchableRipple } from 'react-native-paper';
 import { ScrollView, Switch } from 'react-native-gesture-handler';
 import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -73,7 +73,7 @@ const TaskEditor = props => {
 
     // const [taskName, onChangeName] = React.useState(item.name ?? '');
     // const [pct, onChangePct] = React.useState(item.percentage ?? 0);
-    // const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
+    const [dueDate, onChangeDueDate] = React.useState(new Date(item.due_date * 1000));
     // const [notes, onChangeNotes] = React.useState(item.note ?? '');
 
     const [taskName, onChangeName] = React.useState(item.name ?? '');
@@ -83,12 +83,12 @@ const TaskEditor = props => {
     // i don't think we need this one since it's already handled with hour and minute
     // const [estimatedTime, ] = React.useState(item.estimated_time ?? 0);
     const [hasDueDate, setHasDueDate] = React.useState(item.has_due_date ?? false);
-    const [dueDate, onChangeDueDate] = React.useState(item.due_date ?? Date.now()); // TODO: round it up to next whole hour
+    // const [dueDate, onChangeDueDate] = React.useState(item.id ? item.due_date ?? Math.ceil(Date.now() / (1000*60*60*24)) * (1000*60*60*24) : Math.ceil(Date.now() / (1000*60*60*24)) * (1000*60*60*24)); // TODO: round it up to next whole hour
     
     const [isDone, setIsDone] = React.useState(item.is_done ?? false);
 
-    const [selectedHour, setSelectedHour ] = useState(item.estimated_time ? Math.floor((item.estimated_time / (60*60)) % 24) : 0);
-    const [selectedMinute, setSelectedMinute ] = useState(item.estimated_time ? Math.floor((item.estimated_time / 60) % 60) : 0);
+    const [selectedHour, setSelectedHour ] = useState(item.estimated_time ? Math.floor((item.estimated_time / (1000*60*60)) % 24) : 0);
+    const [selectedMinute, setSelectedMinute ] = useState(item.estimated_time ? Math.floor((item.estimated_time / (1000*60)) % 60) : 0);
 
     const userDetailsRef = user != null ? db.collection('users')
         .doc(user.uid) : null;
@@ -104,9 +104,8 @@ const TaskEditor = props => {
     };
 
     const updateTask = () => {
-        var estimatedTime = (selectedHour * 60 * 60) + (selectedMinute * 60);
+        var estimatedTime = (selectedHour * 60 * 60 * 1000) + (selectedMinute * 60 * 1000);
         console.log("updating task: " + taskName);
-        console.log("selected hour: " + selectedHour + "selected minute: " + selectedMinute);
         console.log("time was: " + item.estimated_time + "time is: " + estimatedTime);
         if(taskName != ''){
             db.collection("tasks").doc(item_id).set({
@@ -116,7 +115,7 @@ const TaskEditor = props => {
                 'has_estimated_time': hasEstimatedTime,
                 'estimated_time': estimatedTime,
                 'has_due_date' : hasDueDate,
-                'due_date': dueDate,
+                'due_date': dueDate.getTime() / 1000,
                 'done': isDone,
                 'user': userRef
             }, { merge: true });

@@ -38,15 +38,20 @@ export default TaskElement = props => {
                             props.has_estimated_time &&
                             <View style={{flex: 1}, styles.boundary}>
                                 <Text style={{justifyContent: 'flex-start',}, styles.boundary}>{timeDisplay(props.duration)} / {timeDisplay(props.estimated_time)}</Text>
-                            </View>
-                        }
-                        {
-                            props.has_due_date &&
-                            <View>
-                                <Text style={{flex: 1, justifyContent: 'flex-end',}, styles.boundary}>Due date: <Moment element={Text} date={props.due_date} fromNow /></Text>
-                            </View>
-                        }
-                                                
+                            }
+                        </View>
+                        <View>
+                            {
+                                props.has_due_date && 
+                                <Text style={{justifyContent: 'flex-end',}, styles.boundary}>Due date: {<Moment format="DD MMMM YYYY" date={props.due_date} element={Text} unix />}</Text>
+                            }
+                        </View> 
+                        <View>
+                            {
+                                props.note != '' &&
+                                <Text style={{justifyContent: 'flex-start',}, styles.boundary}>{props.note}</Text>
+                            }
+                        </View>                     
                     </View> 
                 }
             </Card.Content>
@@ -54,7 +59,7 @@ export default TaskElement = props => {
                 isCollapsed &&
                 <Card.Actions>
                     <Button onPress={props.edit} style={styles.button}>Edit</Button>
-                    <Button style={styles.button}>Mark as done</Button>
+                    <Button onPress={props.done} style={styles.button}>Mark as done</Button>
                 </Card.Actions>
             }
         </Card>
