@@ -129,6 +129,31 @@ const MainTaskList = props => {
             }
         });
     }
+
+    const [durations,setDurations] = useState({})
+    useEffect(() => {
+        // firebase tasks changed - fetch done tasks again
+        console.log("data changed");
+        firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
+            tasks.forEach((task) => {
+                const url = backend_address(total_url + "/" + idToken + "/" + task.id)
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        // so it turns out that setState callbacks can accept a function that recieves the old state
+                        // if we update it from within, it's guaranteed to happen atomically
+                        setDurations((oldDurations) => {
+                            return { ...oldDurations, [task.id]: data.total_time }
+                        })
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+            });
+        }).catch((error) => {
+            // this should never happen
+        })
+    }, [tasks])
+
     return (
         <View style={AppStyles.container}>
             <Searchbar placeholder="Search" value={searchText} onChangeText={setSearchText} />
