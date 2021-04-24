@@ -83,7 +83,7 @@ const TaskEditor = props => {
     // i don't think we need this one since it's already handled with hour and minute
     // const [estimatedTime, ] = React.useState(item.estimated_time ?? 0);
     const [hasDueDate, setHasDueDate] = React.useState(item.has_due_date ?? false);
-    const [dueDate, onChangeDueDate] = React.useState(item.due_date ?? Math.ceil(Date.now() / (1000*60*60*24)) * (1000*60*60*24)); // TODO: round it up to next whole hour
+    const [dueDate, onChangeDueDate] = React.useState(item.due_date ?? Date.now()); // TODO: round it up to next whole hour
     
     const [isDone, setIsDone] = React.useState(item.is_done ?? false);
 
@@ -149,7 +149,7 @@ const TaskEditor = props => {
     const onDueDateTimeChange = (event, selectedDate) => {
         const currentDate = selectedDate || dueDate;
         setTimePickerVisible(Platform.OS === 'ios');
-        console.log('Setting due date');
+        console.log('Setting due date to: ' + selectedDate);
         onChangeDueDate(currentDate);
     };
 
@@ -298,11 +298,11 @@ const TaskEditor = props => {
                         {timePickerVisible && (
                             <DateTimePicker style={{ flex: 1 }}
                                 testID="dateTimePicker"
-                                value={dueDate}
+                                value={Date.now()}
                                 mode={timePickerMode}
                                 display="default"
-                                minimumDate={new Date()}
-                                onChange={onDueDateTimeChange}
+                                minimumDate={dueDate}
+                                onChange={onChangeDueDate}
                             />
                         )}
                     </View>
