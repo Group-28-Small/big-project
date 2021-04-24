@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native'
-import { Card, Text, ProgressBar, Colors, Button } from 'react-native-paper';
+import { Card, Text, ProgressBar, Colors, Button, Divider } from 'react-native-paper';
 import Moment from 'react-moment';
 import { AppTheme } from 'big-project-common';
 
 export default TaskElement = props => {
     const [isCollapsed, toggleCollapse] = useState(false);
+    console.log("the due date is: " + props.due_date);
 
     function timeDisplay(seconds) {
         var hours = Math.floor((seconds / (60*60)) % 24);
@@ -19,38 +20,39 @@ export default TaskElement = props => {
     return (
         <Card onPress={() => toggleCollapse(!isCollapsed)} onLongPress={props.setActive} style={props.active ? styles.activeTask : styles.task}>
             <Card.Content>
-                <Text>{props.name}</Text>
+                <Text style={styles.textDisplay}>{props.name}</Text>
                 {
                     props.has_estimated_time && 
-                    <ProgressBar progress={props.duration / props.estimated_time} color={Colors.red300} style={{height: 15, marginTop: 5, marginBottom: 5, width: '100%'}}/>
+                    <ProgressBar progress={props.duration / props.estimated_time} color={props.active ? Colors.white : Colors.amber200} style={{height: 15, marginTop: 5, marginBottom: 5, width: '100%'}}/>
                 }
                 {
                     props.has_estimated_time && 
-                    <Text style={{alignContent: 'center'}}>{Math.floor(props.duration / props.estimated_time * 100) + '%'}</Text>
+                    <Text style={styles.textDisplay}>{Math.floor(props.duration / props.estimated_time * 100) + '%'}</Text>
                 }
                 {
                     isCollapsed &&
-                    <View style={{flexDirection:"row", justifyContent: 'space-arou'}, styles.boundary}>
+                    <View style={{flexDirection:"row"}}>
                         {
                             props.has_estimated_time &&
-                            <View style={styles.boundary}>
-                                <Text style={{justifyContent: 'flex-start'}}>{timeDisplay(props.duration)} / {timeDisplay(props.estimated_time)}</Text>
+                            <View>
+                                <Text style={styles.textDisplay, {marginRight: '25%'}}>{timeDisplay(props.duration)} / {timeDisplay(props.estimated_time)}</Text>
                             </View>
                         }
                         {
                             props.has_due_date &&
-                            <View style={styles.boundary}>
-                                <Text style={{flex: 1, justifyContent: 'flex-end'}}>Due date: <Moment element={Text} date={props.due_date} fromNow /></Text>
+                            <View>
+                                {console.log("in <View> due date: " + props.due_date)}
+                                <Text style={styles.textDisplay}>Due date: <Moment element={Text} date={props.due_date * 1000} fromNow/></Text>
                             </View>
-                        }
-                        {
-                            props.note != '' &&
-                            <View style={styles.boundary}>
-                                <Text style={{flex: 1, justifyContent: 'flex-start'}}>{props.note}</Text>
-                            </View>
-                        }
-                                                
+                        }                   
                     </View>  
+                }
+                {
+                    isCollapsed && props.note != '' &&
+                    <View>
+                        <Divider/>
+                        <Text style={styles.textDisplay}>{props.note}</Text>
+                    </View>
                 }
             </Card.Content>
             {
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         marginLeft: 5,
         marginRight: 5,
-        backgroundColor: AppTheme.primaryLightColor
+        backgroundColor: Colors.amber200
     },
     boundary: {
         borderStyle: 'solid',
@@ -94,5 +96,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: Colors.pink900,
         marginRight: 5,
+    },
+    textDisplay: {
+        marginVertical: 5,
     }
 })

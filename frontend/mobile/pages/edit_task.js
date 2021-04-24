@@ -70,7 +70,7 @@ const TaskEditor = props => {
 
     // const [taskName, onChangeName] = React.useState(item.name ?? '');
     // const [pct, onChangePct] = React.useState(item.percentage ?? 0);
-    const [dueDate, onChangeDueDate] = React.useState(new Date(item.due_date * 1000));
+    // const [dueDate, onChangeDueDate] = React.useState(new Date(item.due_date * 1000));
     // const [notes, onChangeNotes] = React.useState(item.note ?? '');
 
     const [taskName, onChangeName] = React.useState(item.name ?? '');
@@ -80,7 +80,7 @@ const TaskEditor = props => {
     // i don't think we need this one since it's already handled with hour and minute
     // const [estimatedTime, ] = React.useState(item.estimated_time ?? 0);
     const [hasDueDate, setHasDueDate] = React.useState(item.has_due_date ?? false);
-    // const [dueDate, onChangeDueDate] = React.useState(item.id ? item.due_date ?? Math.ceil(Date.now() / (1000*60*60*24)) * (1000*60*60*24) : Math.ceil(Date.now() / (1000*60*60*24)) * (1000*60*60*24)); // TODO: round it up to next whole hour
+    const [dueDate, onChangeDueDate] = React.useState(new Date(item.due_date * 1000)); // TODO: round it up to next whole hour
     
     const [isDone, setIsDone] = React.useState(item.is_done ?? false);
 
@@ -113,7 +113,7 @@ const TaskEditor = props => {
                 'has_estimated_time': hasEstimatedTime,
                 'estimated_time': estimatedTime,
                 'has_due_date' : hasDueDate,
-                'due_date': dueDate,
+                'due_date': dueDate.getTime() / 1000,
                 'done': isDone,
                 'user': userRef
             }, { merge: true });
@@ -265,11 +265,11 @@ const TaskEditor = props => {
                         {timePickerVisible && (
                             <DateTimePicker style={{ flex: 1 }}
                                 testID="dateTimePicker"
-                                value={Date.now()}
+                                value={dueDate}
                                 mode={timePickerMode}
                                 display="default"
-                                minimumDate={dueDate}
-                                onChange={onChangeDueDate}
+                                minimumDate={new Date()}
+                                onChange={onDueDateTimeChange}
                             />
                         )}
                     </View>
