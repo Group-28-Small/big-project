@@ -14,6 +14,7 @@ import TaskElement from '../components/TaskElement';
 import LoadingScreen from './loadingscreen';
 import { back } from 'react-native/Libraries/Animated/src/Easing';
 import { TaskEditor } from './edit_task'
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 
 export const IndexPage = (props) => {
@@ -224,7 +225,9 @@ const styles = StyleSheet.create({
     },
     activeTask: {
         margin: 2,
-        backgroundColor: AppTheme.primaryLightColor
+        backgroundColor: AppTheme.secondaryLightColor,
+        borderStyle: 'solid',
+        borderWidth: 2,
     },
     iosSnackbar: {
         backgroundColor: 'white',

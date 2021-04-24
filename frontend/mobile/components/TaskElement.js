@@ -8,20 +8,31 @@ import Moment from 'react-moment';
 
 export default TaskElement = props => {
     const [isCollapsed, toggleCollapse] = useState(false);
+
+    function timeDisplay(seconds) {
+        var hours = Math.floor((seconds / (60*60)) % 24);
+        hours = hours < 10 ? '0' + hours.toString() : hours.toString();
+        var minutes = Math.floor((seconds / 60) % 60);
+        minutes = minutes < 10 ? '0' + minutes.toString() : minutes.toString();
+
+        return hours + ':' + minutes;
+    }
+
     return (
         <Card onPress={() => toggleCollapse(!isCollapsed)} onLongPress={props.setActive} style={styles.task}>
             <Card.Content>
                 <Text>{props.name}</Text>
                 {
                     props.has_estimated_time && 
-                    <ProgressBar progress={props.percentage / 100} color={Colors.red300} style={{height: 15, marginTop: 5, marginBottom: 5, width: '100%'}}/>
+                    <ProgressBar progress={props.duration / props.estimated_time} color={Colors.red300} style={{height: 15, marginTop: 5, marginBottom: 5, width: '100%'}}/>
                 }
                 {
                     isCollapsed &&
                     <View style={{flexDirection:"row"}}>
                         <View style={{flex: 1}, styles.boundary}>
                             {
-                                <Text style={{justifyContent: 'flex-start',}, styles.boundary}>{props.duration + ' / ' + (props.has_estimated_time ? props.estimated_time : '--:--')}</Text>
+                                props.has_estimated_time &&
+                                <Text style={{justifyContent: 'flex-start',}, styles.boundary}>{timeDisplay(props.duration)} / {timeDisplay(props.estimated_time)}</Text>
                             }
                         </View>
                         <View>

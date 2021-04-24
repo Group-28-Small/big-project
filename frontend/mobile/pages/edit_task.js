@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, Text, View, Button, Platform, ToastAndroid } from 'react-native';
 import { useFirestore, useFirestoreDoc, useFirestoreDocData, useUser } from 'reactfire';
-import { Paragraph, TextInput, TouchableRipple } from 'react-native-paper';
+import { Paragraph, TextInput, TouchableRipple, Colors } from 'react-native-paper';
 import { ScrollView, Switch } from 'react-native-gesture-handler';
 import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
@@ -87,8 +87,8 @@ const TaskEditor = props => {
     
     const [isDone, setIsDone] = React.useState(item.is_done ?? false);
 
-    const [selectedHour, setSelectedHour ] = useState(item.estimated_time ? Math.floor((item.estimated_time / (1000*60*60)) % 24) : 0);
-    const [selectedMinute, setSelectedMinute ] = useState(item.estimated_time ? Math.floor((item.estimated_time / (1000*60)) % 60) : 0);
+    const [selectedHour, setSelectedHour ] = useState(item.estimated_time ? Math.floor((item.estimated_time / (60*60)) % 24) : 0);
+    const [selectedMinute, setSelectedMinute ] = useState(item.estimated_time ? Math.floor((item.estimated_time / 60) % 60) : 0);
 
     const userDetailsRef = user != null ? db.collection('users')
         .doc(user.uid) : null;
@@ -104,8 +104,9 @@ const TaskEditor = props => {
     };
 
     const updateTask = () => {
-        var estimatedTime = (selectedHour * 60 * 60 * 1000) + (selectedMinute * 60 * 1000);
+        var estimatedTime = (selectedHour * 60 * 60) + (selectedMinute * 60);
         console.log("updating task: " + taskName);
+        console.log("selected hour: " + selectedHour + "selected minute: " + selectedMinute);
         console.log("time was: " + item.estimated_time + "time is: " + estimatedTime);
         if(taskName != ''){
             db.collection("tasks").doc(item_id).set({
