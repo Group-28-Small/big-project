@@ -125,6 +125,8 @@ const MainTaskList = props => {
                                     due_date={item.due_date} 
                                     setActive={() => { Haptics.selectionAsync(); setActiveTask(item.id) }} 
                                     edit={() => editTask(item)}
+                                    containerStyle={taskClasses}
+                                    active={item.id === active_task?.id}
                                     style={taskClasses} />
                             )
                         })
@@ -225,9 +227,9 @@ const styles = StyleSheet.create({
     },
     activeTask: {
         margin: 2,
-        backgroundColor: AppTheme.secondaryLightColor,
-        borderStyle: 'solid',
-        borderWidth: 2,
+        backgroundColor: AppTheme.primaryLightColor,
+        borderColor: 'green',
+        borderWidth: 20,
     },
     iosSnackbar: {
         backgroundColor: 'white',
