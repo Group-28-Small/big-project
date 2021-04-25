@@ -1,29 +1,27 @@
 openapi: 3.0.0
 servers:
   # Added by API Auto Mocking Plugin
-  # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
     url: https://virtserver.swaggerhub.com/Kurtoid/Group21TimeTamer/1.0.0
-  - description: SwaggerHub API Auto Mocking
-    url: timetamer.kurtw.dev/api
+  - description: TimeTamer
+    url: https://timetamer.kurtw.dev/api
 info:
-  description: This is a simple API
+  description: runs heavier operations like search and cumulative times for clients
   version: "1.0.0"
-  title: Simple Inventory API
+  title: TimeTamer Task Operations
   contact:
-    email: you@your-company.com
+    email: kurt@kurtw.dev
   license:
     name: Apache 2.0
     url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
 tags:
-  - name: admins
-    description: Secured Admin-only calls
-  - name: developers
+  - name: frontend
     description: Operations available to regular developers
 paths:
   /time/{userToken}/{taskID}:
     get:
       summary: get the total time for a task
+      tags: [frontend]
       operationId: getTime
       description: |
         By passing in the appropriate options, you can search for
@@ -54,6 +52,7 @@ paths:
     get:
       summary: search tasks by name
       operationId: searchTasks
+      tags: [frontend]
       description: |
         By passing in the appropriate options, you can search for
         available inventory in the system
