@@ -22,7 +22,10 @@ export default function LoginPage(props) {
         auth.signInWithEmailAndPassword(email, password).then(result => {
             console.log(result);
             history.push("/");
-        });
+        }).catch((error) => {
+          setSnackMessage(snackbar_fail)
+          setSnackbarOpen(true)
+        })
     }
     const { data: user } = useUser();
     if (user != null) {
