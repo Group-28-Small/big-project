@@ -7,6 +7,9 @@ import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
 import Moment from 'react-moment';
 import LoadingScreen from './loadingscreen';
 import moment from 'moment';
+import { AppTheme } from 'big-project-common';
+import { Card } from 'react-native-paper';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 export const SessionHistoryPage = props => {
     const db = useFirestore();
@@ -36,15 +39,19 @@ export const SessionHistoryPage = props => {
             <ScrollView>
                 {sessions ? sessions.map((item) => {
                     var taskClasses = [styles.sessions,]
+                    var taskContainer = [styles.container,]
                     var task = taskDict[item.task]
                     if (task === undefined) {
                         return null;
                     }
                     var duration = moment.duration((item.end - item.start) * 1000).humanize();
                     return (
-                        <TouchableOpacity key={item.id}>
-                            <Text style={taskClasses} >{task.name}{' \tAt: '}<Moment unix element={Text} date={item.start} format="MMMM DD" />{" for: " + duration}</Text>
-                        </TouchableOpacity>
+                        <Card key={item.id} style={taskContainer}>
+                            <Card.Content>
+                                <Text style={taskClasses}>{task.name}</Text>
+                                <Text style={taskClasses}>{'at: '}<Moment unix element={Text} date={item.start} format="MMMM DD" />{" for: " + duration}</Text>
+                            </Card.Content>
+                        </Card>
                     );
                 }) : <Caption style={{textAlign: 'center'}}>You haven't tracked any tasks!</Caption>}
             </ScrollView>
@@ -52,26 +59,14 @@ export const SessionHistoryPage = props => {
     );
 }
 const styles = StyleSheet.create({
-    floatinBtn: {
-        position: 'absolute',
-        bottom: 16,
-        right: 16,
-        elevation: 5
-    },
     sessions: {
-        borderRadius: 5,
-        borderWidth: 2,
-        borderColor: 'black',
         color: 'black',
-        fontSize: 15,
+        fontSize: 16,
         textAlign: 'center',
-        margin: 4,
     },
-    activeTask: {
-        borderColor: '#05FF1E',
-        borderWidth: 4,
-        margin: 2,
-    }
-
+    container: {
+        marginVertical: 5,
+        elevation: 2,
+    },
 });
 
