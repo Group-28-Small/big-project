@@ -8,10 +8,12 @@ import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocDat
 import FloatingActionButton from '../components/FloatingActionButton';
 import { ScrollView } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
-import { TrackTaskButton } from '../components/TrackTaskButton'
+import NavButton from '../components/NavButton';
 import TaskElement from '../components/TaskElement';
 import LoadingScreen from './loadingscreen';
 import { Colors } from 'react-native/Libraries/NewAppScreen';
+import { CompletedTasksPage } from './completed_tasks';
+import { SessionHistoryPage } from './session_history';
 
 export const IndexPage = (props) => {
     return (
@@ -279,6 +281,10 @@ const MainTaskList = props => {
             }              
             </ScrollView>
                 {/* <TrackTaskButton onPress={trackTaskPressed} completedTasks={done_tasks.length === 0} sessions={sessions != undefined && sessions.length === 0} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} /> */}
+            <NavButton 
+                completedTasks={done_tasks.length === 0}
+                sessions={sessions != undefined && sessions.length === 0}
+                navigation={props.navigation} />
             <Snackbar style={styles.iosSnackbar}
                 visible={visible}
                 onDismiss={dismissSnackbar}
@@ -286,7 +292,7 @@ const MainTaskList = props => {
                 theme={{ colors: { surface: 'black' } }}>
                 Tracked task has been switched
                 </Snackbar>
-            <FAB style={styles.floatinBtn} onPress={() => addTask()} icon='plus' />
+            {/* <FAB style={styles.floatinBtn} onPress={() => addTask()} icon='plus' /> */}
             {
                 (userDetails) &&
                 <FAB style={styles.track} onPress={trackTaskPressed} icon={userDetails.is_tracking_task ? 'pause' : 'play'} />
@@ -295,7 +301,7 @@ const MainTaskList = props => {
     );
 }
 const styles = StyleSheet.create({
-      floatinBtn: {
+    floatinBtn: {
         position: 'absolute',
         bottom: 15,
         right: 16,
@@ -306,6 +312,20 @@ const styles = StyleSheet.create({
         position: 'absolute',
         bottom: 15,
         right: 170,
+        elevation: 5,
+        backgroundColor: AppTheme.primaryColor,
+    },
+    completed: {
+        position: 'absolute',
+        bottom: 75,
+        right: 16,
+        elevation: 5,
+        backgroundColor: AppTheme.primaryColor,
+    },
+    history: {
+        position: 'absolute',
+        bottom: 15,
+        right: 16,
         elevation: 5,
         backgroundColor: AppTheme.primaryColor,
     },
