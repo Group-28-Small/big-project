@@ -52,6 +52,14 @@ const MainTaskList = props => {
         Haptics.selectionAsync();
         props.navigation.navigate('Edit Task', { item_id: item.id });
     }
+    const finishedTask = item => {
+        Haptics.selectionAsync();
+        console.log('Complete!')
+        db.collection('tasks').doc(item.id).set({
+            'done': true,
+            'duration': item.estimated_time
+        }, { merge: true })
+    }
     const setSearchText = (text) => {
         _setSearchText(text)
         if (text === '') {
@@ -114,24 +122,110 @@ const MainTaskList = props => {
                                 taskClasses.push(styles.activeTask)
                             }
                             
-                            return (
-                                <TaskElement 
-                                    key={item.id} 
-                                    name={item.name} 
-                                    duration={item.duration} 
-                                    has_estimated_time={item.has_estimated_time} 
-                                    estimated_time={item.estimated_time} 
-                                    has_due_date={item.has_due_date} 
-                                    due_date={item.due_date} 
-                                    setActive={() => { Haptics.selectionAsync(); setActiveTask(item.id) }} 
-                                    edit={() => editTask(item)}
-                                    containerStyle={taskClasses}
-                                    active={item.id === active_task?.id}
-                                    style={taskClasses} />
-                            )
+                            //I'm sure there's a better way to do this than to repaste the same taskelement 5 times, but oops
+                            if(tasks.length === 1){
+                                if(item.duration != 0){
+                                    return (
+                                        <View>
+                                        <TaskElement 
+                                            key={item.id} 
+                                            name={item.name} 
+                                            duration={item.duration} 
+                                            has_estimated_time={item.has_estimated_time} 
+                                            estimated_time={item.estimated_time} 
+                                            has_due_date={item.has_due_date} 
+                                            due_date={item.due_date} 
+                                            setActive={() => { Haptics.selectionAsync(); setActiveTask(item.id) }} 
+                                            edit={() => editTask(item)}
+                                            done={() => finishedTask(item)}
+                                            containerStyle={taskClasses}
+                                            active={item.id === active_task?.id}
+                                            style={taskClasses} />
+                                            <Caption style={{textAlign: 'center'}}>You can view your task history by {'\n'} clicking on the 'History' button.</Caption>
+                                            </View>
+                                    )
+                                } else if(userDetails?.is_tracking_task){
+                                    return (
+                                        <View>
+                                        <TaskElement 
+                                            key={item.id} 
+                                            name={item.name} 
+                                            duration={item.duration} 
+                                            has_estimated_time={item.has_estimated_time} 
+                                            estimated_time={item.estimated_time} 
+                                            has_due_date={item.has_due_date} 
+                                            due_date={item.due_date} 
+                                            setActive={() => { Haptics.selectionAsync(); setActiveTask(item.id) }} 
+                                            edit={() => editTask(item)}
+                                            done={() => finishedTask(item)}
+                                            containerStyle={taskClasses}
+                                            active={item.id === active_task?.id}
+                                            style={taskClasses} />
+                                            <Caption style={{textAlign: 'center'}}>Click on the 'Stop Tracking' Button {'\n'} below to finish tracking your task.</Caption>
+                                            </View>
+                                    )
+                                } else if(item.id === active_task?.id){
+                                    return (
+                                        <View>
+                                        <TaskElement 
+                                            key={item.id} 
+                                            name={item.name} 
+                                            duration={item.duration} 
+                                            has_estimated_time={item.has_estimated_time} 
+                                            estimated_time={item.estimated_time} 
+                                            has_due_date={item.has_due_date} 
+                                            due_date={item.due_date} 
+                                            setActive={() => { Haptics.selectionAsync(); setActiveTask(item.id) }} 
+                                            edit={() => editTask(item)}
+                                            done={() => finishedTask(item)}
+                                            containerStyle={taskClasses}
+                                            active={item.id === active_task?.id}
+                                            style={taskClasses} />
+                                            <Caption style={{textAlign: 'center'}}>Click on the 'Start Tracking' Button {'\n'} below to begin tracking your task!</Caption>
+                                            </View>
+                                    )
+                                } else{
+                                    return (
+                                        <View>
+                                        <TaskElement 
+                                            key={item.id} 
+                                            name={item.name} 
+                                            duration={item.duration} 
+                                            has_estimated_time={item.has_estimated_time} 
+                                            estimated_time={item.estimated_time} 
+                                            has_due_date={item.has_due_date} 
+                                            due_date={item.due_date} 
+                                            setActive={() => { Haptics.selectionAsync(); setActiveTask(item.id) }} 
+                                            edit={() => editTask(item)}
+                                            done={() => finishedTask(item)}
+                                            containerStyle={taskClasses}
+                                            active={item.id === active_task?.id}
+                                            style={taskClasses} />
+                                            <Caption style={{textAlign: 'center'}}>Click on the task to expand it. {'\n'}Hold the task to select it.</Caption>
+                                            </View>
+                                    )
+                                }
+                            } else{
+                                return(
+                                    <TaskElement 
+                                        key={item.id} 
+                                        name={item.name} 
+                                        duration={item.duration} 
+                                        has_estimated_time={item.has_estimated_time} 
+                                        estimated_time={item.estimated_time} 
+                                        has_due_date={item.has_due_date} 
+                                        due_date={item.due_date} 
+                                        setActive={() => { Haptics.selectionAsync(); setActiveTask(item.id) }} 
+                                        edit={() => editTask(item)}
+                                        done={() => finishedTask(item)}
+                                        containerStyle={taskClasses}
+                                        active={item.id === active_task?.id}
+                                        style={taskClasses} />
+                                )
+                            }
                         })
                     }
-                    </> : <Caption>There's nothing here...</Caption>
+                    </> : <Caption style={{textAlign: 'center'}}>{no_tasks_msg}</Caption>
                 }              
                 {/* {tasks != undefined && tasks.length != 0 ?
                     <>

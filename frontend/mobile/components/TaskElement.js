@@ -49,7 +49,7 @@ export default TaskElement = props => {
                 isCollapsed &&
                 <Card.Actions>
                     <Button onPress={props.edit} style={styles.button}>Edit</Button>
-                    <Button style={styles.button}>Mark as done</Button>
+                    <Button onPress={props.done} style={styles.button}>Mark as done</Button>
                 </Card.Actions>
             }
         </Card>
