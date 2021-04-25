@@ -28,21 +28,26 @@ export default TaskElement = props => {
                     <ProgressBar progress={props.duration / props.estimated_time} color={Colors.red300} style={{height: 15, marginTop: 5, marginBottom: 5, width: '100%'}}/>
                 }
                 {
+                    props.has_estimated_time && 
+                    <Text style={{alignContent: 'center'}}>{Math.floor(props.duration / props.estimated_time * 100) + '%'}</Text>
+                }
+                {
                     isCollapsed &&
-                    <View style={{flexDirection:"row"}}>
-                        <View style={{flex: 1}, styles.boundary}>
-                            {
-                                props.has_estimated_time &&
+                    <View style={{flexDirection:"row", justifyContent: 'space-arou'}, styles.boundary}>
+                        {
+                            props.has_estimated_time &&
+                            <View style={{flex: 1}, styles.boundary}>
                                 <Text style={{justifyContent: 'flex-start',}, styles.boundary}>{timeDisplay(props.duration)} / {timeDisplay(props.estimated_time)}</Text>
-                            }
-                        </View>
-                        <View>
-                            {
-                                props.has_due_date && 
-                                <Text style={{justifyContent: 'flex-end',}, styles.boundary}>Due date: {<Moment format="DD MMMM YYYY" date={props.due_date} element={Text} unix />}</Text>
-                            }
-                        </View>                        
-                    </View> 
+                            </View>
+                        }
+                        {
+                            props.has_due_date &&
+                            <View>
+                                <Text style={{flex: 1, justifyContent: 'flex-end',}, styles.boundary}>Due date: <Moment element={Text} date={props.due_date} fromNow /></Text>
+                            </View>
+                        }
+                                                
+                    </View>  
                 }
             </Card.Content>
             {
@@ -83,5 +88,6 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 1,
         borderColor: Colors.pink900,
+        marginRight: 5,
     }
 })

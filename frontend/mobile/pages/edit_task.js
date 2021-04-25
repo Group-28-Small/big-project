@@ -87,8 +87,8 @@ const TaskEditor = props => {
     
     const [isDone, setIsDone] = React.useState(item.is_done ?? false);
 
-    const [selectedHour, setSelectedHour ] = useState(item.estimated_time ? Math.floor((item.estimated_time / (1000*60*60)) % 24) : 0);
-    const [selectedMinute, setSelectedMinute ] = useState(item.estimated_time ? Math.floor((item.estimated_time / (1000*60)) % 60) : 0);
+    const [selectedHour, setSelectedHour ] = useState(item.estimated_time ? Math.floor((item.estimated_time / (60*60)) % 24) : 0);
+    const [selectedMinute, setSelectedMinute ] = useState(item.estimated_time ? Math.floor((item.estimated_time / 60) % 60) : 0);
 
     const userDetailsRef = user != null ? db.collection('users')
         .doc(user.uid) : null;
@@ -104,8 +104,9 @@ const TaskEditor = props => {
     };
 
     const updateTask = () => {
-        var estimatedTime = (selectedHour * 60 * 60 * 1000) + (selectedMinute * 60 * 1000);
+        var estimatedTime = (selectedHour * 60 * 60) + (selectedMinute * 60);
         console.log("updating task: " + taskName);
+        console.log("selected hour: " + selectedHour + "selected minute: " + selectedMinute);
         console.log("time was: " + item.estimated_time + "time is: " + estimatedTime);
         if(taskName != ''){
             db.collection("tasks").doc(item_id).set({
@@ -115,7 +116,7 @@ const TaskEditor = props => {
                 'has_estimated_time': hasEstimatedTime,
                 'estimated_time': estimatedTime,
                 'has_due_date' : hasDueDate,
-                'due_date': dueDate.getTime() / 1000,
+                'due_date': dueDate,
                 'done': isDone,
                 'user': userRef
             }, { merge: true });
@@ -148,7 +149,7 @@ const TaskEditor = props => {
     const onDueDateTimeChange = (event, selectedDate) => {
         const currentDate = selectedDate || dueDate;
         setTimePickerVisible(Platform.OS === 'ios');
-        console.log('Setting due date');
+        console.log('Setting due date to: ' + selectedDate);
         onChangeDueDate(currentDate);
     };
 
@@ -297,11 +298,11 @@ const TaskEditor = props => {
                         {timePickerVisible && (
                             <DateTimePicker style={{ flex: 1 }}
                                 testID="dateTimePicker"
-                                value={dueDate}
+                                value={Date.now()}
                                 mode={timePickerMode}
                                 display="default"
-                                minimumDate={new Date()}
-                                onChange={onDueDateTimeChange}
+                                minimumDate={dueDate}
+                                onChange={onChangeDueDate}
                             />
                         )}
                     </View>
