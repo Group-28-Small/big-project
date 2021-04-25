@@ -1,15 +1,16 @@
-import React from 'react';
 import { render, screen } from '@testing-library/react'
 import TaskTree from './TaskTree'
 import 'reactfire'
 import 'react-router'
 import 'react-router-dom'
 import { useFirebaseApp } from 'reactfire';
+import 'firebase'
 
 // we have to create dummy implementations of API calls
 const mockedUserResult = jest.fn()
 const mockedFirestoreDocData = jest.fn()
 const mockedFirestoreCollectionData = jest.fn()
+const mockedUseFirebaseApp = jest.fn()
 
 const mockedFirestoreResult = {
     collection: (type) => {
@@ -41,7 +42,7 @@ jest.mock('reactfire', () => ({
     useFirestoreCollectionData: () => mockedFirestoreCollectionData(),
     useFirestoreDocData: () => mockedFirestoreDocData(),
     useAuth: () => 0,
-    useFirebaseApp: jest.fn()
+    useFirebaseApp: () => mockedUseFirebaseApp()
 }))
 jest.mock('react-router', () => ({
     useHistory: () => ({
@@ -51,6 +52,10 @@ jest.mock('react-router', () => ({
 jest.mock('react-router-dom', () => ({
     Link: 'div'
 }))
+jest.mock('firebase', () => ({
+    firebase: {
+    }
+}))
 
 
 describe("Task Tree", () => {
@@ -58,6 +63,19 @@ describe("Task Tree", () => {
         mockedFirestoreCollectionData.mockImplementation(() => mockedFirestoreCollectionDataResult)
         mockedFirestoreDocData.mockImplementation(() => mockedFirestoreDocResult)
         mockedUserResult.mockImplementation(() => 1)
+        mockedUseFirebaseApp.mockImplementation(() =>
+        ({
+            auth: () => ({
+                currentUser: {
+                    getIdToken: () => ({
+                        then: () => ({
+                            catch: jest.fn()
+                        })
+                    })
+                }
+            })
+        })
+        )
         render(<TaskTree />);
         // check that it doesn't redirect
     });

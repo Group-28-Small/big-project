@@ -65,8 +65,6 @@ describe("New/Edit Task Page", () => {
         const { container } = render(<EditTaskPage />);
         const taskNameField = container.querySelector("#taskName")
         expect(taskNameField).not.toBeNull()
-        const durationField = container.querySelector('#taskEstimated')
-        expect(durationField).not.toBeNull()
         const notesField = container.querySelector('#notes')
         expect(notesField).not.toBeNull()
     });

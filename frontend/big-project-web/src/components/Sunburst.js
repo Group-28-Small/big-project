@@ -20,6 +20,7 @@ export default function Sunburst(props) {
     });
     const [durations, setDurations] = useState({})
     const [onlyDone, setOnlyDone] = useState('all')
+
     useEffect(() => {
         // firebase tasks changed - fetch done tasks again
         console.log("data changed");
@@ -42,6 +43,7 @@ export default function Sunburst(props) {
             // this should never happen
         })
     }, [tasks])
+
     var values = []
     var labels = []
     var hoverText = []
@@ -72,17 +74,17 @@ export default function Sunburst(props) {
     return (
         <Grid
             container
-            spacing={0}
+            spacing={5}
             direction="column"
             alignItems="center"
             justify="center"
         >
-            <Grid item xs={8}>
+            <Grid item xs={8} style ={{paddingLeft: '7%', paddingTop: '2%'}}>
                     <Plot
                         data={data}
                         layout={layout} config={{ displaylogo: false }} />
             </Grid>
-            <Grid item>
+            <Grid item style ={{paddingLeft: '2%'}}>
                 <ToggleButtonGroup value={onlyDone} onChange={(_, v) => setOnlyDone(v)} exclusive aria-label="text formatting">
                     <ToggleButton value="all" aria-label="bold">
                         All

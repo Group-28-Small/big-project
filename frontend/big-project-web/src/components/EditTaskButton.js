@@ -11,7 +11,7 @@ export default function EditTaskButton(props) {
     }
     return (
         <div>
-                <IconButton size='small' onClick={editTask}>
+                <IconButton style={{ marginRight: '22px' }} size='small' onClick={editTask}>
                     <EditIcon />
                 </IconButton>
         </div>

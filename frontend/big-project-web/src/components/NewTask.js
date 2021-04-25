@@ -93,7 +93,7 @@ function TaskEditor(props) {
     const updateTask = () => {
         console.log(dueDate);
         const estimatedTime = selectedMinutes * 60 + selectedHours * 60 * 60;
-        db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'has_estimated_time':switchesState.hasEstimatedTime, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'user': userRef }, { merge: true });
+        db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'has_estimated_time':switchesState.hasEstimatedTime, 'due_date': dueDate.getTime() / 1000, 'has_due_date':switchesState.hasDueDate, 'note': notes, 'user': userRef }, { merge: true });
         props.setOpen(false)
     }
     const deleteTask = () => {

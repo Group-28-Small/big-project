@@ -1,4 +1,4 @@
-import { AppBar, Box, makeStyles, Tab, Tabs, Typography } from "@material-ui/core";
+import { AppBar, Box, makeStyles, Tab, Tabs, Typography, Paper } from "@material-ui/core";
 import { AccessTime, List, PieChart } from "@material-ui/icons";
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -56,7 +56,8 @@ const handleChange = (event, newValue) => {
 };
 
     return (
-        <div className={classes.root}>
+        <div style = {{backgroundImage: "url(https://images.hdqwalls.com/download/windows-xp-bliss-4k-lu-2048x1152.jpg)", position: 'fixed', width:'100%', height: 
+        '100%', backgroundRepeat: 'no-repeat',backgroundSize:'100% 100%'}}className={classes.root}>
         <AppBar position="static" color="default">
             <Tabs
             value={value}
@@ -69,20 +70,22 @@ const handleChange = (event, newValue) => {
             centered
             >
             <Tab label="Tasks" icon={<List />} {...a11yProps(0)} />
-            <Tab label="Sunburst" icon={<PieChart />} {...a11yProps(1)} />
+            <Tab label="Chart" icon={<PieChart />} {...a11yProps(1)} />
             <Tab label="History" icon={<AccessTime />} {...a11yProps(2)} />
             </Tabs>
         </AppBar>
         <TabPanel value={value} index={0} >
-            <TaskTree /> 
+            <Paper  style = {{width:'70%', margin: 'auto', padding: '30px'}} elevation ={5}><TaskTree /></Paper>
         </TabPanel>
             <TabPanel value={value} index={1} >
-                <Sunburst />
+                <Paper style = {{width:'50%', margin: 'auto', padding: '30px'}} elevation ={5}><Sunburst /></Paper>
         </TabPanel>
         <TabPanel value={value} index={2} >
+            <Paper style = {{width:'60%', margin: 'auto', padding: '30px'}} elevation ={5}>
             <Route exact path="/">
                 <SessionHistory />
             </Route>
+            </Paper>
         </TabPanel>
         </div>
     )

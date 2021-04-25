@@ -43,6 +43,8 @@ export default function LoginPage(props) {
     });
   }
     return (
+      <div style = {{backgroundImage: "url(https://images.hdqwalls.com/download/windows-xp-bliss-4k-lu-2048x1152.jpg)", position: 'fixed', width:'100%', height: 
+        '100%', backgroundRepeat: 'no-repeat',backgroundSize:'100% 100%'}}>
       <Paper elevation ={3} className={styles.login}>
         <Container component="main" maxWidth="xs">
             <CssBaseline />
@@ -63,7 +65,7 @@ export default function LoginPage(props) {
           <Snackbar open={snackbarOpen} onClose={() => setSnackbarOpen(false)} autoHideDuration={6000} message={snackBarMessage} />
         </Container>
       </Paper>
-
+      </div>
     )
 }
 
