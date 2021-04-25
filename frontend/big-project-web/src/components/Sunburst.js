@@ -4,6 +4,9 @@ import { backend_address, total_url } from 'big-project-common';
 import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
 import { useFirebaseApp, useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
+import moment from 'moment'
+import momentDurationFormatSetup from 'moment-duration-format'
+momentDurationFormatSetup(moment)
 
 
 export default function Sunburst(props) {
@@ -41,18 +44,15 @@ export default function Sunburst(props) {
     }, [tasks])
     var values = []
     var labels = []
+    var hoverText = []
     tasks.forEach((task) => {
-        if (onlyDone == 'only-not-done' && task.done) {
-            return;
-        } else if (onlyDone == 'only-done' && !task.done) {
+        if (onlyDone == 'only-not-done' && task.done || onlyDone == 'only-done' && !task.done) {
             return;
         }
         labels.push(task.name);
         values.push(durations[task.id])
+        hoverText.push(moment.duration(durations[task.id], "seconds").format("HH:mm:ss"))
     })
-    // console.log(values);
-    // console.log(labels);
-    // console.log(durations);
     var data = [{
         // once we have subtasks, this will be 'sunburst'
         type: "pie",
@@ -61,11 +61,13 @@ export default function Sunburst(props) {
         outsidetextfont: { size: 20, color: "#377eb8" },
         // leaf: {opacity: 0.4},
         marker: { line: { width: 2 } },
+        hoverinfo: 'label+text',
+        hovertext: hoverText
     }];
 
     var layout = {
         margin: { l: 0, r: 0, b: 0, t: 0 },
-        sunburstcolorway: ["#636efa", "#ef553b", "#00cc96"],
+        sunburstcolorway: ["#636efa", "#ef553b", "#00cc96"]
     };
     return (
         <Grid
