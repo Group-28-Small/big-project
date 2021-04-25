@@ -79,7 +79,7 @@ const MainTaskList = props => {
         setSearchText(searchText)
     }
     var tasks = [];
-    var no_tasks_msg = "You don't have any tasks!\nCreate your first one by clicking the + button below!"
+    var no_tasks_msg = "You don't have any active tasks!\nCreate your first one by clicking the + button below!"
     if (searchText === "") {
         tasks = firebase_tasks;
     } else {
@@ -104,21 +104,33 @@ const MainTaskList = props => {
             userStartTask(db, userDetailsRef);
         }
     }
+
+    const done_tasks = []
+    const not_done_tasks = []
+    if (tasks) {
+        tasks.forEach((task) => {
+            if (task?.done) {
+                done_tasks.push(task)
+            } else {
+                not_done_tasks.push(task)
+            }
+        });
+    }
     return (
         <View style={AppStyles.container}>
             <Searchbar placeholder="Search" value={searchText} onChangeText={setSearchText} />
             <ScrollView style={{width: '100%'}}>
-                {tasks != undefined && tasks.length != 0 ?
+            {not_done_tasks != undefined && not_done_tasks.length != 0 ?
                 <>
-                    {
-                        tasks.map((item) => {
-                            var taskClasses = [styles.tasks,]
+                {
+
+                    not_done_tasks.map((item) => {
+                        var taskClasses = [styles.tasks,]
                             if (item.id === active_task?.id) {
                                 taskClasses.push(styles.activeTask)
                             }
-                            
-                            //I'm sure there's a better way to do this than to repaste the same taskelement 5 times, but oops
-                            if(tasks.length === 1){
+                    ///I'm sure there's a better way to do this than to repaste the same taskelement 5 times, but oops
+                             if(tasks.length === 1){
                                 if(item.duration != 0){
                                     return (
                                         <View>
@@ -223,11 +235,10 @@ const MainTaskList = props => {
                                         style={taskClasses} />
                                 )
                             }
-                        })
+                        }) 
                     }
-                    </> : <Caption style={{textAlign: 'center'}}>{no_tasks_msg}</Caption>
-                }              
-
+                </> : <Caption style={{textAlign: 'center'}}>{no_tasks_msg}</Caption>
+            }              
             </ScrollView>
             {active_task != undefined && (
                 <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} />

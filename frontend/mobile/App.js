@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, TabActions } from '@react-navigation/native';
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack';
 import { is_production, setAuthHandler, AppTheme } from 'big-project-common';
 import 'firebase/auth';
@@ -13,6 +13,7 @@ import LoadingScreen from './pages/loadingscreen';
 import { LoginPage } from './pages/login';
 import { RegisterPage } from './pages/register';
 import { SessionHistoryPage } from './pages/session_history';
+import { CompletedTasksPage } from './pages/completed_tasks';
 import { VerifyPage } from './pages/verify_email';
 import * as firebaselib from 'firebase'
 
@@ -169,7 +170,8 @@ function AppNav() {
             headerStyle: {
               backgroundColor: AppTheme.primaryColor
             }
-          }} />
+          }
+          } />
           <Stack.Screen name="New Task" component={NewTaskPage} options={{
             headerRight: SignOutButton,
             ...TransitionPresets.SlideFromRightIOS,
@@ -178,6 +180,13 @@ function AppNav() {
             }
           }} />
           <Stack.Screen name="Session History" component={SessionHistoryPage} options={{
+            headerRight: SignOutButton,
+            ...TransitionPresets.SlideFromRightIOS,
+            headerStyle: {
+              backgroundColor: AppTheme.primaryColor
+            }
+          }} />
+          <Stack.Screen name="Completed Tasks" component={CompletedTasksPage} options={{
             headerRight: SignOutButton,
             ...TransitionPresets.SlideFromRightIOS,
             headerStyle: {

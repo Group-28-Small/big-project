@@ -13,7 +13,6 @@ export const SessionHistoryPage = props => {
     const { data: user } = useUser();
     const userDetailsRef = user != null ? db.collection('users')
         .doc(user.uid) : null;
-    const { data: userDetails } = useFirestoreDocData(userDetailsRef);
     const { data: sessions } = useFirestoreCollectionData(db.collection("sessions").where("user", "==", userDetailsRef).orderBy("start", "desc").orderBy("end", "desc")
     , {
         idField: 'id'
