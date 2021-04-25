@@ -42,8 +42,14 @@ export default TaskElement = props => {
                         }
                         {
                             props.has_due_date &&
-                            <View>
+                            <View style={{flex: 1}, styles.boundary}>
                                 <Text style={{flex: 1, justifyContent: 'flex-end',}, styles.boundary}>Due date: <Moment element={Text} date={props.due_date} fromNow /></Text>
+                            </View>
+                        }
+                        {
+                            props.note != '' &&
+                            <View style={{flex: 1}, styles.boundary}>
+                                <Text style={{flex: 1, justifyContent: 'flex-start',}, styles.boundary}>{props.note}</Text>
                             </View>
                         }
                                                 
