@@ -7,9 +7,9 @@ import NoteIcon from '@material-ui/icons/Note';
 import DoneIcon from '@material-ui/icons/Done';
 import TreeItem from '@material-ui/lab/TreeItem';
 import TreeView from '@material-ui/lab/TreeView';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Moment from 'react-moment';
-import { useFirebaseApp, useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
+import { useFirebaseApp, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser } from 'reactfire';
 import EditTaskButton from './EditTaskButton';
 import { EditTaskPage, NewTaskPage } from "./NewTask";
 import PlayPauseButton from './PlayPauseButton';
@@ -65,6 +65,7 @@ export default function TaskTree(props) {
         })
     }
     // turns out this should be done with useEffect (well akchually useReducer if we want to be 100% best practices)
+    // new edit: see how this works in Sunburst.js - its a lot better
     if (firebase_tasks !== tasksCache) {
         console.log("update detected")
         setTasksCache(firebase_tasks)
@@ -163,6 +164,10 @@ function TaskTreeItem(props) {
     const styles = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
     const [done, setDone] = useState(task.done ?? false);
+    const { data: user } = useUser();
+    const userDetailsRef = user != null ? db.collection('users')
+        .doc(user.uid) : null;
+    const { data: userDetails } = useFirestoreDocData(userDetailsRef ?? db.collection('users').doc());
 
     const handlePopoverOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -204,6 +209,14 @@ function TaskTreeItem(props) {
                 <div className={`${styles.treeItem} ${isLast && styles.lastItem}`} >
                     {task.name}{' \t'}{task.estimated_time}{' hrs \t'}{task.percentage}{'% \t'}
                     <Moment format="DD MMMM YYYY" date={task.due_date} unix />
+                    {(userDetails?.active_task?.id == task.id && userDetails.is_tracking_task) &&
+                        (
+                            <div style={{ marginLeft: 'auto' }}>
+                                <Moment date={userDetails.task_start_time} interval={1000} format="hh:mm:ss" durationFromNow unix />
+                            </div>
+                        )
+
+                    }
                     <div style={{ marginRight: '0', marginLeft: 'auto' }}>
                         <IconButton size='small' onClick={ handleTaskCompletion }>
                             <Confetti config={confettiConfig} active={done} />
