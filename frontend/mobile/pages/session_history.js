@@ -1,14 +1,10 @@
 
 import React from 'react';
-import { StyleSheet, Text, Vibration, View } from 'react-native';
-import { backend_address, setUserActiveTask, userStopTask, userStartTask } from 'big-project-common';
+import { StyleSheet, Text, View } from 'react-native';
 import AppStyles from '../styles';
 import { useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser } from 'reactfire';
-import FloatingActionButton from '../components/FloatingActionButton';
 import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
-import * as Haptics from 'expo-haptics';
 import Moment from 'react-moment';
-import { TrackTaskButton } from '../components/TrackTaskButton'
 import LoadingScreen from './loadingscreen';
 import moment from 'moment';
 

@@ -1,21 +1,16 @@
 
 import React from 'react';
-import { StyleSheet, Text, Vibration, View, ToastAndroid, Button } from 'react-native';
+import { StyleSheet, View, ToastAndroid } from 'react-native';
 import { backend_address, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME, AppTheme, search_url } from 'big-project-common';
 import AppStyles from '../styles';
 import { Searchbar, Snackbar, Caption } from 'react-native-paper';
-import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser, useAuth, useFirebaseApp } from 'reactfire';
+import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser, useFirebaseApp } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
-import Moment from 'react-moment';
 import { TrackTaskButton } from '../components/TrackTaskButton'
 import TaskElement from '../components/TaskElement';
 import LoadingScreen from './loadingscreen';
-import { back } from 'react-native/Libraries/Animated/src/Easing';
-import { TaskEditor } from './edit_task'
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-
 
 export const IndexPage = (props) => {
     return (
@@ -232,67 +227,7 @@ const MainTaskList = props => {
                     }
                     </> : <Caption style={{textAlign: 'center'}}>{no_tasks_msg}</Caption>
                 }              
-                {/* {tasks != undefined && tasks.length != 0 ?
-                    <>
-                        {
-                            tasks.map((item) => {
-                                var pct = item.estimated_hour ? (item.percentage + (item.duration / ((item.estimated_hour * 60) + item.estimated_minute))) : (item.percentage + (item.duration / item.estimated_minute))
-                                var taskClasses = [styles.tasks,]
-                                if (item.id === active_task?.id) {
-                                    taskClasses.push(styles.activeTask)
-                                }
-                                if(tasks.length === 1){
-                                    if(item.duration != 0){
-                                        return (
-                                            <View>
-                                                <TouchableOpacity key={item.id} onLongPress={() => editTask(item)} onPress={() => setActiveTask(item.id)}>
-                                                    <Text style={taskClasses} >{item.name}{' \t'}{item.duration === 0 ? 'no time logged' : moment.duration(item.duration * 1000).humanize()}{item.has_estimated_time ? '/' + item.estimated_hour + ' hrs ' + item.estimated_minute + ' min\t' : '\t'}{item.track_progress ? (' ' + Math.trunc(pct)  + '% \n') : '\n'}{item.has_due_date ? <Moment format="DD MMMM YYYY" date={item.due_date} element={Text} unix /> : '' }</Text>
-                                                </TouchableOpacity>
-                                                <Text style={{textAlign: 'center'}}>You can view your task history by {'\n'} clicking on the 'History' button.</Text>
-                                            </View>
-                                        );
-                                    }
-                                    else if(userDetails?.is_tracking_task){
-                                        return (
-                                            <View>
-                                                <TouchableOpacity key={item.id} onLongPress={() => editTask(item)} onPress={() => setActiveTask(item.id)}>
-                                                    <Text style={taskClasses} >{item.name}{' \t'}{item.duration === 0 ? 'no time logged' : moment.duration(item.duration * 1000).humanize()}{item.has_estimated_time ? '/' + item.estimated_hour + ' hrs ' + item.estimated_minute + ' min\t' : '\t'}{item.track_progress ? (' ' + Math.trunc(pct)  + '% \n') : '\n'}{item.has_due_date ? <Moment format="DD MMMM YYYY" date={item.due_date} element={Text} unix /> : '' }</Text>
-                                                </TouchableOpacity>
-                                                <Text style={{textAlign: 'center'}}>Click on the 'Stop Tracking' Button {'\n'} below to finish tracking your task.</Text>
-                                            </View>
-                                        );
-                                    }
-                                    else if(item.id === active_task?.id){
-                                        return (
-                                            <View>
-                                                <TouchableOpacity key={item.id} onLongPress={() => editTask(item)} onPress={() => setActiveTask(item.id)}>
-                                                    <Text style={taskClasses} >{item.name}{' \t'}{item.duration === 0 ? 'no time logged' : moment.duration(item.duration * 1000).humanize()}{item.has_estimated_time ? '/' + item.estimated_hour + ' hrs ' + item.estimated_minute + ' min\t' : '\t'}{item.track_progress ? (' ' + Math.trunc(pct)  + '% \n') : '\n'}{item.has_due_date ? <Moment format="DD MMMM YYYY" date={item.due_date} element={Text} unix /> : '' }</Text>
-                                                </TouchableOpacity>
-                                                <Text style={{textAlign: 'center'}}>Click on the 'Start Tracking' Button {'\n'} below to begin tracking your task!</Text>
-                                            </View>
-                                        );
-                                    } else{
-                                        console.log('else');
-                                        return(
-                                            <View>
-                                                <TouchableOpacity key={item.id} onLongPress={() => editTask(item)} onPress={() => setActiveTask(item.id)}>
-                                                    <Text style={taskClasses} >{item.name}{' \t'}{item.duration === 0 ? 'no time logged' : moment.duration(item.duration * 1000).humanize()}{item.has_estimated_time ? '/' + item.estimated_hour + ' hrs ' + item.estimated_minute + ' min\t' : '\t'}{item.track_progress ? (' ' + Math.trunc(pct)  + '% \n') : '\n'}{item.has_due_date ? <Moment format="DD MMMM YYYY" date={item.due_date} element={Text} unix /> : '' }</Text>
-                                                </TouchableOpacity>
-                                                <Text style={{textAlign: 'center'}}>Click on the task to select it. {'\n'}Hold the task to edit or delete it.</Text>
-                                            </View>
-                                        )
-                                    }
-                                }
-                                else{
-                                    return (
-                                        <TouchableOpacity key={item.id} onLongPress={() => editTask(item)} onPress={() => setActiveTask(item.id)}>
-                                            <Text style={taskClasses} >{item.name}{' \t'}{item.duration === 0 ? 'no time logged' : moment.duration(item.duration * 1000).humanize()}{item.has_estimated_time ? '/' + item.estimated_hour + ' hrs ' + item.estimated_minute + ' min\t' : '\t'}{item.track_progress ? (' ' + Math.trunc(pct)  + '% \n') : '\n'}{item.has_due_date ? <Moment format="DD MMMM YYYY" date={item.due_date} element={Text} unix /> : '' }</Text>
-                                        </TouchableOpacity>
-                                    );
-                                }
-                            })
-                        }
-                    </> : <Text>{no_tasks_msg}</Text>} */}
+
             </ScrollView>
             {active_task != undefined && (
                 <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} />
