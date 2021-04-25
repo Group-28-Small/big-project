@@ -56,7 +56,7 @@ export default TaskElement = props => {
             {
                 isCollapsed &&
                 <Card.Actions>
-                    <Button onPress={props.edit} style={styles.button}>Edit</Button>
+                    {props.isDone ?? <Button onPress={props.edit} style={styles.button}>Edit</Button>}
 
                     {props.isDone ? <Button onPress={props.notDone} style={styles.button}>Mark as incomplete</Button> : <Button onPress={props.done} style={styles.button}>Mark as done</Button>}
                 </Card.Actions>

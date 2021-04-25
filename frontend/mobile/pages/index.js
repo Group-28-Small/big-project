@@ -105,13 +105,10 @@ const MainTaskList = props => {
         }
     }
 
-    const done_tasks = []
     const not_done_tasks = []
     if (tasks) {
         tasks.forEach((task) => {
-            if (task?.done) {
-                done_tasks.push(task)
-            } else {
+            if (!task?.done) {
                 not_done_tasks.push(task)
             }
         });
@@ -123,7 +120,6 @@ const MainTaskList = props => {
             {not_done_tasks != undefined && not_done_tasks.length != 0 ?
                 <>
                 {
-
                     not_done_tasks.map((item) => {
                         var taskClasses = [styles.tasks,]
                             if (item.id === active_task?.id) {
