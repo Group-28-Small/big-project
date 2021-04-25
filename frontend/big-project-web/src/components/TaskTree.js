@@ -3,6 +3,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { TextFields } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
 import NoteIcon from '@material-ui/icons/Note';
+import DoneIcon from '@material-ui/icons/Done';
 import TreeItem from '@material-ui/lab/TreeItem';
 import TreeView from '@material-ui/lab/TreeView';
 import React, { useState } from 'react';
@@ -11,7 +12,8 @@ import { useFirebaseApp, useFirestore, useFirestoreCollectionData, useUser } fro
 import EditTaskButton from './EditTaskButton';
 import { EditTaskPage, NewTaskPage } from "./NewTask";
 import PlayPauseButton from './PlayPauseButton';
-import { backend_address, search_url } from 'big-project-common'
+import { backend_address, search_url } from 'big-project-common';
+import Confetti from 'react-dom-confetti';
 
 
 
@@ -99,12 +101,13 @@ export default function TaskTree(props) {
 
             <TreeView>
                 {tasks.map((item, idx) => {
+                    //if(!item.done) { maybe later, with just this ruins isLast
                     return (
                         <TaskTreeItem 
                             nodeId={item.id} 
                             key={item.id} 
                             task={item} 
-                            //onClick={() => editTask(item)} 
+                            db={ db } 
                             isLast={idx === tasks.length - 1}
                             editCallback={editTask}
                         />
@@ -130,9 +133,10 @@ export default function TaskTree(props) {
 
 
 function TaskTreeItem(props) {
-    const { task, isLast, ...other } = props;
+    const { task, isLast, db, ...other } = props;
     const styles = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [done, setDone] = useState(task.done ?? false);
 
     const handlePopoverOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -144,6 +148,23 @@ function TaskTreeItem(props) {
 
     const open = Boolean(anchorEl);
 
+    const handleTaskCompletion = () => {
+        //console.log(`setting ${task.id} to done`);
+        if(task.estimated_time) {
+            db.collection('tasks').doc(task.id).set({
+                'done': true,
+                'duration': task.estimated_time
+            }, { merge: true })
+        }
+        else {
+            db.collection('tasks').doc(task.id).set({
+                'done': true,
+                'duration': 0
+            }, { merge: true })
+        }
+        setDone(true);
+    }
+
     return (
         <TreeItem 
             label={
@@ -151,7 +172,11 @@ function TaskTreeItem(props) {
                     {task.name}{' \t'}{task.estimated_time}{' hrs \t'}{task.percentage}{'% \t'}
                     <Moment format="DD MMMM YYYY" date={task.due_date} unix />
                     <div style={{ marginRight: '0', marginLeft: 'auto' }}>
-                        <IconButton>
+                        <IconButton size='small' onClick={ handleTaskCompletion }>
+                            <Confetti config={confettiConfig} active={done}/>
+                            <DoneIcon />
+                        </IconButton>
+                        <IconButton size='small'>
                             <NoteIcon aria-owns={open ? 'mouse-over-popover' : undefined} aria-haspopup="true" onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}/>
                             <Popover
                                 id="mouse-over-popover"
@@ -186,11 +211,24 @@ function TaskTreeItem(props) {
     );
 }
 
+const confettiConfig = {
+    angle: 90,
+    spread: 360,
+    startVelocity: 40,
+    elementCount: 70,
+    dragFriction: 0.12,
+    duration: 1000,
+    stagger: 3,
+    width: "10px",
+    height: "10px",
+    perspective: "500px",
+    colors: ["#000", "#eab800"]
+  };
 
 
 const useStyles = makeStyles((theme) => ({
     fab: {
-        position: 'absolute',
+        position: 'fixed',
         bottom: theme.spacing(2),
         right: theme.spacing(2),
     },
