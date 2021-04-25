@@ -321,8 +321,7 @@ const useStyles = makeStyles((theme) => ({
     },
     search: {
         margin: '12px',
-        marginLeft: '0'
-        marginRight: '64px',
+        marginLeft: '0',
         width: '100%',
         textAlign: 'center',
     },
