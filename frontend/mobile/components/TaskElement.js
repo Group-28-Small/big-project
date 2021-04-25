@@ -5,11 +5,12 @@ import { StyleSheet, View } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { Card, Divider, Text, ProgressBar, Colors, Button } from 'react-native-paper';
 import Moment from 'react-moment';
+import { AppTheme } from 'big-project-common';
 
 export default TaskElement = props => {
     const [isCollapsed, toggleCollapse] = useState(false);
     return (
-        <Card onPress={() => toggleCollapse(!isCollapsed)} onLongPress={props.setActive} style={styles.task}>
+        <Card onPress={() => toggleCollapse(!isCollapsed)} onLongPress={props.setActive} style={props.active ? styles.activeTask : styles.task}>
             <Card.Content>
                 <Text>{props.name}</Text>
                 {
@@ -52,6 +53,14 @@ const styles = StyleSheet.create({
         marginBottom: 5,
         marginLeft: 5,
         marginRight: 5,
+    },
+    activeTask:{
+        elevation: 2,
+        marginTop: 5,
+        marginBottom: 5,
+        marginLeft: 5,
+        marginRight: 5,
+        backgroundColor: AppTheme.primaryLightColor
     },
     boundary: {
         borderStyle: 'solid',
