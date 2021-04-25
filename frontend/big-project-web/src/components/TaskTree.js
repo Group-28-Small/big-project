@@ -230,7 +230,7 @@ function TaskTreeItem(props) {
                                 onClose={handlePopoverClose}
                                 disableRestoreFocus
                             >
-                            <Typography className = {styles.formating}>{task.note}</Typography>
+                                <Typography className={styles.formating}>{task.note === '' ? "No note" : task.note}</Typography>
                             </Popover>
                             
                         </IconButton>
