@@ -140,6 +140,7 @@ const MainTaskList = props => {
                                             done={() => finishedTask(item)}
                                             containerStyle={taskClasses}
                                             active={item.id === active_task?.id}
+                                            note={item.note}
                                             style={taskClasses} />
                                             <Caption style={{textAlign: 'center'}}>You can view your task history by {'\n'} clicking on the 'History' button.</Caption>
                                             </View>
@@ -160,6 +161,7 @@ const MainTaskList = props => {
                                             done={() => finishedTask(item)}
                                             containerStyle={taskClasses}
                                             active={item.id === active_task?.id}
+                                            note={item.note}
                                             style={taskClasses} />
                                             <Caption style={{textAlign: 'center'}}>Click on the 'Stop Tracking' Button {'\n'} below to finish tracking your task.</Caption>
                                             </View>
@@ -180,6 +182,7 @@ const MainTaskList = props => {
                                             done={() => finishedTask(item)}
                                             containerStyle={taskClasses}
                                             active={item.id === active_task?.id}
+                                            note={item.note}
                                             style={taskClasses} />
                                             <Caption style={{textAlign: 'center'}}>Click on the 'Start Tracking' Button {'\n'} below to begin tracking your task!</Caption>
                                             </View>
@@ -200,6 +203,7 @@ const MainTaskList = props => {
                                             done={() => finishedTask(item)}
                                             containerStyle={taskClasses}
                                             active={item.id === active_task?.id}
+                                            note={item.note}
                                             style={taskClasses} />
                                             <Caption style={{textAlign: 'center'}}>Click on the task to expand it. {'\n'}Hold the task to select it.</Caption>
                                             </View>
@@ -220,6 +224,7 @@ const MainTaskList = props => {
                                         done={() => finishedTask(item)}
                                         containerStyle={taskClasses}
                                         active={item.id === active_task?.id}
+                                        note={item.note}
                                         style={taskClasses} />
                                 )
                             }
