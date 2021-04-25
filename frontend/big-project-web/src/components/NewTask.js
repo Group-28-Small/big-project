@@ -92,6 +92,7 @@ function TaskEditor(props) {
     const updateTask = () => {
         console.log(dueDate);
         db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'user': userRef }, { merge: true });
+        props.setOpen(false)
     }
     const deleteTask = () => {
         db.collection("tasks").doc(item_id).delete();
@@ -184,6 +185,7 @@ function TaskEditor(props) {
         </Container>
     )
 }
+
 const useStyles = makeStyles((theme) => ({
     field: {
         margin: 8,

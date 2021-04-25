@@ -1,4 +1,4 @@
-import { Container, Fab, makeStyles, Modal, Popover, TextField, Typography } from '@material-ui/core';
+import { Container, Fab, makeStyles, Modal, Popover, TextField, Typography, List, ListItem, ListItemText, Divider } from '@material-ui/core';
 import IconButton from "@material-ui/core/IconButton";
 import { TextFields } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
@@ -107,9 +107,9 @@ export default function TaskTree(props) {
         });
     }
     return (
-        <Container>
-            <Typography variant='h4' className={styles.task}>Tasks</Typography>
-            <TextField className={styles.search} id='search' type="text" label='Search' variant='outlined' onChange={(e) => setSearchText(e.target.value)} value={searchText}></TextField>
+        <List>
+            {/* <Typography variant='h4' className={styles.task}>Tasks</Typography> */}
+            <TextField className={styles.search} id='search' type="text" label='Search' variant='filled' onChange={(e) => setSearchText(e.target.value)} value={searchText}></TextField>
 
             <TreeView>
                 {not_done_tasks.map((item, idx) => {
@@ -152,7 +152,7 @@ export default function TaskTree(props) {
 }
                 </div>
             </Modal>
-        </Container>
+        </List>
     );
 }
 
@@ -201,7 +201,7 @@ function TaskTreeItem(props) {
     return (
         <TreeItem 
             label={
-                <div className={`${styles.treeItem} ${isLast && styles.lastItem}`} >
+                <div className={`${styles.treeItem} ${isLast && styles.lastItem} ${task.done && styles.TreeItemDone}`} >
                     {task.name}{' \t'}{task.estimated_time}{' hrs \t'}{task.percentage}{'% \t'}
                     <Moment format="DD MMMM YYYY" date={task.due_date} unix />
                     <div style={{ marginRight: '0', marginLeft: 'auto' }}>
@@ -267,16 +267,20 @@ const useStyles = makeStyles((theme) => ({
     },
     // purely experimental - delete if you want
     treeItem: {
-        borderWidth: 1,
+        borderWidth: 2,
         borderBottomWidth: 0,
         borderColor: 'black',
         borderStyle: 'solid',
-        padding: 4,
+        padding: 15,
         alignItems: 'center',
-        display: 'flex'
+        display: 'flex',
+        
+    },
+    TreeItemDone:{
+        borderStyle: 'dashed',
     },
     lastItem: {
-        borderBottomWidth: 1,
+        borderBottomWidth: 2,
     },
     paper: {
         position: 'absolute',
@@ -300,8 +304,9 @@ const useStyles = makeStyles((theme) => ({
         textAlign: 'center',
     },
     search: {
-        margin: '16px',
-        marginRight: '64px'
-
+        margin: '12px',
+        marginRight: '64px',
+        width: '100%',
+        textAlign: 'center',
     }
 }));
