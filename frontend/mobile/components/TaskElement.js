@@ -1,9 +1,6 @@
-import { setUserActiveTask } from 'big-project-common';
-import React from 'react';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import { Card, Divider, Text, ProgressBar, Colors, Button } from 'react-native-paper';
+import { Card, Text, ProgressBar, Colors, Button } from 'react-native-paper';
 import Moment from 'react-moment';
 import { AppTheme } from 'big-project-common';
 
@@ -36,20 +33,20 @@ export default TaskElement = props => {
                     <View style={{flexDirection:"row", justifyContent: 'space-arou'}, styles.boundary}>
                         {
                             props.has_estimated_time &&
-                            <View style={{flex: 1}, styles.boundary}>
-                                <Text style={{justifyContent: 'flex-start',}, styles.boundary}>{timeDisplay(props.duration)} / {timeDisplay(props.estimated_time)}</Text>
+                            <View style={styles.boundary}>
+                                <Text style={{justifyContent: 'flex-start'}}>{timeDisplay(props.duration)} / {timeDisplay(props.estimated_time)}</Text>
                             </View>
                         }
                         {
                             props.has_due_date &&
-                            <View style={{flex: 1}, styles.boundary}>
-                                <Text style={{flex: 1, justifyContent: 'flex-end',}, styles.boundary}>Due date: <Moment element={Text} date={props.due_date} fromNow /></Text>
+                            <View style={styles.boundary}>
+                                <Text style={{flex: 1, justifyContent: 'flex-end'}}>Due date: <Moment element={Text} date={props.due_date} fromNow /></Text>
                             </View>
                         }
                         {
                             props.note != '' &&
-                            <View style={{flex: 1}, styles.boundary}>
-                                <Text style={{flex: 1, justifyContent: 'flex-start',}, styles.boundary}>{props.note}</Text>
+                            <View style={styles.boundary}>
+                                <Text style={{flex: 1, justifyContent: 'flex-start'}}>{props.note}</Text>
                             </View>
                         }
                                                 
@@ -88,6 +85,7 @@ const styles = StyleSheet.create({
         borderStyle: 'solid',
         borderWidth: 1,
         borderColor: Colors.blue900,
+        flex: 1
     },
     button: {
         backgroundColor: Colors.green100,

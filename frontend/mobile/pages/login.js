@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, SafeAreaView, Button, Platform, ToastAndroid, View, Text } from 'react-native';
+import { StyleSheet, SafeAreaView, Button, Platform, ToastAndroid, View } from 'react-native';
 import { Snackbar, Button as PaperButton } from 'react-native-paper';
-import { TextInput, TouchableOpacity } from 'react-native-gesture-handler';
-import { useAuth, useFirebaseApp } from 'reactfire';
+import { TextInput } from 'react-native-gesture-handler';
+import { useAuth } from 'reactfire';
 import AppStyles from '../styles';
 import { AppTheme } from 'big-project-common';
 

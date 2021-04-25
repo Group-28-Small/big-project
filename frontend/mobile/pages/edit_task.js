@@ -1,15 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, Platform, ToastAndroid } from 'react-native';
-import { useFirestore, useFirestoreDoc, useFirestoreDocData, useUser } from 'reactfire';
-import { Paragraph, TextInput, TouchableRipple } from 'react-native-paper';
+import { useFirestore, useFirestoreDocData, useUser } from 'reactfire';
+import { Paragraph, TextInput, TouchableRipple, Snackbar } from 'react-native-paper';
 import { ScrollView, Switch } from 'react-native-gesture-handler';
-import Slider from '@react-native-community/slider';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import AppStyles from '../styles';
 import Moment from 'react-moment';
 import LoadingScreen from './loadingscreen';
-import firebase, { firestore } from 'firebase';
-import { Snackbar } from 'react-native-paper';
+import firebase from 'firebase';
 import Dialog from "react-native-dialog";
 import { userStopTask, AppTheme } from 'big-project-common';
 import InputSpinner from "react-native-input-spinner";
@@ -244,36 +241,6 @@ const TaskEditor = props => {
                     </View>
                 </>
             )}
-            {/* <TouchableRipple onPress={() => setTrackProgress(!trackProgress)}>
-                <View style={styles.row}>
-                    <Paragraph>Track Progress</Paragraph>
-                    <View pointerEvents="none">
-                        <Switch value={trackProgress} ios_backgroundColor={AppTheme.secondaryLightColor}  />
-                    </View>
-                </View>
-            </TouchableRipple>
-            {trackProgress && (
-                <>
-                    <View style={[styles.row, AppStyles.centered]}>
-                        <Text style={styles.text}>Percentage: {pct}%</Text>
-                    </View>
-                    <View style={styles.row}>
-                        <Slider
-                        //TODO: This is bugging out again on slide
-                            style={{ width: '100%', height: 40 }}
-                            minimumValue={0}
-                            maximumValue={100}
-                            value={pct}
-                            step={1}
-                            onValueChange={onChangePct}
-                            minimumTrackTintColor={AppTheme.primaryDarkColor}
-                            maximumTrackTintColor={AppTheme.primaryColor}
-                            thumbTintColor={AppTheme.primaryDarkColor}
-                        />
-                    </View>
-                </>
-            )
-            } */}
             <TouchableRipple onPress={() => setHasDueDate(!hasDueDate)}>
                 <View style={styles.row}>
                     <Paragraph>Has Due Date</Paragraph>

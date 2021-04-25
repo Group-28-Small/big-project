@@ -1,21 +1,16 @@
 
 import React from 'react';
-import { StyleSheet, Text, Vibration, View, ToastAndroid, Button } from 'react-native';
+import { StyleSheet, View, ToastAndroid } from 'react-native';
 import { backend_address, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME, AppTheme, search_url } from 'big-project-common';
 import AppStyles from '../styles';
 import { Searchbar, Snackbar, Caption } from 'react-native-paper';
-import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser, useAuth, useFirebaseApp } from 'reactfire';
+import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser, useFirebaseApp } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
-import { ScrollView, TouchableOpacity } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import * as Haptics from 'expo-haptics';
-import Moment from 'react-moment';
 import { TrackTaskButton } from '../components/TrackTaskButton'
 import TaskElement from '../components/TaskElement';
 import LoadingScreen from './loadingscreen';
-import { back } from 'react-native/Libraries/Animated/src/Easing';
-import { TaskEditor } from './edit_task'
-import { Colors } from 'react-native/Libraries/NewAppScreen';
-
 
 export const IndexPage = (props) => {
     return (
@@ -232,7 +227,7 @@ const MainTaskList = props => {
                     }
                     </> : <Caption style={{textAlign: 'center'}}>{no_tasks_msg}</Caption>
                 }              
-                
+
             </ScrollView>
             {active_task != undefined && (
                 <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} />
