@@ -15,7 +15,9 @@ import { RegisterPage } from './pages/register';
 import { SessionHistoryPage } from './pages/session_history';
 import { CompletedTasksPage } from './pages/completed_tasks';
 import { VerifyPage } from './pages/verify_email';
-import * as firebaselib from 'firebase'
+import * as firebaselib from 'firebase';
+import BottomNav from './components/BottomNav';
+
 
 var firebaseConfig = {
   apiKey: "AIzaSyDhZOTZT7X9YC8krs7imlVPvFcFMs8RKhk",
@@ -59,6 +61,12 @@ export default function App() {
   return (
     <FirebaseAppProvider firebaseConfig={firebaseConfig} suspense={false}>
       <AppNav />
+        {/* <BottomNav 
+          TasksRoute={IndexPage} 
+          DoneRoute={CompletedTasksPage} 
+          HistoryRoute={SessionHistoryPage}
+          barStyle={{backgroundColor: AppTheme.primaryColor, position: 'absolute', bottom: 20}}>
+        </BottomNav> */}
     </FirebaseAppProvider>
   );
 }

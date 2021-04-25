@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, View, ToastAndroid } from 'react-native';
 import { backend_address, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME, AppTheme, search_url } from 'big-project-common';
 import AppStyles from '../styles';
-import { Searchbar, Snackbar, Caption, FAB } from 'react-native-paper';
+import { Searchbar, Snackbar, Caption, FAB, Text } from 'react-native-paper';
 import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser, useFirebaseApp } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -130,29 +130,30 @@ const MainTaskList = props => {
         });
     }
 
-    const [durations,setDurations] = useState({})
-    useEffect(() => {
-        // firebase tasks changed - fetch done tasks again
-        console.log("data changed");
-        firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
-            tasks.forEach((task) => {
-                const url = backend_address(total_url + "/" + idToken + "/" + task.id)
-                fetch(url)
-                    .then(response => response.json())
-                    .then(data => {
-                        // so it turns out that setState callbacks can accept a function that recieves the old state
-                        // if we update it from within, it's guaranteed to happen atomically
-                        setDurations((oldDurations) => {
-                            return { ...oldDurations, [task.id]: data.total_time }
-                        })
-                    }).catch((error) => {
-                        console.log(error);
-                    });
-            });
-        }).catch((error) => {
-            // this should never happen
-        })
-    }, [tasks])
+    // this is for Kurt to figure out
+    // const [durations,setDurations] = useState({})
+    // useEffect(() => {
+    //     // firebase tasks changed - fetch done tasks again
+    //     console.log("data changed");
+    //     firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
+    //         tasks.forEach((task) => {
+    //             const url = backend_address(total_url + "/" + idToken + "/" + task.id)
+    //             fetch(url)
+    //                 .then(response => response.json())
+    //                 .then(data => {
+    //                     // so it turns out that setState callbacks can accept a function that recieves the old state
+    //                     // if we update it from within, it's guaranteed to happen atomically
+    //                     setDurations((oldDurations) => {
+    //                         return { ...oldDurations, [task.id]: data.total_time }
+    //                     })
+    //                 }).catch((error) => {
+    //                     console.log(error);
+    //                 });
+    //         });
+    //     }).catch((error) => {
+    //         // this should never happen
+    //     })
+    // }, [tasks])
 
     return (
         <View style={AppStyles.container}>
@@ -294,16 +295,16 @@ const MainTaskList = props => {
     );
 }
 const styles = StyleSheet.create({
-    floatinBtn: {
+      floatinBtn: {
         position: 'absolute',
-        bottom: 40,
+        bottom: 15,
         right: 16,
         elevation: 5,
         backgroundColor: AppTheme.primaryColor,
     },
     track: {
         position: 'absolute',
-        bottom: 40,
+        bottom: 15,
         right: 170,
         elevation: 5,
         backgroundColor: AppTheme.primaryColor,
