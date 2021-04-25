@@ -2,6 +2,7 @@ import { Container, Fab, makeStyles, Modal, Popover, TextField, Typography } fro
 import IconButton from "@material-ui/core/IconButton";
 import { TextFields } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
+import RedoIcon from '@material-ui/icons/Redo'
 import NoteIcon from '@material-ui/icons/Note';
 import DoneIcon from '@material-ui/icons/Done';
 import TreeItem from '@material-ui/lab/TreeItem';
@@ -205,8 +206,8 @@ function TaskTreeItem(props) {
                     <Moment format="DD MMMM YYYY" date={task.due_date} unix />
                     <div style={{ marginRight: '0', marginLeft: 'auto' }}>
                         <IconButton size='small' onClick={ handleTaskCompletion }>
-                            <Confetti config={confettiConfig} active={done}/>
-                            <DoneIcon />
+                            <Confetti config={confettiConfig} active={done} />
+                            {!task.done ? <DoneIcon /> : <RedoIcon />}
                         </IconButton>
                         <IconButton size='small'>
                             <NoteIcon aria-owns={open ? 'mouse-over-popover' : undefined} aria-haspopup="true" onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}/>
