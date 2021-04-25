@@ -17,7 +17,6 @@
     "plotly.js": "^1.58.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
-    "react-dom-confetti": "^0.2.0",
     "react-moment": "^1.1.1",
     "react-plotly.js": "^2.5.1",
     "react-router-dom": "^5.2.0",

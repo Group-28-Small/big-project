@@ -12,22 +12,6 @@ import EditTaskButton from './EditTaskButton';
 import { EditTaskPage, NewTaskPage } from "./NewTask";
 import PlayPauseButton from './PlayPauseButton';
 import { backend_address, search_url } from 'big-project-common'
-import DoneIcon from '@material-ui/icons/Done';
-import Confetti from 'react-dom-confetti';
-
-const config = {
-  angle: 90,
-  spread: 360,
-  startVelocity: 40,
-  elementCount: 70,
-  dragFriction: 0.12,
-  duration: 1000,
-  stagger: 3,
-  width: "10px",
-  height: "10px",
-  perspective: "500px",
-  colors: ["#000", "#eab800"]
-};
 
 
 
@@ -149,7 +133,6 @@ function TaskTreeItem(props) {
     const { task, isLast, ...other } = props;
     const styles = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
-    const [done, setDone]  = React.useState(task.done);
 
     const handlePopoverOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -161,12 +144,6 @@ function TaskTreeItem(props) {
 
     const open = Boolean(anchorEl);
 
-    const handleTaskCompletion = (task) => {
-        task.done = true;
-        setDone(true);
-    }
-
-
     return (
         <TreeItem 
             label={
@@ -174,36 +151,32 @@ function TaskTreeItem(props) {
                     {task.name}{' \t'}{task.estimated_time}{' hrs \t'}{task.percentage}{'% \t'}
                     <Moment format="DD MMMM YYYY" date={task.due_date} unix />
                     <div style={{ marginRight: '0', marginLeft: 'auto' }}>
-                        <IconButton size="small" onClick={ handleTaskCompletion }>
-                            <Confetti active={ done } config={ config }/>
-                            <DoneIcon />
+                        <IconButton>
+                            <NoteIcon aria-owns={open ? 'mouse-over-popover' : undefined} aria-haspopup="true" onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}/>
+                            <Popover
+                                id="mouse-over-popover"
+                                className={styles.popover}
+                                classes={{
+                                    paper: styles.poper,
+                                }}
+                                open={open}
+                                anchorEl={anchorEl}
+                                anchorOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'center',
+                                  }}
+                                  transformOrigin={{
+                                    vertical: 'bottom',
+                                    horizontal: 'center',
+                                  }}
+                                onClose={handlePopoverClose}
+                                disableRestoreFocus
+                            >
+                            <Typography className = {styles.formating}>{task.note}</Typography>
+                            </Popover>
+                            
                         </IconButton>
                     </div>
-                    <IconButton size="small">
-                        <NoteIcon aria-owns={open ? 'mouse-over-popover' : undefined} aria-haspopup="true" onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}/>
-                        <Popover
-                            id="mouse-over-popover"
-                            className={styles.popover}
-                            classes={{
-                                paper: styles.poper,
-                            }}
-                            open={open}
-                            anchorEl={anchorEl}
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'center',
-                                }}
-                                transformOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'center',
-                                }}
-                            onClose={handlePopoverClose}
-                            disableRestoreFocus
-                        >
-                        <Typography className = {styles.formating}>{task.note}</Typography>
-                        </Popover>
-                        
-                    </IconButton>
                     <EditTaskButton taskId={task.id} editCallback={props.editCallback} />
                     <PlayPauseButton taskId={task.id}/>
                 </div>
