@@ -93,25 +93,50 @@ export default function TaskTree(props) {
         setOpen(false);
     };
 
+    const done_tasks = []
+    const not_done_tasks = []
+    if (tasks) {
 
+        tasks.forEach((task) => {
+            if (task?.done) {
+                done_tasks.push(task)
+            } else {
+                not_done_tasks.push(task)
+            }
+        });
+    }
     return (
         <Container>
             <Typography variant='h4' className={styles.task}>Tasks</Typography>
             <TextField className={styles.search} id='search' type="text" label='Search' variant='outlined' onChange={(e) => setSearchText(e.target.value)} value={searchText}></TextField>
 
             <TreeView>
-                {tasks.map((item, idx) => {
-                    //if(!item.done) { maybe later, with just this ruins isLast
+                {not_done_tasks.map((item, idx) => {
                     return (
-                        <TaskTreeItem 
-                            nodeId={item.id} 
-                            key={item.id} 
-                            task={item} 
-                            db={ db } 
-                            isLast={idx === tasks.length - 1}
+                        <TaskTreeItem
+                            nodeId={item.id}
+                            key={item.id}
+                            task={item}
+                            db={db}
+                            isLast={idx === not_done_tasks.length - 1}
                             editCallback={editTask}
                         />
                     );
+                })}
+            </TreeView>
+            <hr />
+            <TreeView>
+                {done_tasks.map((item, idx) => {
+                        return (
+                            <TaskTreeItem
+                                nodeId={item.id}
+                                key={item.id}
+                                task={item}
+                                db={db}
+                                isLast={idx === done_tasks.length - 1}
+                                editCallback={editTask}
+                            />
+                        );
                 })}
             </TreeView>
             <Fab color="primary" aria-label="add" className={styles.fab} onClick={handleOpen}>
@@ -150,19 +175,26 @@ function TaskTreeItem(props) {
 
     const handleTaskCompletion = () => {
         //console.log(`setting ${task.id} to done`);
-        if(task.estimated_time) {
+        if (!task.done) {
+            if (task.estimated_time) {
+                db.collection('tasks').doc(task.id).set({
+                    'done': true,
+                    'duration': task.estimated_time
+                }, { merge: true })
+            }
+            else {
+                db.collection('tasks').doc(task.id).set({
+                    'done': true,
+                    'duration': 0
+                }, { merge: true })
+            }
+            setDone(true);
+        } else {
             db.collection('tasks').doc(task.id).set({
-                'done': true,
-                'duration': task.estimated_time
+                'done': false,
             }, { merge: true })
+            setDone(false);
         }
-        else {
-            db.collection('tasks').doc(task.id).set({
-                'done': true,
-                'duration': 0
-            }, { merge: true })
-        }
-        setDone(true);
     }
 
     return (
