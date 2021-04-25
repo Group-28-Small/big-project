@@ -108,6 +108,7 @@ export default function TaskTree(props) {
         });
     }
     return (
+        <Container>
         <List>
             {/* <Typography variant='h4' className={styles.task}>Tasks</Typography> */}
             <TextField className={styles.search} id='search' type="text" label='Search' variant='filled' onChange={(e) => setSearchText(e.target.value)} value={searchText}></TextField>
@@ -153,7 +154,8 @@ export default function TaskTree(props) {
 }
                 </div>
             </Modal>
-        </List>
+            </List>
+        </Container>
     );
 }
 
@@ -204,7 +206,8 @@ function TaskTreeItem(props) {
     }
 
     return (
-        <TreeItem 
+        <TreeItem
+            classes={{ label: styles.treeItemNoPadding, iconContainer: styles.nope }}
             label={
                 <div className={`${styles.treeItem} ${isLast && styles.lastItem} ${task.done && styles.TreeItemDone}`} >
                     {task.name}{' \t'}{task.estimated_time}{' hrs \t'}{task.percentage}{'% \t'}
@@ -318,8 +321,15 @@ const useStyles = makeStyles((theme) => ({
     },
     search: {
         margin: '12px',
+        marginLeft: '0'
         marginRight: '64px',
         width: '100%',
         textAlign: 'center',
+    },
+    treeItemNoPadding: {
+        padding: 0,
+    },
+    nope: {
+        display: 'none'
     }
 }));
