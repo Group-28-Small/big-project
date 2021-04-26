@@ -7,7 +7,7 @@ servers:
     url: https://timetamer.kurtw.dev/api
 info:
   description: runs heavier operations like search and cumulative times for clients
-  version: "1.0.0"
+  version: "1.0.1"
   title: TimeTamer Task Operations
   contact:
     email: kurt@kurtw.dev
