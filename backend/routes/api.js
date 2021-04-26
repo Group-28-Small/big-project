@@ -18,7 +18,9 @@ router.get("/" + common.search_url + '/:userToken/:_searchText', function (req, 
     result.forEach((d) => {
       // clear the user field, since that has keys in it
       const data = d.data()
+      const id = d.id;
       data.user = undefined;
+      data.id = id;
       const name = d.data().name
       if (name.toLowerCase().indexOf(searchText) !== -1)
         tasks.push(data)
