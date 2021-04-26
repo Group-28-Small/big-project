@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, View, ToastAndroid } from 'react-native';
 import { backend_address, setUserActiveTask, userStopTask, userStartTask, MIN_TASK_TIME, AppTheme, search_url } from 'big-project-common';
 import AppStyles from '../styles';
-import { Searchbar, Snackbar, Caption } from 'react-native-paper';
+import { Searchbar, Snackbar, Caption, FAB, Text } from 'react-native-paper';
 import { AuthCheck, useFirestore, useFirestoreCollectionData, useFirestoreDocData, useUser, useFirebaseApp } from 'reactfire';
 import FloatingActionButton from '../components/FloatingActionButton';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -11,6 +11,7 @@ import * as Haptics from 'expo-haptics';
 import { TrackTaskButton } from '../components/TrackTaskButton'
 import TaskElement from '../components/TaskElement';
 import LoadingScreen from './loadingscreen';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 export const IndexPage = (props) => {
     return (
@@ -128,6 +129,32 @@ const MainTaskList = props => {
             }
         });
     }
+
+    // this is for Kurt to figure out
+    // const [durations,setDurations] = useState({})
+    // useEffect(() => {
+    //     // firebase tasks changed - fetch done tasks again
+    //     console.log("data changed");
+    //     firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
+    //         tasks.forEach((task) => {
+    //             const url = backend_address(total_url + "/" + idToken + "/" + task.id)
+    //             fetch(url)
+    //                 .then(response => response.json())
+    //                 .then(data => {
+    //                     // so it turns out that setState callbacks can accept a function that recieves the old state
+    //                     // if we update it from within, it's guaranteed to happen atomically
+    //                     setDurations((oldDurations) => {
+    //                         return { ...oldDurations, [task.id]: data.total_time }
+    //                     })
+    //                 }).catch((error) => {
+    //                     console.log(error);
+    //                 });
+    //         });
+    //     }).catch((error) => {
+    //         // this should never happen
+    //     })
+    // }, [tasks])
+
     return (
         <View style={AppStyles.container}>
             <Searchbar placeholder="Search" value={searchText} onChangeText={setSearchText} />
@@ -251,7 +278,7 @@ const MainTaskList = props => {
                 </> : <Caption style={{textAlign: 'center'}}>{no_tasks_msg}</Caption>
             }              
             </ScrollView>
-                <TrackTaskButton onPress={trackTaskPressed} completedTasks={done_tasks.length === 0} sessions={sessions != undefined && sessions.length === 0} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} />
+                {/* <TrackTaskButton onPress={trackTaskPressed} completedTasks={done_tasks.length === 0} sessions={sessions != undefined && sessions.length === 0} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} /> */}
             <Snackbar style={styles.iosSnackbar}
                 visible={visible}
                 onDismiss={dismissSnackbar}
@@ -259,16 +286,28 @@ const MainTaskList = props => {
                 theme={{ colors: { surface: 'black' } }}>
                 Tracked task has been switched
                 </Snackbar>
-            <FloatingActionButton style={styles.floatinBtn} onPress={() => addTask()} />
+            <FAB style={styles.floatinBtn} onPress={() => addTask()} icon='plus' />
+            {
+                (userDetails) &&
+                <FAB style={styles.track} onPress={trackTaskPressed} icon={userDetails.is_tracking_task ? 'pause' : 'play'} />
+            }
         </View>
     );
 }
 const styles = StyleSheet.create({
-    floatinBtn: {
+      floatinBtn: {
         position: 'absolute',
-        bottom: 16,
+        bottom: 15,
         right: 16,
-        elevation: 5
+        elevation: 5,
+        backgroundColor: AppTheme.primaryColor,
+    },
+    track: {
+        position: 'absolute',
+        bottom: 15,
+        right: 170,
+        elevation: 5,
+        backgroundColor: AppTheme.primaryColor,
     },
     tasks: {
         borderRadius: 5,
