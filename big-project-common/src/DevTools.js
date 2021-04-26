@@ -14,7 +14,8 @@ function backend_address(route) {
         return 'https://' + app_name + '.herokuapp.com/api/' + route;
     }
     else {
-        return 'http://localhost:4000/api/' + route;
+        // return 'http://localhost:4000/api/' + route;
+        return 'https://' + app_name + '.herokuapp.com/api/' + route;
     }
 }
 
