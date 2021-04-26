@@ -15,8 +15,8 @@ import { EditTaskPage, NewTaskPage } from "./NewTask";
 import PlayPauseButton from './PlayPauseButton';
 import { backend_address, search_url, total_url } from 'big-project-common';
 import Confetti from 'react-dom-confetti';
-import moment from 'moment'
-import momentDurationFormatSetup from 'moment-duration-format'
+import moment from 'moment';
+import momentDurationFormatSetup from 'moment-duration-format';
 momentDurationFormatSetup(moment)
 
 
@@ -128,6 +128,13 @@ export default function TaskTree(props) {
             }
         });
     }
+
+    const [confettiActive, setConfetti] = useState(false);
+    const confettiCallback = () => {
+        setConfetti(true);
+        setTimeout(function() {setConfetti(false);}, 1); //didnt know where else to set it back to false
+    }
+
     return (
         <Container>
             <List>
@@ -135,11 +142,11 @@ export default function TaskTree(props) {
                 <TextField className={styles.search} id='search' type="text" label='Search' variant='filled' onChange={(e) => setSearchText(e.target.value)} value={searchText}></TextField>
                 <Grid container>
                     <Typography variant="h6" style={{ paddingLeft: '10px', paddingRight: '60px' }}>Name</Typography>
-
                     <Typography variant="h6" style={{ marginLeft: 'auto', paddingRight: '10px' }}>Finish/Notes/Edit/Track</Typography>
-
+                    
 
                 </Grid>
+                
                 <TreeView>
                     {not_done_tasks.map((item, idx) => {
                         return (
@@ -150,30 +157,37 @@ export default function TaskTree(props) {
                                 db={db}
                                 isLast={idx === not_done_tasks.length - 1}
                                 editCallback={editTask}
+                                handleConfetti={confettiCallback}
                                 total_time={taskDurations[item.id] ?? 0}
                             />
+
                         );
                     })}
                 </TreeView>
+                <div style={{margin:'auto', paddingLeft:'50%'}}>
+                    <Confetti config={confettiConfig} active={confettiActive}/>
+                </div>
                 <hr />
                 <TreeView>
                     {done_tasks.map((item, idx) => {
                         return (
-                            <TaskTreeItem
-                                nodeId={item.id}
-                                key={item.id}
-                                task={item}
-                                db={db}
-                                isLast={idx === done_tasks.length - 1}
-                                editCallback={editTask}
-                                total_time={taskDurations[item.id] ?? 0}
-                            />
+                                <TaskTreeItem
+                                    nodeId={item.id}
+                                    key={item.id}
+                                    task={item}
+                                    db={db}
+                                    isLast={idx === done_tasks.length - 1}
+                                    editCallback={editTask}
+                                    handleConfetti={confettiCallback}
+                                    total_time={taskDurations[item.id] ?? 0}
+                                />
                         );
                     })}
                 </TreeView>
                 <Fab color="primary" aria-label="add" className={styles.fab} onClick={handleOpen}>
                     <AddIcon />
                 </Fab>
+                
                 <Modal open={open} onClose={handleClose} aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description">
                     <div style={modalStyle} className={styles.paper}>
                         {modalMode === 'newtask' ?
@@ -226,6 +240,7 @@ function TaskTreeItem(props) {
                     'duration': 0
                 }, { merge: true })
             }
+            props.handleConfetti();
             setDone(true);
         } else {
             db.collection('tasks').doc(task.id).set({
@@ -236,11 +251,11 @@ function TaskTreeItem(props) {
     }
     const [progressInterval, setProgressInterval] = React.useState(null)
     useEffect(() => {
-        if (userDetails?.is_tracking_task && userDetails?.active_task?.id === task.id) {
+        if (userDetails?.is_tracking_task && userDetails?.active_task.id === task.id) {
             if (!progressInterval) {
                 setProgressInterval(setInterval(() => {
                     setCurrentTrackTime((prev) => {
-                 return (Date.now() / 1000) - userDetails.task_start_time
+                        return (Date.now() / 1000) - userDetails.task_start_time
                     });
                 }, 1000))
             }
@@ -258,6 +273,7 @@ function TaskTreeItem(props) {
             classes={{ label: styles.treeItemNoPadding, iconContainer: styles.nope }}
             label={
                 <div className={`${styles.treeItem} ${isLast && styles.lastItem} ${task.done && styles.TreeItemDone}`} >
+
                     <p style={{ marginLeft: '0px', borderRight: 'thin solid #666666', lineHeight: '30px', padding: '8px' }}>{task.name}</p>
                     {/* show estimated time  */}
 
@@ -276,10 +292,10 @@ function TaskTreeItem(props) {
                     }
 
                     {/* show total time spent */}
-                    {!!props.total_time && props.total_time !== 0 &&
-                    <>
-                        <span style={{marginLeft: '8px', fontWeight: 'bold'}}>Total:</span><span style = {{borderRight: 'thin solid #666666', lineHeight: '40px', padding:'8px'}}> {moment.duration(props.total_time, "seconds").format("hh:mm:ss", 0, {trim:false})}</span>
-                    </>
+                    {props.total_time &&
+                        <>
+                        <span style={{ marginLeft: '8px', fontWeight: 'bold' }}>Total:</span><span style={{ borderRight: 'thin solid #666666', lineHeight: '40px', padding: '8px' }}> {moment.duration(props.total_time, "seconds").format("hh:mm:ss", 0, { trim: false })}</span>
+                        </>
                     }
 
                     {/* show current session time in currently tracked task */}
@@ -291,10 +307,9 @@ function TaskTreeItem(props) {
                             </>
                         )
                     }
-
+                     
                     <div style={{ marginRight: '20', marginLeft: 'auto' }}>
                         <IconButton style={{ marginRight: '22px' }} size='small' onClick={handleTaskCompletion}>
-                            <Confetti config={confettiConfig} active={done} />
                             {!task.done ? <DoneIcon /> : <RedoIcon />}
                         </IconButton>
                         <IconButton size='small' style={{ marginRight: '22px' }}>
@@ -335,14 +350,14 @@ function TaskTreeItem(props) {
 const confettiConfig = {
     angle: 90,
     spread: 360,
-    startVelocity: 40,
-    elementCount: 70,
+    startVelocity: 30,
+    elementCount: 100,
     dragFriction: 0.12,
     duration: 1000,
-    stagger: 3,
+    stagger: 1,
     width: "10px",
     height: "10px",
-    perspective: "500px",
+    perspective: "5000px",
     colors: ["#000", "#eab800"]
 };
 
@@ -357,6 +372,7 @@ const useStyles = makeStyles((theme) => ({
     treeItem: {
         borderWidth: 2,
         borderBottomWidth: 0,
+        minWidth: 1000,
         borderColor: 'black',
         borderStyle: 'solid',
         padding: 0,
