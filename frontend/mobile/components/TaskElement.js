@@ -6,7 +6,7 @@ import { AppTheme } from 'big-project-common';
 
 export default TaskElement = props => {
     const [isCollapsed, toggleCollapse] = useState(false);
-    console.log("the due date is: " + props.due_date);
+    // console.log("the due date is: " + props.due_date);
 
     function timeDisplay(seconds) {
         var hours = Math.floor((seconds / (60*60)) % 24);
