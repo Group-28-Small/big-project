@@ -36,6 +36,10 @@ const MainTaskList = props => {
     const { data: firebase_tasks } = useFirestoreCollectionData(query, {
         idField: 'id'
     });
+    const { data: sessions } = useFirestoreCollectionData(db.collection("sessions").where("user", "==", userDetailsRef).orderBy("start", "desc").orderBy("end", "desc")
+    , {
+        idField: 'id'
+    });
     const [tasksCache, setTasksCache] = React.useState([])
     const dismissSnackbar = () => {
         onDismissSnackBar()
@@ -56,6 +60,11 @@ const MainTaskList = props => {
         }, { merge: true })
         if (Platform.OS === 'android') {
             ToastAndroid.show("Task has been moved to the 'Completed Tasks' page.", ToastAndroid.SHORT);
+        }
+        if(userDetails?.active_task !== undefined && item.id === userDetails?.active_task.id){
+            const firebase = require('firebase')
+            userStopTask(db, userDetails?.active_task, userDetails, userDetailsRef);
+            userDetailsRef.set({ 'active_task': firebase.firestore.FieldValue.delete()}, { merge: true })
         }
     }
     const setSearchText = (text) => {
@@ -108,11 +117,14 @@ const MainTaskList = props => {
         }
     }
 
+    const done_tasks = []
     const not_done_tasks = []
     if (tasks) {
         tasks.forEach((task) => {
             if (!task?.done) {
                 not_done_tasks.push(task)
+            } else{
+                done_tasks.push(task)
             }
         });
     }
@@ -148,7 +160,7 @@ const MainTaskList = props => {
                                             active={item.id === active_task?.id}
                                             note={item.note}
                                             style={taskClasses} />
-                                            <Caption style={{textAlign: 'center'}}>You can view your task history by {'\n'} clicking on the 'History' button.</Caption>
+                                            <Caption style={{textAlign: 'center'}}>You can view your task history by {'\n'} clicking on the 'Session History' button.</Caption>
                                             </View>
                                     )
                                 } else if(userDetails?.is_tracking_task){
@@ -239,9 +251,7 @@ const MainTaskList = props => {
                 </> : <Caption style={{textAlign: 'center'}}>{no_tasks_msg}</Caption>
             }              
             </ScrollView>
-            {active_task != undefined && (
-                <TrackTaskButton onPress={trackTaskPressed} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} />
-            )}
+                <TrackTaskButton onPress={trackTaskPressed} completedTasks={done_tasks.length === 0} sessions={sessions != undefined && sessions.length === 0} task={active_task} isTracking={!!(userDetails?.is_tracking_task)} navigation={props.navigation} />
             <Snackbar style={styles.iosSnackbar}
                 visible={visible}
                 onDismiss={dismissSnackbar}
