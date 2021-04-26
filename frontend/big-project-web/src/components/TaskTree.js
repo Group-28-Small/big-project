@@ -264,7 +264,7 @@ function TaskTreeItem(props) {
                     }
 
                     {/* show total time spent */}
-                    {props.total_time &&
+                    {!!props.total_time && props.total_time !== 0 &&
                     <>
                         <span style={{marginLeft: '8px', fontWeight: 'bold'}}>Total:</span><span style = {{borderRight: 'thin solid #666666', lineHeight: '40px', padding:'8px'}}> {moment.duration(props.total_time, "seconds").format("hh:mm:ss", 0, {trim:false})}</span>
                     </>

@@ -57,6 +57,8 @@ export default function RegisterPage(props) {
         }
     }
     return (
+        <div style = {{backgroundImage: "url(https://images.hdqwalls.com/download/windows-xp-bliss-4k-lu-2048x1152.jpg)", position: 'fixed', width:'100%', height: 
+        '100%', backgroundRepeat: 'no-repeat',backgroundSize:'100% 100%'}}>
         <Paper className={styles.login} elevation ={3}>
             <Container component="main" maxWidth="xs">
                 <CssBaseline />
@@ -76,6 +78,7 @@ export default function RegisterPage(props) {
                 </div>
             </Container>
         </Paper>
+        </div>
     );
 }
 

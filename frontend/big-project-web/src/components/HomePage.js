@@ -57,7 +57,7 @@ const handleChange = (event, newValue) => {
 
     return (
         <div style = {{backgroundImage: "url(https://images.hdqwalls.com/download/windows-xp-bliss-4k-lu-2048x1152.jpg)", position: 'fixed', width:'100%', height: 
-        '100%', backgroundRepeat: 'no-repeat'}}className={classes.root}>
+        '100%', backgroundRepeat: 'no-repeat',backgroundSize:'100% 100%'}}className={classes.root}>
         <AppBar position="static" color="default">
             <Tabs
             value={value}
@@ -75,14 +75,13 @@ const handleChange = (event, newValue) => {
             </Tabs>
         </AppBar>
         <TabPanel value={value} index={0} >
-            <Paper  style = {{ display: 'inline-block', padding: '30px', position: 'fixed', left:'25%' }} elevation ={5}><TaskTree /></Paper>
-             
+            <Paper  style = {{width:'70%', margin: 'auto', padding: '30px'}} elevation ={5}><TaskTree /></Paper>
         </TabPanel>
             <TabPanel value={value} index={1} >
-                <Paper elevation ={5}><Sunburst /></Paper>
+                <Paper style = {{width:'50%', margin: 'auto', padding: '30px'}} elevation ={5}><Sunburst /></Paper>
         </TabPanel>
         <TabPanel value={value} index={2} >
-            <Paper elevation ={5}>
+            <Paper style = {{width:'60%', margin: 'auto', padding: '30px'}} elevation ={5}>
             <Route exact path="/">
                 <SessionHistory />
             </Route>
