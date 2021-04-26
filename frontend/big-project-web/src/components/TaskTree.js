@@ -277,7 +277,7 @@ function TaskTreeItem(props) {
                     <p style={{ marginLeft: '0px', borderRight: 'thin solid #666666', lineHeight: '30px', padding: '8px' }}>{task.name}</p>
                     {/* show estimated time  */}
 
-                    {task.has_estimated_time &&
+                    {!!task.has_estimated_time &&
                         <>
                         <span style={{ fontWeight: 'bold', marginRight: '10px', marginLeft: '10px' }}>Estimated: {moment.duration(task.estimated_time, "seconds").format("hh:mm", 0, { trim: false })}</span>
                         <span><LinearProgress variant='determinate' style={{ width: 150 }} value={100 * (props.total_time + current_tracktime) / task.estimated_time} /></span>
@@ -285,14 +285,14 @@ function TaskTreeItem(props) {
                         </>
                     }
 
-                    {task.has_due_date &&
+                    {!!task.has_due_date &&
                         <>
                         <p style={{ marginLeft: '8px', fontWeight: 'bold' }}>Due:</p><Moment style={{ borderRight: 'thin solid #666666', lineHeight: '40px', padding: '8px' }} format="DD MMMM YYYY" date={task.due_date} unix />
                         </>
                     }
 
                     {/* show total time spent */}
-                    {props.total_time &&
+                    {!!props.total_time &&
                         <>
                         <span style={{ marginLeft: '8px', fontWeight: 'bold' }}>Total:</span><span style={{ borderRight: 'thin solid #666666', lineHeight: '40px', padding: '8px' }}> {moment.duration(props.total_time, "seconds").format("hh:mm:ss", 0, { trim: false })}</span>
                         </>
