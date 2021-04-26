@@ -1,4 +1,4 @@
-import { Container, Fab, makeStyles, Modal, Popover, TextField, Typography, List, ListItem, ListItemText, Divider } from '@material-ui/core';
+import { Container, Fab, makeStyles, Modal, Popover, TextField, Typography, List, Grid, LinearProgress } from '@material-ui/core';
 import IconButton from "@material-ui/core/IconButton";
 import { TextFields } from '@material-ui/icons';
 import AddIcon from '@material-ui/icons/Add';
@@ -13,8 +13,11 @@ import { useFirebaseApp, useFirestore, useFirestoreCollectionData, useFirestoreD
 import EditTaskButton from './EditTaskButton';
 import { EditTaskPage, NewTaskPage } from "./NewTask";
 import PlayPauseButton from './PlayPauseButton';
-import { backend_address, search_url } from 'big-project-common';
+import { backend_address, search_url, total_url } from 'big-project-common';
 import Confetti from 'react-dom-confetti';
+import moment from 'moment'
+import momentDurationFormatSetup from 'moment-duration-format'
+momentDurationFormatSetup(moment)
 
 
 
@@ -45,7 +48,7 @@ export default function TaskTree(props) {
     const [taskID, setTaskID] = React.useState(undefined);
     const [searchText, _setSearchText] = useState("")
     const [searchedTasks, setSearchedTasks] = React.useState([])
-    const [tasksCache, setTasksCache] = React.useState([])
+    const [taskDurations, setDurations] = React.useState({})
     const setSearchText = (text) => {
         _setSearchText(text);
         if (text === '') {
@@ -64,14 +67,32 @@ export default function TaskTree(props) {
             // this should never happen
         })
     }
-    // turns out this should be done with useEffect (well akchually useReducer if we want to be 100% best practices)
-    // new edit: see how this works in Sunburst.js - its a lot better
-    if (firebase_tasks !== tasksCache) {
-        console.log("update detected")
-        setTasksCache(firebase_tasks)
-        setSearchText(searchText)
-    }
 
+    useEffect(() => {
+        // firebase tasks changed - fetch done tasks again
+        console.log("data changed");
+        setSearchText(searchText)
+        firebase.auth().currentUser.getIdToken(/* forceRefresh */ true).then(function (idToken) {
+            firebase_tasks.forEach((task) => {
+                const url = backend_address(total_url + "/" + idToken + "/" + task.id)
+                fetch(url)
+                    .then(response => response.json())
+                    .then(data => {
+                        // so it turns out that setState callbacks can accept a function that recieves the old state
+                        // if we update it from within, it's guaranteed to happen atomically
+                        setDurations((oldDurations) => {
+                            return { ...oldDurations, [task.id]: data.total_time }
+                        })
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+            });
+        }).catch((error) => {
+            // this should never happen
+        })
+    }, [firebase_tasks])
+
+    const [progress, setProgress] = React.useState(30)
 
     var tasks = [];
     if (searchText === "") {
@@ -112,7 +133,20 @@ export default function TaskTree(props) {
         <List>
             {/* <Typography variant='h4' className={styles.task}>Tasks</Typography> */}
             <TextField className={styles.search} id='search' type="text" label='Search' variant='filled' onChange={(e) => setSearchText(e.target.value)} value={searchText}></TextField>
+            <Grid container direction ="row" justify="space-evenly" alignItems="start"> 
+            <Typography variant="h6" style={{width:'15%'}}>Name</Typography>
+            <Typography variant="h6" style={{width:'15%'}}>Progress</Typography>
+            <Typography variant="h6" style={{width:'10%'}}>Esitmated</Typography>
+            <Typography variant="h6" style={{width:'8%'}}>Total</Typography>
+            <Typography variant="h6" style={{width:'10%'}}>Due</Typography>
+            
+            <Typography variant="h6" style={{width:'2%'}}>Finish</Typography>
+            <Typography variant="h6" style={{width:'2%'}}>Notes</Typography>
+            <Typography variant="h6" style={{width:'2%'}}>Edit</Typography>
+            <Typography variant="h6" style={{width: '2%'}}>Track</Typography>
+            
 
+            </Grid>
             <TreeView>
                 {not_done_tasks.map((item, idx) => {
                     return (
@@ -123,6 +157,7 @@ export default function TaskTree(props) {
                             db={db}
                             isLast={idx === not_done_tasks.length - 1}
                             editCallback={editTask}
+                            total_time={taskDurations[item.id]??0}
                         />
                     );
                 })}
@@ -130,16 +165,17 @@ export default function TaskTree(props) {
             <hr />
             <TreeView>
                 {done_tasks.map((item, idx) => {
-                        return (
-                            <TaskTreeItem
-                                nodeId={item.id}
-                                key={item.id}
-                                task={item}
-                                db={db}
-                                isLast={idx === done_tasks.length - 1}
-                                editCallback={editTask}
-                            />
-                        );
+                    return (
+                        <TaskTreeItem
+                            nodeId={item.id}
+                            key={item.id}
+                            task={item}
+                            db={db}
+                            isLast={idx === done_tasks.length - 1}
+                            editCallback={editTask}
+                            total_time={taskDurations[item.id]??0}
+                        />
+                    );
                 })}
             </TreeView>
             <Fab color="primary" aria-label="add" className={styles.fab} onClick={handleOpen}>
@@ -165,6 +201,7 @@ function TaskTreeItem(props) {
     const { task, isLast, db, ...other } = props;
     const styles = useStyles();
     const [anchorEl, setAnchorEl] = React.useState(null);
+    const [current_tracktime, setCurrentTrackTime] = React.useState(0)
     const [done, setDone] = useState(task.done ?? false);
     const { data: user } = useUser();
     const userDetailsRef = user != null ? db.collection('users')
@@ -204,22 +241,45 @@ function TaskTreeItem(props) {
             setDone(false);
         }
     }
+    useEffect(()=>{
 
+        if (userDetails?.is_tracking_task && userDetails?.active_task.id === task.id) {
+        console.log("second")
+        setCurrentTrackTime((Date.now()/1000) - userDetails.task_start_time)
+    }
+    }, [Math.floor(Date.now()/1000)])
     return (
         <TreeItem
             classes={{ label: styles.treeItemNoPadding, iconContainer: styles.nope }}
             label={
                 <div className={`${styles.treeItem} ${isLast && styles.lastItem} ${task.done && styles.TreeItemDone}`} >
-                    {task.name}{' \t'}{task.estimated_time}{' hrs \t'}{task.percentage}{'% \t'}
-                    <Moment format="DD MMMM YYYY" date={task.due_date} unix />
-                    {(userDetails?.active_task?.id == task.id && userDetails.is_tracking_task) &&
+                    {task.name}{' \t'}
+                    {/* show estimated time  */}
+                    {task.has_estimated_time &&
+                    <>
+                        <span style={{ marginLeft: '16px' }}>Estimated Time: {moment.duration(task.estimated_time, "seconds").format("hh:mm", 0, { trim: false })}</span>
+                        <LinearProgress variant='determinate' style={{width: 200}} value={100*(props.total_time+current_tracktime)/task.estimated_time}/>
+                        {Math.round(100*props.total_time/task.estimated_time)/100}
+                    </>
+                    }
+                    
+                    {task.has_due_date &&
+                        <Moment format="DD MMMM YYYY" date={task.due_date} unix />
+                    }
+                    {/* show total time spent */}
+                    {props.total_time &&
+                        <span style={{marginLeft: '16px'}}>Time Spent: {moment.duration(props.total_time, "seconds").format("hh:mm:ss", 0, {trim:false})}</span>
+                    }
+                    {task.has}
+                    {/* show current session time in currently tracked task */}
+                    {(userDetails?.active_task?.id === task.id && userDetails.is_tracking_task) &&
                         (
                             <div style={{ marginLeft: 'auto' }}>
-                                <Moment date={userDetails.task_start_time} interval={1000} format="hh:mm:ss" durationFromNow unix />
+                               Current Session: <Moment date={userDetails.task_start_time} interval={1000} format="hh:mm:ss" durationFromNow unix />
                             </div>
                         )
-
                     }
+                    
                     <div style={{ marginRight: '0', marginLeft: 'auto' }}>
                         <IconButton size='small' onClick={ handleTaskCompletion }>
                             <Confetti config={confettiConfig} active={done} />
@@ -252,7 +312,7 @@ function TaskTreeItem(props) {
                         </IconButton>
                     </div>
                     <EditTaskButton taskId={task.id} editCallback={props.editCallback} />
-                    <PlayPauseButton taskId={task.id}/>
+                    <PlayPauseButton taskId={task.id} />
                 </div>
             }
             {...other}
@@ -330,5 +390,16 @@ const useStyles = makeStyles((theme) => ({
     },
     nope: {
         display: 'none'
-    }
+    },
+    leftLabel: {
+        width: '10%',
+    },
+    rightLabel: {
+        
+        width: '10%',
+       
+    },
+    centerLabel: {
+        width: '10%',
+    },
 }));

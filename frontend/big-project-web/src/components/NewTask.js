@@ -70,11 +70,12 @@ function TaskEditor(props) {
 
     const [switchesState, setSwitchesState] = React.useState({
         hasDueDate: item.has_due_date ?? false,
-        trackProgress: item.track_progress ?? false,
+        hasEstimatedTime: item.has_estimated_time ?? false,
     });
 
     const [taskName, onChangeName] = React.useState(item.name ?? '');
-    const [estimatedTime, onChangeTime] = React.useState(item.estimated_time ?? '');
+    const [selectedMinutes, setSelectedMinutes] = React.useState(item.estimated_time?Math.floor((item.estimated_time / (60*60)) % 24):0)
+    const [selectedHours, setSelectedHours] = React.useState(item.estimated_time? Math.floor((item.estimated_time / (60*60)) % 24):0)
     const [pct, onChangePct] = React.useState(item.percentage ?? 0);
     const [dueDate, setDueDate] = React.useState(new Date(item.due_date * 1000));
     const [notes, onChangeNotes] = React.useState(item.note ?? '');
@@ -91,7 +92,8 @@ function TaskEditor(props) {
 
     const updateTask = () => {
         console.log(dueDate);
-        db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'percentage': pct, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'user': userRef }, { merge: true });
+        const estimatedTime = selectedMinutes * 60 + selectedHours * 60 * 60;
+        db.collection("tasks").doc(item_id).set({ 'name': taskName, 'estimated_time': estimatedTime, 'has_estimated_time':switchesState.hasEstimatedTime, 'due_date': dueDate.getTime() / 1000, 'note': notes, 'user': userRef }, { merge: true });
         props.setOpen(false)
     }
     const deleteTask = () => {
@@ -103,7 +105,10 @@ function TaskEditor(props) {
         // TODO: find a way to do this without code duplication
         // I think if we bundle this state into a single state, we can unpack it directly from the item... ? I'll look at it later. ~Kurt
         onChangeName(item.name ?? '');
-        onChangeTime(item.estimated_time ?? '');
+        // onChangeTime(item.estimated_time ?? '');
+        setSelectedMinutes(item.estimated_time?Math.floor((item.estimated_time / (60)) % 60):0)
+        setSelectedHours(item.estimated_time? Math.floor((item.estimated_time / (60*60)) % 24):0)
+        setSwitchesState({hasEstimatedTime: item.has_estimated_time??false, hasDueDate: item.has_due_date??false})
         onChangePct(item.percentage ?? 0);
         setDueDate(new Date(item.due_date * 1000))
     }, [item_id, item]);
@@ -120,18 +125,19 @@ function TaskEditor(props) {
                         }
                     </div>
                     <TextField className={styles.field} required id='taskName' label='Task Name' type='text' variant='outlined' autoFocus={true} onChange={(e) => onChangeName(e.target.value)} value={taskName}></TextField>
-                    <TextField className={styles.field} id='taskEstimated' type="text" label='Estimated Time (Hours)' variant='outlined' onChange={(e) => onChangeTime(e.target.value)} value={estimatedTime}></TextField>
-                    <TextField className={styles.field} id='notes' type="text" label='Notes...' variant='outlined' onChange={(e) => onChangeNotes(e.target.value)} value={notes} multiline rowsMax = "6"></TextField>
+                    {/* <TextField className={styles.field} id='taskEstimated' type="text" label='Estimated Time (Hours)' variant='outlined' onChange={(e) => onChangeTime(e.target.value)} value={estimatedTime}></TextField> */}
                     <FormControlLabel
-                        control={<Switch checked={switchesState.trackProgress} name="trackProgress" onChange={handleSwitchChange} />}
-                        label="Track Progress" labelPlacement="start" className={`${styles.field} ${styles.wide}`}
+                        control={<Switch checked={switchesState.hasEstimatedTime} name="hasEstimatedTime" onChange={handleSwitchChange} />}
+                        label="Has Estimated Time" labelPlacement="start" className={`${styles.field} ${styles.wide}`}
                     />
-                    {switchesState.trackProgress && (
+                    {switchesState.hasEstimatedTime && (
                         <div className={styles.field}>
-                            Percentage: {pct}%
-                            <Slider value={pct} onChange={(_, v) => { onChangePct(v) }} aria-labelledby="continuous-slider" />
+                    <TextField type="number" value={selectedHours} style={{width:"40%"}} label='Hours' variant='outlined' onChange={(e) => setSelectedHours(e.target.value)} />
+                        :
+                    <TextField type="number" value={selectedMinutes} style={{width:"40%"}} label='Minutes' variant='outlined' onChange={(e)=>setSelectedMinutes(e.target.value)} />
                         </div>
                     )}
+                    <TextField className={styles.field} id='notes' type="text" label='Notes...' variant='outlined' onChange={(e) => onChangeNotes(e.target.value)} value={notes} multiline rowsMax = "6"></TextField>
                     <FormControlLabel
                         control={<Switch checked={switchesState.hasDueDate} name="hasDueDate" onChange={handleSwitchChange} />}
                         label="Has Due Date" labelPlacement="start" className={`${styles.field} ${styles.wide}`}
