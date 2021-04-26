@@ -79,7 +79,7 @@ export default function Sunburst(props) {
             alignItems="center"
             justify="center"
         >
-            <Grid item xs={8} style ={{paddingLeft: '7%', paddingTop: '5%'}}>
+            <Grid item xs={8} style ={{paddingLeft: '7%', paddingTop: '2%'}}>
                     <Plot
                         data={data}
                         layout={layout} config={{ displaylogo: false }} />

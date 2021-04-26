@@ -1,4 +1,4 @@
-import { AppBar, Box, makeStyles, Tab, Tabs, Typography } from "@material-ui/core";
+import { AppBar, Box, makeStyles, Tab, Tabs, Typography, Paper } from "@material-ui/core";
 import { AccessTime, List, PieChart } from "@material-ui/icons";
 import PropTypes from 'prop-types';
 import React from 'react';
@@ -56,7 +56,8 @@ const handleChange = (event, newValue) => {
 };
 
     return (
-        <div className={classes.root}>
+        <div style = {{backgroundImage: "url(https://images.hdqwalls.com/download/windows-xp-bliss-4k-lu-2048x1152.jpg)", position: 'fixed', width:'100%', height: 
+        '100%', backgroundRepeat: 'no-repeat'}}className={classes.root}>
         <AppBar position="static" color="default">
             <Tabs
             value={value}
@@ -74,15 +75,18 @@ const handleChange = (event, newValue) => {
             </Tabs>
         </AppBar>
         <TabPanel value={value} index={0} >
-            <TaskTree /> 
+            <Paper  style = {{ display: 'inline-block', padding: '30px', position: 'fixed', left:'25%' }} elevation ={5}><TaskTree /></Paper>
+             
         </TabPanel>
             <TabPanel value={value} index={1} >
-                <Sunburst />
+                <Paper elevation ={5}><Sunburst /></Paper>
         </TabPanel>
         <TabPanel value={value} index={2} >
+            <Paper elevation ={5}>
             <Route exact path="/">
                 <SessionHistory />
             </Route>
+            </Paper>
         </TabPanel>
         </div>
     )
