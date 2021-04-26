@@ -130,59 +130,59 @@ export default function TaskTree(props) {
     }
     return (
         <Container>
-        <List>
-            {/* <Typography variant='h4' className={styles.task}>Tasks</Typography> */}
-            <TextField className={styles.search} id='search' type="text" label='Search' variant='filled' onChange={(e) => setSearchText(e.target.value)} value={searchText}></TextField>
-                <Grid container> 
-                    <Typography variant="h6" style={{paddingLeft: '10px', paddingRight: '60px'}}>Name</Typography>
-                    
-                    <Typography variant="h6" style={{marginLeft: 'auto',paddingRight: '10px'}}>Finish/Notes/Edit/Track</Typography>
-                    
-                    
+            <List>
+                {/* <Typography variant='h4' className={styles.task}>Tasks</Typography> */}
+                <TextField className={styles.search} id='search' type="text" label='Search' variant='filled' onChange={(e) => setSearchText(e.target.value)} value={searchText}></TextField>
+                <Grid container>
+                    <Typography variant="h6" style={{ paddingLeft: '10px', paddingRight: '60px' }}>Name</Typography>
+
+                    <Typography variant="h6" style={{ marginLeft: 'auto', paddingRight: '10px' }}>Finish/Notes/Edit/Track</Typography>
+
+
                 </Grid>
-            <TreeView>
-                {not_done_tasks.map((item, idx) => {
-                    return (
-                        <TaskTreeItem
-                            nodeId={item.id}
-                            key={item.id}
-                            task={item}
-                            db={db}
-                            isLast={idx === not_done_tasks.length - 1}
-                            editCallback={editTask}
-                            total_time={taskDurations[item.id]??0}
-                        />
-                    );
-                })}
-            </TreeView>
-            <hr />
-            <TreeView>
-                {done_tasks.map((item, idx) => {
-                    return (
-                        <TaskTreeItem
-                            nodeId={item.id}
-                            key={item.id}
-                            task={item}
-                            db={db}
-                            isLast={idx === done_tasks.length - 1}
-                            editCallback={editTask}
-                            total_time={taskDurations[item.id]??0}
-                        />
-                    );
-                })}
-            </TreeView>
-            <Fab color="primary" aria-label="add" className={styles.fab} onClick={handleOpen}>
-                <AddIcon />
-            </Fab>
-            <Modal open={open} onClose={handleClose} aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description">
-                <div style={modalStyle} className={styles.paper}>
-                    {modalMode === 'newtask' ?
-                        <NewTaskPage setOpen={setOpen} />
-                        :
-                        <EditTaskPage taskID={taskID} setOpen={setOpen}/>
-}
-                </div>
-            </Modal>
+                <TreeView>
+                    {not_done_tasks.map((item, idx) => {
+                        return (
+                            <TaskTreeItem
+                                nodeId={item.id}
+                                key={item.id}
+                                task={item}
+                                db={db}
+                                isLast={idx === not_done_tasks.length - 1}
+                                editCallback={editTask}
+                                total_time={taskDurations[item.id] ?? 0}
+                            />
+                        );
+                    })}
+                </TreeView>
+                <hr />
+                <TreeView>
+                    {done_tasks.map((item, idx) => {
+                        return (
+                            <TaskTreeItem
+                                nodeId={item.id}
+                                key={item.id}
+                                task={item}
+                                db={db}
+                                isLast={idx === done_tasks.length - 1}
+                                editCallback={editTask}
+                                total_time={taskDurations[item.id] ?? 0}
+                            />
+                        );
+                    })}
+                </TreeView>
+                <Fab color="primary" aria-label="add" className={styles.fab} onClick={handleOpen}>
+                    <AddIcon />
+                </Fab>
+                <Modal open={open} onClose={handleClose} aria-labelledby="simple-modal-title" aria-describedby="simple-modal-description">
+                    <div style={modalStyle} className={styles.paper}>
+                        {modalMode === 'newtask' ?
+                            <NewTaskPage setOpen={setOpen} />
+                            :
+                            <EditTaskPage taskID={taskID} setOpen={setOpen} />
+                        }
+                    </div>
+                </Modal>
             </List>
         </Container>
     );
@@ -234,33 +234,45 @@ function TaskTreeItem(props) {
             setDone(false);
         }
     }
-    useEffect(()=>{
+    const [progressInterval, setProgressInterval] = React.useState(null)
+    useEffect(() => {
+        if (userDetails?.is_tracking_task && userDetails?.active_task?.id === task.id) {
+            if (!progressInterval) {
+                setProgressInterval(setInterval(() => {
+                    setCurrentTrackTime((prev) => {
+                 return (Date.now() / 1000) - userDetails.task_start_time
+                    });
+                }, 1000))
+            }
+        } else {
+            clearInterval(progressInterval);
+            setProgressInterval(null)
 
-        if (userDetails?.is_tracking_task && userDetails?.active_task.id === task.id) {
-        console.log("second")
-        setCurrentTrackTime((Date.now()/1000) - userDetails.task_start_time)
-    }
-    }, [Math.floor(Date.now()/1000)])
+        }
+        if (progressInterval) {
+            return progressInterval;
+        }
+    }, [userDetails])
     return (
         <TreeItem
             classes={{ label: styles.treeItemNoPadding, iconContainer: styles.nope }}
             label={
                 <div className={`${styles.treeItem} ${isLast && styles.lastItem} ${task.done && styles.TreeItemDone}`} >
-                    <p style={{marginLeft: '0px',borderRight: 'thin solid #666666', lineHeight: '30px', padding:'8px'}}>{task.name}</p>
+                    <p style={{ marginLeft: '0px', borderRight: 'thin solid #666666', lineHeight: '30px', padding: '8px' }}>{task.name}</p>
                     {/* show estimated time  */}
-                    
+
                     {task.has_estimated_time &&
-                    <>
-                        <span style={{fontWeight: 'bold',marginRight: '10px',marginLeft: '10px'}}>Estimated: {moment.duration(task.estimated_time, "seconds").format("hh:mm", 0, { trim: false })}</span>
-                        <span><LinearProgress variant='determinate' style={{width: 150}} value={100*(props.total_time+current_tracktime)/task.estimated_time}/></span>
-                        <span style={{fontWeight: 'bold',marginLeft: '5px',borderRight: 'thin solid #666666', lineHeight: '40px', padding:'8px'}}>{Math.round(100*props.total_time/task.estimated_time)}%</span>
-                    </>
+                        <>
+                        <span style={{ fontWeight: 'bold', marginRight: '10px', marginLeft: '10px' }}>Estimated: {moment.duration(task.estimated_time, "seconds").format("hh:mm", 0, { trim: false })}</span>
+                        <span><LinearProgress variant='determinate' style={{ width: 150 }} value={100 * (props.total_time + current_tracktime) / task.estimated_time} /></span>
+                        <span style={{ fontWeight: 'bold', marginLeft: '5px', borderRight: 'thin solid #666666', lineHeight: '40px', padding: '8px' }}>{Math.round(100 * (props.total_time + current_tracktime) / task.estimated_time)}%</span>
+                        </>
                     }
-                    
+
                     {task.has_due_date &&
-                    <>  
-                        <p style={{marginLeft: '8px', fontWeight: 'bold'}}>Due:</p><Moment style={{borderRight: 'thin solid #666666', lineHeight: '40px', padding:'8px'}} format="DD MMMM YYYY" date={task.due_date} unix />
-                    </>
+                        <>
+                        <p style={{ marginLeft: '8px', fontWeight: 'bold' }}>Due:</p><Moment style={{ borderRight: 'thin solid #666666', lineHeight: '40px', padding: '8px' }} format="DD MMMM YYYY" date={task.due_date} unix />
+                        </>
                     }
 
                     {/* show total time spent */}
@@ -274,19 +286,19 @@ function TaskTreeItem(props) {
                     {(userDetails?.active_task?.id === task.id && userDetails.is_tracking_task) &&
                         (
                             <>
-                            <div style={{ fontWeight: 'bold',marginLeft: '10px'}}>
-                               Current Session: </div> <div style={{borderRight: 'thin solid #666666', lineHeight: '40px', padding:'8px' }}><Moment date={userDetails.task_start_time} interval={1000} format="hh:mm:ss" durationFromNow unix /></div>
+                            <div style={{ fontWeight: 'bold', marginLeft: '10px' }}>
+                                Current Session: </div> <div style={{ borderRight: 'thin solid #666666', lineHeight: '40px', padding: '8px' }}><Moment date={userDetails.task_start_time} interval={1000} format="hh:mm:ss" durationFromNow unix /></div>
                             </>
                         )
                     }
-                    
+
                     <div style={{ marginRight: '20', marginLeft: 'auto' }}>
-                        <IconButton style={{ marginRight: '22px' }} size='small' onClick={ handleTaskCompletion }>
+                        <IconButton style={{ marginRight: '22px' }} size='small' onClick={handleTaskCompletion}>
                             <Confetti config={confettiConfig} active={done} />
                             {!task.done ? <DoneIcon /> : <RedoIcon />}
                         </IconButton>
                         <IconButton size='small' style={{ marginRight: '22px' }}>
-                            <NoteIcon aria-owns={open ? 'mouse-over-popover' : undefined} aria-haspopup="true" onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}/>
+                            <NoteIcon aria-owns={open ? 'mouse-over-popover' : undefined} aria-haspopup="true" onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose} />
                             <Popover
                                 id="mouse-over-popover"
                                 className={styles.popover}
@@ -298,17 +310,17 @@ function TaskTreeItem(props) {
                                 anchorOrigin={{
                                     vertical: 'bottom',
                                     horizontal: 'center',
-                                  }}
-                                  transformOrigin={{
+                                }}
+                                transformOrigin={{
                                     vertical: 'bottom',
                                     horizontal: 'center',
-                                  }}
+                                }}
                                 onClose={handlePopoverClose}
                                 disableRestoreFocus
                             >
                                 <Typography className={styles.formating}>{task.note === '' ? "No note" : task.note}</Typography>
                             </Popover>
-                            
+
                         </IconButton>
                     </div>
                     <EditTaskButton taskId={task.id} editCallback={props.editCallback} />
@@ -332,7 +344,7 @@ const confettiConfig = {
     height: "10px",
     perspective: "500px",
     colors: ["#000", "#eab800"]
-  };
+};
 
 
 const useStyles = makeStyles((theme) => ({
@@ -350,9 +362,9 @@ const useStyles = makeStyles((theme) => ({
         padding: 0,
         alignItems: 'center',
         display: 'flex',
-        
+
     },
-    TreeItemDone:{
+    TreeItemDone: {
         borderStyle: 'dashed',
     },
     lastItem: {
