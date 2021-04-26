@@ -54,6 +54,7 @@ jest.mock('react-router-dom', () => ({
 
 
 describe("Task Tree", () => {
+    jest.spyOn(React, 'useEffect')
     it('renders without crashing', () => {
         mockedFirestoreCollectionData.mockImplementation(() => mockedFirestoreCollectionDataResult)
         mockedFirestoreDocData.mockImplementation(() => mockedFirestoreDocResult)
