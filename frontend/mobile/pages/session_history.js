@@ -46,7 +46,7 @@ export const SessionHistoryPage = props => {
                             <Text style={taskClasses} >{task.name}{' \tAt: '}<Moment unix element={Text} date={item.start} format="MMMM DD" />{" for: " + duration}</Text>
                         </TouchableOpacity>
                     );
-                }) : <Text>You haven't tracked any tasks!</Text>}
+                }) : <Caption style={{textAlign: 'center'}}>You haven't tracked any tasks!</Caption>}
             </ScrollView>
         </View>
     );

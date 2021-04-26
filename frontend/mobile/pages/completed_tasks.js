@@ -76,7 +76,7 @@ export const CompletedTasksPage = props => {
                             isDone={item.done}
                             style={taskClasses} />
                     );
-                }) : <Text>You haven't tracked any tasks!</Text>}
+                }) : <Caption style={{textAlign: 'center'}}>You haven't completed any tasks!</Caption>}
             </ScrollView>
             <Snackbar style={styles.iosSnackbar}
                 visible={visible}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native'
-import { Card, Text, ProgressBar, Colors, Button } from 'react-native-paper';
+import { Card, Text, ProgressBar, Colors, Button, IconButton } from 'react-native-paper';
 import Moment from 'react-moment';
 import { AppTheme } from 'big-project-common';
 
@@ -57,8 +57,9 @@ export default TaskElement = props => {
                 isCollapsed &&
                 <Card.Actions>
                     {props.isDone ?? <Button onPress={props.edit} style={styles.button}>Edit</Button>}
-
                     {props.isDone ? <Button onPress={props.notDone} style={styles.button}>Mark as incomplete</Button> : <Button onPress={props.done} style={styles.button}>Mark as done</Button>}
+                    {/*thinking of moving start/stop functionality to each card, similar to web*/}
+                    {/* {props.isTracking ? <IconButton color='red' icon="pause" size={20}/> : <IconButton color='green' icon="play" size={20}/>} */}
                 </Card.Actions>
             }
         </Card>
