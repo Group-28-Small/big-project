@@ -6,6 +6,7 @@ import React from 'react';
 import { useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
 
 export default function SessionHistory(props) {
+    const classes = styles();
     const db = useFirestore();
     const { data: user } = useUser();
     const userDetailsRef = user != null ? db.collection('users')
@@ -26,7 +27,7 @@ export default function SessionHistory(props) {
 
     return (
         <Container>
-           <Typography variant='h4'>Session History</Typography>
+           //<Typography variant='h4'>Session History</Typography>
            <TreeView disableSelection>
                 {sessions ? sessions.map((item) => {
                     var task = taskDict[item.task];
@@ -35,7 +36,7 @@ export default function SessionHistory(props) {
                     var duration = moment.duration((item.end - item.start) * 1000).humanize();
                     //var startDate = () => {return <Moment unix date={now} format="" />}; TODO: fix start date
                     return (
-                        <TreeItem label={
+                        <TreeItem className={sessions} label={
                             task.name + " for: " + duration
                         }/>
                     );
@@ -54,13 +55,9 @@ const styles = makeStyles((theme) => ({
         elevation: 5
     },
     sessions: {
-        borderRadius: 5,
-        borderWidth: 2,
-        borderColor: 'black',
-        color: 'black',
         fontSize: 15,
         textAlign: 'center',
-        margin: 4,
+        margin: 4
     },
     activeTask: {
         borderColor: '#05FF1E',
