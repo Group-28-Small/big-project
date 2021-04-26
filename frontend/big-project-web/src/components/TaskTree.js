@@ -236,11 +236,11 @@ function TaskTreeItem(props) {
     }
     const [progressInterval, setProgressInterval] = React.useState(null)
     useEffect(() => {
-        if (userDetails?.is_tracking_task && userDetails?.active_task.id === task.id) {
+        if (userDetails?.is_tracking_task && userDetails?.active_task?.id === task.id) {
             if (!progressInterval) {
                 setProgressInterval(setInterval(() => {
                     setCurrentTrackTime((prev) => {
-                        return (Date.now() / 1000) - userDetails.task_start_time
+                 return (Date.now() / 1000) - userDetails.task_start_time
                     });
                 }, 1000))
             }

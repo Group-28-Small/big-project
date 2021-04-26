@@ -75,7 +75,7 @@ const handleChange = (event, newValue) => {
             </Tabs>
         </AppBar>
         <TabPanel value={value} index={0} >
-            <Paper  style = {{ display: 'inline-block', padding: '30px', position: 'fixed', left:'25%' }} elevation ={5}><TaskTree /></Paper>
+                <Paper style={{ width: '60%', margin: 'auto', padding: '16px' }} elevation={5}><TaskTree /></Paper>
              
         </TabPanel>
             <TabPanel value={value} index={1} >
