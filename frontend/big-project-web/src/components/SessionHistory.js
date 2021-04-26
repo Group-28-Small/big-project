@@ -26,8 +26,10 @@ export default function SessionHistory(props) {
 
     return (
         <Container>
-           <Typography variant='h4'>Session History</Typography>
-           <TreeView disableSelection>
+            <Typography style ={{paddingLeft: '47%', paddingTop: '0%'}} variant="h6">Recent</Typography>
+            <hr/>
+           <TreeView style ={{paddingLeft: '40%', paddingTop: '0%'}} disableSelection>
+               
                 {sessions ? sessions.map((item) => {
                     var task = taskDict[item.task];
                     if(task === undefined)
@@ -35,7 +37,7 @@ export default function SessionHistory(props) {
                     var duration = moment.duration((item.end - item.start) * 1000).humanize();
                     //var startDate = () => {return <Moment unix date={now} format="" />}; TODO: fix start date
                     return (
-                        <TreeItem label={
+                        <TreeItem style ={{textAlign: 'center', paddingRight:'70%'}} label={
                             task.name + " for: " + duration
                         }/>
                     );

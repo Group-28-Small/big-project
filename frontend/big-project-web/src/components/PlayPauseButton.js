@@ -49,14 +49,14 @@ export default function PlayPauseButton(props) {
     //console.log(isTracking);
     if(active_task === undefined || !userDetails.is_tracking_task)
         return(
-            <div>
+            <div style={{marginRight: '20px'}}>
                 <IconButton size='small' onClick={trackTaskPressed}>
                     <PlayArrowIcon style={ {color: '#4caf50'} } />
                 </IconButton>
             </div>
         );
     return (
-        <div>
+        <div style={{marginRight: '20px'}}>
             {isCurrTracking ?
                 <IconButton size='small' onClick={trackTaskPressed}>
                     <PauseIcon style={ {color: '#f44336'} } />

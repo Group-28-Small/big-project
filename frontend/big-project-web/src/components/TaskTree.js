@@ -133,20 +133,13 @@ export default function TaskTree(props) {
         <List>
             {/* <Typography variant='h4' className={styles.task}>Tasks</Typography> */}
             <TextField className={styles.search} id='search' type="text" label='Search' variant='filled' onChange={(e) => setSearchText(e.target.value)} value={searchText}></TextField>
-            <Grid container direction ="row" justify="space-evenly" alignItems="start"> 
-            <Typography variant="h6" style={{width:'15%'}}>Name</Typography>
-            <Typography variant="h6" style={{width:'15%'}}>Progress</Typography>
-            <Typography variant="h6" style={{width:'10%'}}>Esitmated</Typography>
-            <Typography variant="h6" style={{width:'8%'}}>Total</Typography>
-            <Typography variant="h6" style={{width:'10%'}}>Due</Typography>
-            
-            <Typography variant="h6" style={{width:'2%'}}>Finish</Typography>
-            <Typography variant="h6" style={{width:'2%'}}>Notes</Typography>
-            <Typography variant="h6" style={{width:'2%'}}>Edit</Typography>
-            <Typography variant="h6" style={{width: '2%'}}>Track</Typography>
-            
-
-            </Grid>
+                <Grid container> 
+                    <Typography variant="h6" style={{paddingLeft: '10px', paddingRight: '60px'}}>Name</Typography>
+                    
+                    <Typography variant="h6" style={{marginLeft: 'auto',paddingRight: '10px'}}>Finish/Notes/Edit/Track</Typography>
+                    
+                    
+                </Grid>
             <TreeView>
                 {not_done_tasks.map((item, idx) => {
                     return (
@@ -253,39 +246,46 @@ function TaskTreeItem(props) {
             classes={{ label: styles.treeItemNoPadding, iconContainer: styles.nope }}
             label={
                 <div className={`${styles.treeItem} ${isLast && styles.lastItem} ${task.done && styles.TreeItemDone}`} >
-                    {task.name}{' \t'}
+                    <p style={{marginLeft: '0px',borderRight: 'thin solid #666666', lineHeight: '30px', padding:'8px'}}>{task.name}</p>
                     {/* show estimated time  */}
+                    
                     {task.has_estimated_time &&
                     <>
-                        <span style={{ marginLeft: '16px' }}>Estimated Time: {moment.duration(task.estimated_time, "seconds").format("hh:mm", 0, { trim: false })}</span>
-                        <LinearProgress variant='determinate' style={{width: 200}} value={100*(props.total_time+current_tracktime)/task.estimated_time}/>
-                        {Math.round(100*props.total_time/task.estimated_time)/100}
+                        <span style={{fontWeight: 'bold',marginRight: '10px',marginLeft: '10px'}}>Estimated: {moment.duration(task.estimated_time, "seconds").format("hh:mm", 0, { trim: false })}</span>
+                        <span><LinearProgress variant='determinate' style={{width: 150}} value={100*(props.total_time+current_tracktime)/task.estimated_time}/></span>
+                        <span style={{fontWeight: 'bold',marginLeft: '5px',borderRight: 'thin solid #666666', lineHeight: '40px', padding:'8px'}}>{Math.round(100*props.total_time/task.estimated_time)}%</span>
                     </>
                     }
                     
                     {task.has_due_date &&
-                        <Moment format="DD MMMM YYYY" date={task.due_date} unix />
+                    <>  
+                        <p style={{marginLeft: '8px', fontWeight: 'bold'}}>Due:</p><Moment style={{borderRight: 'thin solid #666666', lineHeight: '40px', padding:'8px'}} format="DD MMMM YYYY" date={task.due_date} unix />
+                    </>
                     }
+
                     {/* show total time spent */}
                     {props.total_time &&
-                        <span style={{marginLeft: '16px'}}>Time Spent: {moment.duration(props.total_time, "seconds").format("hh:mm:ss", 0, {trim:false})}</span>
+                    <>
+                        <span style={{marginLeft: '8px', fontWeight: 'bold'}}>Total:</span><span style = {{borderRight: 'thin solid #666666', lineHeight: '40px', padding:'8px'}}> {moment.duration(props.total_time, "seconds").format("hh:mm:ss", 0, {trim:false})}</span>
+                    </>
                     }
-                    {task.has}
+
                     {/* show current session time in currently tracked task */}
                     {(userDetails?.active_task?.id === task.id && userDetails.is_tracking_task) &&
                         (
-                            <div style={{ marginLeft: 'auto' }}>
-                               Current Session: <Moment date={userDetails.task_start_time} interval={1000} format="hh:mm:ss" durationFromNow unix />
-                            </div>
+                            <>
+                            <div style={{ fontWeight: 'bold',marginLeft: '10px'}}>
+                               Current Session: </div> <div style={{borderRight: 'thin solid #666666', lineHeight: '40px', padding:'8px' }}><Moment date={userDetails.task_start_time} interval={1000} format="hh:mm:ss" durationFromNow unix /></div>
+                            </>
                         )
                     }
                     
-                    <div style={{ marginRight: '0', marginLeft: 'auto' }}>
-                        <IconButton size='small' onClick={ handleTaskCompletion }>
+                    <div style={{ marginRight: '20', marginLeft: 'auto' }}>
+                        <IconButton style={{ marginRight: '22px' }} size='small' onClick={ handleTaskCompletion }>
                             <Confetti config={confettiConfig} active={done} />
                             {!task.done ? <DoneIcon /> : <RedoIcon />}
                         </IconButton>
-                        <IconButton size='small'>
+                        <IconButton size='small' style={{ marginRight: '22px' }}>
                             <NoteIcon aria-owns={open ? 'mouse-over-popover' : undefined} aria-haspopup="true" onMouseEnter={handlePopoverOpen} onMouseLeave={handlePopoverClose}/>
                             <Popover
                                 id="mouse-over-popover"
@@ -347,7 +347,7 @@ const useStyles = makeStyles((theme) => ({
         borderBottomWidth: 0,
         borderColor: 'black',
         borderStyle: 'solid',
-        padding: 15,
+        padding: 0,
         alignItems: 'center',
         display: 'flex',
         
@@ -390,16 +390,5 @@ const useStyles = makeStyles((theme) => ({
     },
     nope: {
         display: 'none'
-    },
-    leftLabel: {
-        width: '10%',
-    },
-    rightLabel: {
-        
-        width: '10%',
-       
-    },
-    centerLabel: {
-        width: '10%',
     },
 }));

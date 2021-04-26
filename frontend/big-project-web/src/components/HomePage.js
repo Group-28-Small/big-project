@@ -69,7 +69,7 @@ const handleChange = (event, newValue) => {
             centered
             >
             <Tab label="Tasks" icon={<List />} {...a11yProps(0)} />
-            <Tab label="Sunburst" icon={<PieChart />} {...a11yProps(1)} />
+            <Tab label="Chart" icon={<PieChart />} {...a11yProps(1)} />
             <Tab label="History" icon={<AccessTime />} {...a11yProps(2)} />
             </Tabs>
         </AppBar>
