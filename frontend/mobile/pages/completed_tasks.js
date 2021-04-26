@@ -1,13 +1,21 @@
 
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, ToastAndroid } from 'react-native';
 import AppStyles from '../styles';
 import { useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
 import { ScrollView } from 'react-native-gesture-handler';
 import LoadingScreen from './loadingscreen';
 import * as Haptics from 'expo-haptics';
+import { Snackbar } from 'react-native-paper';
 
 export const CompletedTasksPage = props => {
+    const [visible, setVisible] = React.useState(false);
+    const onDismissSnackBar = () => setVisible(false);
+    const onToggleSnackBar = () => setVisible(true);
+    const dismissSnackbar = () => {
+        onDismissSnackBar()
+    }
+
     const db = useFirestore();
     const { data: user } = useUser();
     const userDetailsRef = user != null ? db.collection('users')
@@ -23,6 +31,11 @@ export const CompletedTasksPage = props => {
             'done': false,
             'duration': item.estimated_time //not sure how to revert this 
         }, { merge: true })
+        if (Platform.OS === 'android') {
+            ToastAndroid.show("Task has been returned to the home screen", ToastAndroid.SHORT);
+        } else if (Platform.OS === 'ios') {
+            onToggleSnackBar()
+        }
     }
     var taskDict = {}
     if (tasks) {
@@ -57,16 +70,21 @@ export const CompletedTasksPage = props => {
                             estimated_time={item.estimated_time} 
                             has_due_date={item.has_due_date} 
                             due_date={item.due_date} 
-                            setActive={() => { Haptics.selectionAsync(); setActiveTask(item.id) }} 
                             notDone={() => unFinishedTask(item)}
                             containerStyle={taskClasses}
-                            active={item.id === userDetailsRef.active_task?.id}
                             note={item.note}
                             isDone={item.done}
                             style={taskClasses} />
                     );
                 }) : <Text>You haven't tracked any tasks!</Text>}
             </ScrollView>
+            <Snackbar style={styles.iosSnackbar}
+                visible={visible}
+                onDismiss={dismissSnackbar}
+                duration={Snackbar.DURATION_SHORT}
+                theme={{ colors: { surface: 'black' } }}>
+                Task has been returned to the home screen
+                </Snackbar>
         </View>
     );
 }
@@ -80,5 +98,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         margin: 4,
     },
+    iosSnackbar: {
+        backgroundColor: 'white',
+        width: 320,
+        position: 'absolute',
+        bottom: 0,
+        elevation: 1,
+        alignSelf: 'center',
+    }
 });
 

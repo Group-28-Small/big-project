@@ -54,6 +54,9 @@ const MainTaskList = props => {
             'done': true,
             'duration': item.estimated_time
         }, { merge: true })
+        if (Platform.OS === 'android') {
+            ToastAndroid.show("Task has been moved to the 'Completed Tasks' page.", ToastAndroid.SHORT);
+        }
     }
     const setSearchText = (text) => {
         _setSearchText(text)
