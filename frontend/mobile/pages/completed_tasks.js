@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { StyleSheet, Text, View, ToastAndroid } from 'react-native';
+import { StyleSheet, View, ToastAndroid } from 'react-native';
 import AppStyles from '../styles';
 import { useFirestore, useFirestoreCollectionData, useUser } from 'reactfire';
 import { ScrollView } from 'react-native-gesture-handler';
